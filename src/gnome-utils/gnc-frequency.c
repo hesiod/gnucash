@@ -58,7 +58,7 @@ static guint gnc_frequency_signals[LAST_SIGNAL] = { 0 };
 /** Private Prototypes ********************/
 
 static void gnc_frequency_class_init( GncFrequencyClass *klass );
-static void gnc_frequency_class_destroy( GtkObject *object );
+static void gnc_frequency_class_destroy( GObject *object );
 
 static void freq_combo_changed( GtkComboBox *b, gpointer d );
 static void start_date_changed( GNCDateEdit *gde, gpointer d );
@@ -127,7 +127,7 @@ gnc_frequency_get_type()
             (GInstanceInitFunc)gnc_frequency_init
         };
 
-        gncfreq_type = g_type_register_static (GTK_TYPE_VBOX,
+        gncfreq_type = g_type_register_static (GTK_TYPE_BOX,
                                                "GncFrequency",
                                                &gncfreq_info, 0);
     }
@@ -140,12 +140,10 @@ static void
 gnc_frequency_class_init( GncFrequencyClass *klass )
 {
     GObjectClass *object_class;
-    GtkObjectClass *gtkobject_class;
 
     parent_class = g_type_class_peek_parent (klass);
 
     object_class = G_OBJECT_CLASS (klass);
-    gtkobject_class = GTK_OBJECT_CLASS (klass);
 
     gnc_frequency_signals[GNCFREQ_CHANGED] =
         g_signal_new ("changed",
@@ -157,9 +155,6 @@ gnc_frequency_class_init( GncFrequencyClass *klass )
                       g_cclosure_marshal_VOID__VOID,
                       G_TYPE_NONE,
                       0);
-
-    /* GtkObject signals */
-    gtkobject_class->destroy = gnc_frequency_class_destroy;
 }
 
 
@@ -167,7 +162,7 @@ void
 gnc_frequency_init(GncFrequency *gf)
 {
     int i;
-    GtkVBox* vb;
+    GtkBox* vb;
     GtkWidget* o;
     GtkAdjustment* adj;
     GtkBuilder *builder;
@@ -225,11 +220,10 @@ gnc_frequency_init(GncFrequency *gf)
     {
         gint dont_expand_or_fill = 0;
         GtkWidget *table = GTK_WIDGET(gtk_builder_get_object (builder, "gncfreq_table"));
-        gtk_table_attach(GTK_TABLE(table), GTK_WIDGET(gf->startDate),
-                         4, 5, 0, 1, dont_expand_or_fill, 0,
-                         0, 0);
+        gtk_grid_attach(GTK_GRID(table), GTK_WIDGET(gf->startDate),
+                         4, 5, 0, 1);
     }
-    vb = GTK_VBOX(gtk_builder_get_object (builder, "gncfreq_vbox"));
+    vb = GTK_BOX(gtk_builder_get_object (builder, "gncfreq_vbox"));
     gf->vb = vb;
     gtk_container_add(GTK_CONTAINER(&gf->widget), GTK_WIDGET(gf->vb));
 
@@ -281,7 +275,7 @@ gnc_frequency_init(GncFrequency *gf)
  *  @internal
  */
 static void
-gnc_frequency_class_destroy (GtkObject *object)
+gnc_frequency_class_destroy (GObject *object)
 {
     GncFrequency *gf;
 
@@ -298,8 +292,6 @@ gnc_frequency_class_destroy (GtkObject *object)
         gf->builder = NULL;
     }
 
-    if (GTK_OBJECT_CLASS (parent_class)->destroy)
-        GTK_OBJECT_CLASS (parent_class)->destroy (object);
     LEAVE(" ");
 }
 

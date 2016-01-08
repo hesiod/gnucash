@@ -84,8 +84,7 @@ gnc_file_dialog (const char * title,
     GtkWidget *file_box;
     const char *internal_name;
     char *file_name = NULL;
-    gchar * okbutton = GTK_STOCK_OPEN;
-    const gchar *ok_icon = NULL;
+    gchar * okbutton;
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_OPEN;
     gint response;
 
@@ -93,45 +92,34 @@ gnc_file_dialog (const char * title,
 
     switch (type)
     {
+    default:
     case GNC_FILE_DIALOG_OPEN:
         action = GTK_FILE_CHOOSER_ACTION_OPEN;
-        okbutton = GTK_STOCK_OPEN;
-        if (title == NULL)
-            title = _("Open");
+        okbutton = _("_Open");
         break;
     case GNC_FILE_DIALOG_IMPORT:
         action = GTK_FILE_CHOOSER_ACTION_OPEN;
         okbutton = _("_Import");
-        if (title == NULL)
-            title = _("Import");
         break;
     case GNC_FILE_DIALOG_SAVE:
         action = GTK_FILE_CHOOSER_ACTION_SAVE;
-        okbutton = GTK_STOCK_SAVE;
-        if (title == NULL)
-            title = _("Save");
+        okbutton = _("_Save");
         break;
     case GNC_FILE_DIALOG_EXPORT:
         action = GTK_FILE_CHOOSER_ACTION_SAVE;
         okbutton = _("_Export");
-        ok_icon = GTK_STOCK_CONVERT;
-        if (title == NULL)
-            title = _("Export");
         break;
-
     }
+    if (title == NULL)
+        title = okbutton;
 
     file_box = gtk_file_chooser_dialog_new(
                    title,
                    NULL,
                    action,
-                   GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                   okbutton, GTK_RESPONSE_ACCEPT,
+                   _("_Cancel"), GTK_RESPONSE_CANCEL,
                    NULL);
-    if (ok_icon)
-        gnc_gtk_dialog_add_button(file_box, okbutton, ok_icon, GTK_RESPONSE_ACCEPT);
-    else
-        gtk_dialog_add_button(GTK_DIALOG(file_box),
-                              okbutton, GTK_RESPONSE_ACCEPT);
 
     if (starting_dir)
         gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER (file_box),
@@ -140,7 +128,7 @@ gnc_file_dialog (const char * title,
     gtk_window_set_modal(GTK_WINDOW(file_box), TRUE);
     /*
     gtk_window_set_transient_for(GTK_WINDOW(file_box),
-    		       GTK_WINDOW(gnc_ui_get_toplevel()));
+                   GTK_WINDOW(gnc_ui_get_toplevel()));
     */
 
     if (filters != NULL)
@@ -258,39 +246,27 @@ show_session_error (QofBackendError io_error,
         break;
 
     case ERR_BACKEND_LOCKED:
+              fmt = _("GnuCash could not obtain the lock for %s. "
+                      "That database may be in use by another user, "
+                      "in which case you should not access the database. "
+                      "Do you want to proceed?");
         switch (type)
         {
         case GNC_FILE_DIALOG_OPEN:
         default:
-            label = GTK_STOCK_OPEN;
-            fmt = _("GnuCash could not obtain the lock for %s. "
-                    "That database may be in use by another user, "
-                    "in which case you should not open the database. "
-                    "Do you want to proceed with opening the database?");
+            label = _("Open");
             break;
 
         case GNC_FILE_DIALOG_IMPORT:
             label = _("Import");
-            fmt = _("GnuCash could not obtain the lock for %s. "
-                    "That database may be in use by another user, "
-                    "in which case you should not import the database. "
-                    "Do you want to proceed with importing the database?");
             break;
 
         case GNC_FILE_DIALOG_SAVE:
-            label = GTK_STOCK_SAVE;
-            fmt = _("GnuCash could not obtain the lock for %s. "
-                    "That database may be in use by another user, "
-                    "in which case you should not save the database. "
-                    "Do you want to proceed with saving the database?");
+            label = _("Save");
             break;
 
         case GNC_FILE_DIALOG_EXPORT:
             label = _("Export");
-            fmt = _("GnuCash could not obtain the lock for %s. "
-                    "That database may be in use by another user, "
-                    "in which case you should not export the database. "
-                    "Do you want to proceed with exporting the database?");
             break;
         }
 
@@ -301,7 +277,7 @@ show_session_error (QofBackendError io_error,
                                         fmt,
                                         displayname);
         gtk_dialog_add_buttons(GTK_DIALOG(dialog),
-                               GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                               _("Cancel"), GTK_RESPONSE_CANCEL,
                                label, GTK_RESPONSE_YES,
                                NULL);
         if (parent == NULL)
@@ -591,9 +567,9 @@ gnc_file_query_save (gboolean can_cancel)
 
         if (can_cancel)
             gtk_dialog_add_button(GTK_DIALOG(dialog),
-                                  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+                                  _("Cancel"), GTK_RESPONSE_CANCEL);
         gtk_dialog_add_button(GTK_DIALOG(dialog),
-                              GTK_STOCK_SAVE, GTK_RESPONSE_YES);
+                              _("Save"), GTK_RESPONSE_YES);
 
         gtk_dialog_set_default_response(GTK_DIALOG(dialog), GTK_RESPONSE_YES);
 
@@ -776,14 +752,14 @@ RESTART:
         gtk_window_set_skip_taskbar_hint(GTK_WINDOW(dialog), FALSE);
 
         gnc_gtk_dialog_add_button(dialog, _("_Open Read-Only"),
-                                  GTK_STOCK_REVERT_TO_SAVED, RESPONSE_READONLY);
+                                  "emblem-readonly", RESPONSE_READONLY);
         gnc_gtk_dialog_add_button(dialog, _("_Create New File"),
-                                  GTK_STOCK_NEW, RESPONSE_NEW);
+                                  "document-new", RESPONSE_NEW);
         gnc_gtk_dialog_add_button(dialog, _("Open _Anyway"),
-                                  GTK_STOCK_OPEN, RESPONSE_OPEN);
+                                  "emblem-unreadable", RESPONSE_OPEN);
         if (shutdown_cb)
             gtk_dialog_add_button(GTK_DIALOG(dialog),
-                                  GTK_STOCK_QUIT, RESPONSE_QUIT);
+                                  _("Quit"), RESPONSE_QUIT);
         rc = gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         g_free (displayname);
@@ -829,8 +805,8 @@ RESTART:
         if (FALSE == show_session_error (io_err, newfile, GNC_FILE_DIALOG_OPEN))
         {
             /* user told us to create a new database. Do it. We
-            	     * shouldn't have to worry about locking or clobbering,
-            	     * it's supposed to be new. */
+                     * shouldn't have to worry about locking or clobbering,
+                     * it's supposed to be new. */
             qof_session_begin (new_session, newfile, FALSE, TRUE, FALSE);
         }
     }
@@ -1172,14 +1148,14 @@ gnc_file_do_export(const char * filename)
     /* Some extra steps for file based uri's only */
     if (gnc_uri_is_file_protocol(protocol))
     {
-	if (check_file_path (path))
-	{
-	    show_session_error (ERR_FILEIO_RESERVED_WRITE, newfile,
-				GNC_FILE_DIALOG_SAVE);
-	    return;
-	}
-	gnc_set_default_directory (GNC_PREFS_GROUP_OPEN_SAVE,
-				   g_path_get_dirname(path));
+    if (check_file_path (path))
+    {
+        show_session_error (ERR_FILEIO_RESERVED_WRITE, newfile,
+                GNC_FILE_DIALOG_SAVE);
+        return;
+    }
+    gnc_set_default_directory (GNC_PREFS_GROUP_OPEN_SAVE,
+                   g_path_get_dirname(path));
     }
     /* Check to see if the user specified the same file as the current
      * file. If so, prevent the export from happening to avoid killing this file */
@@ -1403,14 +1379,14 @@ gnc_file_do_save_as (const char* filename)
     /* Some extra steps for file based uri's only */
     if (gnc_uri_is_file_protocol(protocol))
     {
-	if (check_file_path (path))
-	{
-	    show_session_error (ERR_FILEIO_RESERVED_WRITE, newfile,
-				GNC_FILE_DIALOG_SAVE);
-	    return;
-	}
-	gnc_set_default_directory (GNC_PREFS_GROUP_OPEN_SAVE,
-				   g_path_get_dirname (path));
+    if (check_file_path (path))
+    {
+        show_session_error (ERR_FILEIO_RESERVED_WRITE, newfile,
+                GNC_FILE_DIALOG_SAVE);
+        return;
+    }
+    gnc_set_default_directory (GNC_PREFS_GROUP_OPEN_SAVE,
+                   g_path_get_dirname (path));
     }
 
     /* Check to see if the user specified the same file as the current

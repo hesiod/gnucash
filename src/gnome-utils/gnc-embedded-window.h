@@ -56,10 +56,10 @@ G_BEGIN_DECLS
 typedef struct
 {
     /** The parent object for an embedded window. */
-    GtkVBox vbox;
+    GtkBox vbox;
     /** A pointer to the UI Manager data structure for the whole
      *  window. */
-    GtkUIManager *ui_merge;
+    GtkBuilder *ui_merge;
 } GncEmbeddedWindow;
 
 
@@ -67,7 +67,7 @@ typedef struct
 typedef struct
 {
     /** The parent class for an embedded window. */
-    GtkVBoxClass vbox;
+    GtkBoxClass vbox;
 } GncEmbeddedWindowClass;
 
 
@@ -83,8 +83,7 @@ GType gnc_embedded_window_get_type (void);
  *
  *  @return A pointer to the new object.
  */
-GncEmbeddedWindow *gnc_embedded_window_new (const gchar *action_group_name,
-        GtkActionEntry *action_entries,
+GncEmbeddedWindow *gnc_embedded_window_new (GActionEntry *action_entries,
         gint n_action_entries,
         const gchar *ui_filename,
         GtkWidget *enclosing_win,

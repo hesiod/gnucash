@@ -301,7 +301,7 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
     GList *node;
     int i;
 
-    main_vbox = gtk_vbox_new(FALSE, 3);
+    main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 3);
     gtk_container_set_border_width(GTK_CONTAINER(main_vbox), 6);
     gtk_widget_show(main_vbox);
 

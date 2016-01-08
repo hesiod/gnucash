@@ -208,7 +208,7 @@ gnc_dense_cal_get_type()
             NULL
         };
 
-        dense_cal_type = g_type_register_static(GTK_TYPE_VBOX,
+        dense_cal_type = g_type_register_static(GTK_TYPE_BOX,
                                                 "GncDenseCal",
                                                 &dense_cal_info, 0);
     }
@@ -280,15 +280,13 @@ gnc_dense_cal_init(GncDenseCal *dcal)
     }
 
     {
-        GtkHBox *hbox = GTK_HBOX(gtk_hbox_new(FALSE, 0));
-        GtkAlignment *label_align;
+        GtkBox *hbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0));
         GtkLabel *label;
-        float right_align = 1.0, mid_align = 0.5, fill_x = 0.0, fill_y = 1.0;
+        float right_align = 1.0, mid_align = 0.5;
 
         label = GTK_LABEL(gtk_label_new(_("View:")));
-        label_align = GTK_ALIGNMENT(gtk_alignment_new(right_align, mid_align, fill_x, fill_y));
-        gtk_container_add(GTK_CONTAINER(label_align), GTK_WIDGET(label));
-        gtk_box_pack_start(GTK_BOX(hbox), GTK_WIDGET(label_align), TRUE, TRUE, 0);
+        gtk_widget_set_margin_end(GTK_WIDGET(label), 1);
+        gtk_box_pack_start(GTK_BOX(hbox), GTK_WIDGET(label), TRUE, TRUE, 0);
         gtk_box_pack_start(GTK_BOX(hbox), GTK_WIDGET(dcal->view_options), FALSE, FALSE, 0);
 
         gtk_box_pack_start(GTK_BOX(dcal), GTK_WIDGET(hbox), FALSE, FALSE, 0);
@@ -320,8 +318,8 @@ gnc_dense_cal_init(GncDenseCal *dcal)
         GtkListStore *tree_data;
         GtkTreeView *tree_view;
 
-        vbox = gtk_vbox_new(FALSE, 5);
-        hbox = gtk_hbox_new(FALSE, 5);
+        vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+        hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
         l = gtk_label_new(_("Date: "));
         gtk_container_add(GTK_CONTAINER(hbox), l);
@@ -330,7 +328,7 @@ gnc_dense_cal_init(GncDenseCal *dcal)
         gtk_container_add(GTK_CONTAINER(hbox), l);
         gtk_container_add(GTK_CONTAINER(vbox), hbox);
 
-        gtk_container_add(GTK_CONTAINER(vbox), gtk_hseparator_new());
+        gtk_container_add(GTK_CONTAINER(vbox), gtk_separator_new(GTK_ORIENTATION_HORIZONTAL));
 
         tree_data = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
         tree_view = GTK_TREE_VIEW(gtk_tree_view_new_with_model(GTK_TREE_MODEL(tree_data)));
@@ -346,11 +344,14 @@ gnc_dense_cal_init(GncDenseCal *dcal)
         gtk_widget_realize(GTK_WIDGET(dcal->transPopup));
     }
 
+    // FIXME do we need this?
+#if 0
     gdk_color_parse(MONTH_THIS_COLOR,  &dcal->weekColors[MONTH_THIS]);
     gdk_color_parse(MONTH_THAT_COLOR,  &dcal->weekColors[MONTH_THAT]);
 
     /* success array must be as big as number of colors */
     g_assert(MAX_COLORS == (sizeof(colorAllocSuccess)/sizeof(gboolean)));
+
 
     if (gdk_colormap_alloc_colors(gdk_colormap_get_system(),
                                   dcal->weekColors,
@@ -359,18 +360,20 @@ gnc_dense_cal_init(GncDenseCal *dcal)
     {
         g_error("error allocating colors");
     }
-
+#endif
     /* Deal with the various label sizes. */
     {
         gint i;
         gint maxWidth, maxHeight;
-        GtkStyle *style;
         PangoLayout *layout;
+        layout = gtk_widget_create_pango_layout(GTK_WIDGET(dcal), NULL);
+        // FIXME Update this
+#if 0
+        GtkStyle *style;
         PangoFontDescription *font_desc;
         gint font_size;
         gint font_size_reduction_units = 1;
 
-        layout = gtk_widget_create_pango_layout(GTK_WIDGET(dcal), NULL);
 
         style = gtk_widget_get_style(GTK_WIDGET(dcal));
 
@@ -380,6 +383,7 @@ gnc_dense_cal_init(GncDenseCal *dcal)
         pango_font_description_set_size(font_desc, font_size);
         gtk_widget_modify_font(GTK_WIDGET(dcal), font_desc);
         pango_font_description_free(font_desc);
+#endif
 
         maxWidth = maxHeight = 0;
         for (i = 0; i < 12; i++)
@@ -407,8 +411,8 @@ gnc_dense_cal_init(GncDenseCal *dcal)
     dcal->topPadding = 2;
 
     {
-	GDate now;
-	g_date_clear (&now, 1);
+    GDate now;
+    g_date_clear (&now, 1);
         gnc_gdate_set_today (&now);
         _gnc_dense_cal_set_month(dcal, g_date_get_month(&now), FALSE);
         _gnc_dense_cal_set_year(dcal, g_date_get_year(&now), FALSE);
@@ -708,9 +712,12 @@ gnc_dense_cal_realize (GtkWidget *widget, gpointer user_data)
     recompute_x_y_scales(dcal);
     gdc_reconfig(dcal);
 
+    // FIXME do we need this?
+#if 0
     gtk_style_set_background(gtk_widget_get_style (widget),
                              gtk_widget_get_window (widget),
                              GTK_STATE_ACTIVE);
+#endif
 }
 
 static void
@@ -895,7 +902,7 @@ gnc_dense_cal_draw_to_buffer(GncDenseCal *dcal)
 {
     GtkWidget *widget;
     GtkAllocation alloc;
-    GdkColor color;
+    GdkRGBA color;
     gint i;
     int maxWidth;
     PangoLayout *layout;
@@ -915,14 +922,10 @@ gnc_dense_cal_draw_to_buffer(GncDenseCal *dcal)
     LOG_AND_RESET(timer, "create_pango_layout");
 
     gtk_widget_get_allocation (GTK_WIDGET(dcal->cal_drawing_area), &alloc);
-    color = gtk_widget_get_style (widget)->white;
-    cairo_set_source_rgb (cr, color.red   / 65535.0,
-                              color.green / 65535.0,
-                              color.blue  / 65535.0);
-    cairo_rectangle (cr, 0, 0,
-                     cairo_image_surface_get_width (dcal->surface),
-                     cairo_image_surface_get_height (dcal->surface));
-    cairo_fill (cr);
+    gtk_render_background (gtk_widget_get_style_context(GTK_WIDGET(dcal->surface)), cr,
+                           0, 0,
+                           cairo_image_surface_get_width (dcal->surface),
+                           cairo_image_surface_get_height (dcal->surface));
 
     /* Fill in alternating month colors. */
     {
@@ -949,11 +952,8 @@ gnc_dense_cal_draw_to_buffer(GncDenseCal *dcal)
             {
                 rect = (GdkRectangle*)mcListIter->data;
                 color = dcal->weekColors[ i % 2 ];
-                cairo_set_source_rgb (cr, color.red   / 65535.0,
-                              color.green / 65535.0,
-                              color.blue  / 65535.0);
-                cairo_rectangle (cr, rect->x, rect->y,
-                                     rect->width, rect->height);
+                gdk_cairo_set_source_rgba (cr, &color);
+                gdk_cairo_rectangle (cr, rect);
                 cairo_fill (cr);
             }
             g_list_foreach(mcList, free_rect, NULL);
@@ -967,8 +967,7 @@ gnc_dense_cal_draw_to_buffer(GncDenseCal *dcal)
         int i;
         int x1, x2, y1, y2;
 
-        gdk_color_parse(MARK_COLOR, &color);
-        gdk_colormap_alloc_color(gdk_colormap_get_system(), &color, TRUE, TRUE);
+        gdk_rgba_parse(&color, MARK_COLOR);
         cairo_set_source_rgb (cr, color.red   / 65535.0,
                                   color.green / 65535.0,
                                   color.blue  / 65535.0);
@@ -1006,14 +1005,12 @@ gnc_dense_cal_draw_to_buffer(GncDenseCal *dcal)
         w = col_width(dcal) - COL_BORDER_SIZE - dcal->label_width;
         h = col_height(dcal);
 
+        gtk_render_background (gtk_widget_get_style_context(GTK_WIDGET(dcal)), cr,
+                               x, y, w, h);
+
         /* draw the outside border [inside the month labels] */
-        color = gtk_widget_get_style (widget)->fg[gtk_widget_get_state (widget)];
-        cairo_set_line_width (cr, 1);
-        cairo_set_source_rgb (cr, color.red   / 65535.0,
-                                  color.green / 65535.0,
-                                  color.blue  / 65535.0);
-        cairo_rectangle (cr, x + 0.5, y + 0.5, w, h);
-        cairo_stroke (cr);
+        gtk_render_frame (gtk_widget_get_style_context(GTK_WIDGET(dcal)), cr,
+                          x + 0.5, y + 0.5, w, h);
 
         /* draw the week seperations */
         for (j = 0; j < num_weeks_per_col(dcal); j++)
@@ -1055,10 +1052,7 @@ gnc_dense_cal_draw_to_buffer(GncDenseCal *dcal)
                                  - (day_label_width / 2);
                 label_y_offset = y - dcal->dayLabelHeight;
                 pango_layout_set_text(layout, day_label_str, -1);
-                color = gtk_widget_get_style (widget)->text[gtk_widget_get_state (widget)];
-                cairo_set_source_rgb (cr, color.red   / 65535.0,
-                                          color.green / 65535.0,
-                                          color.blue  / 65535.0);
+
                 cairo_move_to (cr, label_x_offset, label_y_offset);
                 pango_cairo_show_layout (cr, layout);
             }
@@ -1738,15 +1732,15 @@ gdc_add_tag_markings(GncDenseCal *cal, guint tag)
     }
     if (g_date_valid(dates[0]))
     {
-	 if (g_date_get_julian(dates[0]) < g_date_get_julian(calDate))
-	 {
-	      _gnc_dense_cal_set_month(cal, g_date_get_month(dates[0]), FALSE);
-	      _gnc_dense_cal_set_year(cal, g_date_get_year(dates[0]), FALSE);
-	 }
+     if (g_date_get_julian(dates[0]) < g_date_get_julian(calDate))
+     {
+          _gnc_dense_cal_set_month(cal, g_date_get_month(dates[0]), FALSE);
+          _gnc_dense_cal_set_year(cal, g_date_get_year(dates[0]), FALSE);
+     }
     }
     else
     {
-	 g_warning("Bad date, skipped.");
+     g_warning("Bad date, skipped.");
     }
     gdc_mark_add(cal, tag, name, info, num_marks, dates);
 

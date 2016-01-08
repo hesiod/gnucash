@@ -496,15 +496,13 @@ gnc_gtk_dialog_add_button (GtkWidget *dialog, const gchar *label, const gchar *s
 {
     GtkWidget *button;
 
-    button = gtk_button_new_with_mnemonic(label);
-    if (stock_id)
-    {
-        GtkWidget *image;
-
-        image = gtk_image_new_from_stock (stock_id, GTK_ICON_SIZE_BUTTON);
-        gtk_button_set_image(GTK_BUTTON(button), image);
+    if (stock_id) {
+          button = gtk_button_new_from_icon_name(stock_id, GTK_ICON_SIZE_BUTTON);
+    } else {
+          button = gtk_button_new();
     }
-    g_object_set (button, "can-default", TRUE, NULL);
+    gtk_button_set_label(GTK_BUTTON(button), label);
+
     gtk_widget_show_all(button);
     gtk_dialog_add_action_widget(GTK_DIALOG(dialog), button, response);
 }

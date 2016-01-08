@@ -74,11 +74,6 @@ typedef struct GncEmbeddedWindowPrivate
      *  the status bar. */
     GtkWidget *statusbar;
 
-    /** The group of all actions provided by the main window itself.
-     *  This does not include any action provided by menu or content
-     *  plugins. */
-    GtkActionGroup *action_group;
-
     /** The currently selected page. */
     GncPluginPage *page;
     /** The parent of this embedded "window".  This points to a real
@@ -119,7 +114,7 @@ gnc_embedded_window_get_type (void)
             NULL
         };
 
-        gnc_embedded_window_type = g_type_register_static (GTK_TYPE_VBOX,
+        gnc_embedded_window_type = g_type_register_static (GTK_TYPE_BOX,
                                    "GncEmbeddedWindow",
                                    &our_info, 0);
         g_type_add_interface_static (gnc_embedded_window_type,
@@ -181,7 +176,6 @@ gnc_embedded_window_close_page (GncEmbeddedWindow *window,
     gnc_plugin_page_removed (page);
 
     gnc_plugin_page_unmerge_actions (page, window->ui_merge);
-    gtk_ui_manager_ensure_update (window->ui_merge);
 
     gnc_plugin_page_destroy_widget (page);
     g_object_unref(page);
@@ -291,7 +285,7 @@ gnc_embedded_window_dispose (GObject *object)
 
 
 static void
-gnc_embedded_window_add_widget (GtkUIManager *merge,
+gnc_embedded_window_add_widget (GtkBuilder *merge,
                                 GtkWidget *widget,
                                 GncEmbeddedWindow *window)
 {
@@ -324,28 +318,24 @@ gnc_embedded_window_setup_window (GncEmbeddedWindow *window)
     /* Create widgets and add them to the window */
     gtk_widget_show (GTK_WIDGET(window));
 
-    priv->menu_dock = gtk_vbox_new (FALSE, 0);
+    priv->menu_dock = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (priv->menu_dock);
     gtk_box_pack_start (GTK_BOX (window), priv->menu_dock, FALSE, TRUE, 0);
 
     priv->statusbar = gtk_statusbar_new ();
-    gtk_statusbar_set_has_resize_grip (GTK_STATUSBAR(priv->statusbar), FALSE);
     gtk_widget_show (priv->statusbar);
     gtk_box_pack_end (GTK_BOX (window), priv->statusbar, FALSE, TRUE, 0);
 
-    window->ui_merge = gtk_ui_manager_new ();
+    window->ui_merge = gtk_builder_new ();
     g_signal_connect (G_OBJECT (window->ui_merge), "add_widget",
                       G_CALLBACK (gnc_embedded_window_add_widget), window);
-
-    priv->action_group = NULL;
     LEAVE(" ");
 }
 
 
 /** Create a new gnc embedded window plugin. */
 GncEmbeddedWindow *
-gnc_embedded_window_new (const gchar *action_group_name,
-                         GtkActionEntry *action_entries,
+gnc_embedded_window_new (GActionEntry *action_entries,
                          gint n_action_entries,
                          const gchar *ui_filename,
                          GtkWidget *enclosing_win,
@@ -358,8 +348,8 @@ gnc_embedded_window_new (const gchar *action_group_name,
     GError *error = NULL;
     guint merge_id;
 
-    ENTER("group %s, first %p, num %d, ui file %s, parent %p, add accelerators %d, user data %p",
-          action_group_name, action_entries, n_action_entries, ui_filename,
+    ENTER("first %p, num %d, ui file %s, parent %p, add accelerators %d, user data %p",
+          action_entries, n_action_entries, ui_filename,
           enclosing_win, add_accelerators, user_data);
     window = g_object_new (GNC_TYPE_EMBEDDED_WINDOW, NULL);
     priv = GNC_EMBEDDED_WINDOW_GET_PRIVATE(window);
@@ -371,12 +361,10 @@ gnc_embedded_window_new (const gchar *action_group_name,
     priv->parent_window = enclosing_win;
 
     /* Create menu and toolbar information */
-    priv->action_group = gtk_action_group_new (action_group_name);
-    gnc_gtk_action_group_set_translation_domain(priv->action_group, GETTEXT_PACKAGE);
-    gtk_action_group_add_actions (priv->action_group, action_entries,
-                                  n_action_entries, user_data);
-    gtk_ui_manager_insert_action_group (window->ui_merge, priv->action_group, 0);
-    merge_id = gtk_ui_manager_add_ui_from_file (window->ui_merge, ui_fullname,
+    g_action_map_add_action_entries (
+                   G_ACTION_MAP(gtk_builder_get_application (window->ui_merge)),
+                   action_entries, n_action_entries, user_data);
+    merge_id = gtk_builder_add_from_file (window->ui_merge, ui_fullname,
                &error);
 
     /* Error checking */
@@ -391,12 +379,6 @@ gnc_embedded_window_new (const gchar *action_group_name,
         return window;
     }
 
-    /* Add accelerators (if wanted) */
-    if (add_accelerators)
-        gtk_window_add_accel_group (GTK_WINDOW(enclosing_win),
-                                    gtk_ui_manager_get_accel_group(window->ui_merge));
-
-    gtk_ui_manager_ensure_update (window->ui_merge);
     g_free(ui_fullname);
     LEAVE("window %p", window);
     return window;
