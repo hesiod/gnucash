@@ -96,7 +96,7 @@ typedef struct
     PopupGetWidth    popup_get_width;
     gpointer         popup_user_data;
 
-    GdkGC *gc;
+    cairo_t *gc;
 
     gboolean reset_pos;
     gint x_offset;

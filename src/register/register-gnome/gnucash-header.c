@@ -109,23 +109,21 @@ gnc_header_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
     h *= header->num_phys_rows;
     h /= header->style->nrows;
 
-    gdk_gc_set_foreground (header->gc, bg_color);
+    gdk_cairo_set_source_color (header->gc, bg_color);
+    cairo_rectangle (header->gc, 0, 0, style->dimensions->width, h);
+    cairo_stroke (header->gc);
 
-    gdk_draw_rectangle (drawable, header->gc, TRUE, 0, 0,
-                        style->dimensions->width, h);
+    gdk_cairo_set_source_color (header->gc, fg_color);
 
-    gdk_gc_set_line_attributes (header->gc, 1, GDK_LINE_SOLID, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
-    gdk_gc_set_foreground (header->gc, fg_color);
+    cairo_rectangle (header->gc, -x, -y, style->dimensions->width, h);
+    cairo_stroke (header->gc);
+    cairo_set_line_width (header->gc, 1);
+    cairo_move_to (header->gc, 0, h + 1);
+    cairo_line_to (header->gc, style->dimensions->width, h + 1);
+    cairo_stroke (header->gc);
 
-    gdk_draw_rectangle (drawable, header->gc, FALSE, -x, -y,
-                        style->dimensions->width, h);
-
-    gdk_draw_line (drawable, header->gc, 0, h + 1,
-                   style->dimensions->width, h + 1);
-
-    gdk_gc_set_line_attributes (header->gc, 1, GDK_LINE_SOLID, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
-    gdk_gc_set_background (header->gc, &gn_white);
-    gdk_gc_set_foreground (header->gc, fg_color);
+    gdk_cairo_set_source_color (header->gc, &gn_white);
+    gdk_cairo_set_source_color (header->gc, fg_color);
     /*font = gnucash_register_font;*/
 
     vcell = gnc_table_get_virtual_cell
@@ -169,8 +167,8 @@ gnc_header_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
 
             h = cd->pixel_height;
 
-            gdk_draw_rectangle (drawable, header->gc, FALSE,
-                                xpaint, ypaint, w, h);
+            cairo_rectangle (header->gc, xpaint, ypaint, w, h);
+            cairo_stroke (header->gc);
 
             virt_loc.vcell_loc =
                 table->current_cursor_loc.vcell_loc;
@@ -206,17 +204,16 @@ gnc_header_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
             rect.width = MAX (0, w - (2 * CELL_HPADDING));
             rect.height = h - 2;
 
-            gdk_gc_set_clip_rectangle (header->gc, &rect);
+            gdk_cairo_rectangle (header->gc, &rect);
+            cairo_clip (header->gc);
 
-            gdk_draw_layout (drawable,
-                             header->gc,
-                             xpaint + CELL_HPADDING,
-                             ypaint + 1,
-                             layout);
+            cairo_move_to (header->gc,
+                           rect.x,
+                           rect.y);
+            pango_cairo_show_layout (header->gc, layout);
 
             g_object_unref (layout);
-
-            gdk_gc_set_clip_rectangle (header->gc, NULL);
+            cairo_destroy (header->gc);
 
             xpaint += w;
         }
@@ -251,7 +248,7 @@ gnc_header_realize (GnomeCanvasItem *item)
 
     window = gtk_widget_get_window (GTK_WIDGET (item->canvas));
 
-    header->gc = gdk_gc_new (window);
+    header->gc = gdk_cairo_create (window);
 }
 
 

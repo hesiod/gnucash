@@ -53,9 +53,9 @@ struct _GnucashGrid
     long       top_offset;
     long       left_offset;
 
-    GdkGC      *grid_gc;    /* Draw grid gc */
-    GdkGC      *fill_gc;    /* Default background fill gc */
-    GdkGC      *gc;     /* Color used for the cell */
+    cairo_t    *grid_gc;    /* Draw grid gc */
+    cairo_t    *fill_gc;    /* Default background fill gc */
+    cairo_t    *gc;     /* Color used for the cell */
 
     GdkColor   background;
     GdkColor   grid_color;
@@ -83,7 +83,7 @@ gnucash_grid_realize (GnomeCanvasItem *item)
 {
     GdkWindow *window;
     GnucashGrid *gnucash_grid;
-    GdkGC *gc;
+    cairo_t *gc;
 
     if (GNOME_CANVAS_ITEM_CLASS (gnucash_grid_parent_class)->realize)
         (GNOME_CANVAS_ITEM_CLASS
@@ -93,22 +93,22 @@ gnucash_grid_realize (GnomeCanvasItem *item)
     window = gtk_widget_get_window (GTK_WIDGET (item->canvas));
 
     /* Configure the default grid gc */
-    gnucash_grid->grid_gc = gc = gdk_gc_new (window);
-    gnucash_grid->fill_gc = gdk_gc_new (window);
-    gnucash_grid->gc = gdk_gc_new (window);
+    gnucash_grid->grid_gc = gc = gdk_cairo_create (window);
+    gnucash_grid->fill_gc = gdk_cairo_create (window);
+    gnucash_grid->gc = gdk_cairo_create (window);
 
     /* Allocate the default colors */
     gnucash_grid->background = gn_white;
     gnucash_grid->grid_color = gn_black;
     gnucash_grid->default_color = gn_black;
 
-    gdk_gc_set_foreground (gc, &gnucash_grid->grid_color);
-    gdk_gc_set_background (gc, &gnucash_grid->background);
+    gdk_cairo_set_source_color (gc, &gnucash_grid->grid_color);
+    //gdk_cairo_set_source_color (gc, &gnucash_grid->background);
 
-    gdk_gc_set_foreground (gnucash_grid->fill_gc,
+    gdk_cairo_set_source_color (gnucash_grid->fill_gc,
                            &gnucash_grid->background);
-    gdk_gc_set_background (gnucash_grid->fill_gc,
-                           &gnucash_grid->grid_color);
+    //gdk_cairo_set_source_color (gnucash_grid->fill_gc,
+    //                       &gnucash_grid->grid_color);
 }
 
 
@@ -299,14 +299,12 @@ gnucash_grid_find_loc_by_pixel (GnucashGrid *grid, gint x, gint y,
 }
 
 G_INLINE_FUNC void
-draw_cell_line (GdkDrawable *drawable,
-                GdkGC *gc, GdkColor *bg_color,
+draw_cell_line (cairo_t *gc, GdkColor *bg_color,
                 int x1, int y1, int x2, int y2,
                 PhysicalCellBorderLineStyle style);
 
 void
-draw_cell_line (GdkDrawable *drawable,
-                GdkGC *gc, GdkColor *bg_color,
+draw_cell_line (cairo_t *gc, GdkColor *bg_color,
                 int x1, int y1, int x2, int y2,
                 PhysicalCellBorderLineStyle style)
 {
@@ -335,8 +333,10 @@ draw_cell_line (GdkDrawable *drawable,
         return;
     }
 
-    gdk_gc_set_foreground (gc, fg_color);
-    gdk_draw_line (drawable, gc, x1, y1, x2, y2);
+    gdk_cairo_set_source_color (gc, fg_color);
+    cairo_move_to (gc, x1, y1);
+    cairo_line_to (gc, x2, y2);
+    cairo_stroke (gc);
 }
 
 static void
@@ -384,19 +384,16 @@ get_cell_borders (GnucashSheet *sheet, VirtualLocation virt_loc,
 }
 
 void
-gnucash_draw_hatching (GdkDrawable *drawable, GdkGC *gc,
+gnucash_draw_hatching (cairo_t *gc,
                        int x, int y, int width, int height)
 {
-    gdk_gc_set_foreground (gc, &gn_light_gray);
+    gdk_cairo_set_source_color (gc, &gn_light_gray);
 
-    gdk_draw_rectangle (drawable, gc, FALSE,
-                        x + 2, y + 2, height / 3, height / 3);
+    cairo_rectangle (gc, x + 2, y + 2, height / 3, height / 3);
+    cairo_rectangle (gc, x + 2, y + 2 + height / 3, x + 2 + height / 3, y + 2);
+    cairo_rectangle (gc, x + 2, y + 2, x + 2 + height / 3, y + 2 + height / 3);
 
-    gdk_draw_line (drawable, gc,
-                   x + 2, y + 2 + height / 3, x + 2 + height / 3, y + 2);
-
-    gdk_draw_line (drawable, gc,
-                   x + 2, y + 2, x + 2 + height / 3, y + 2 + height / 3);
+    cairo_stroke(gc);
 }
 
 #ifdef READONLY_LINES_WITH_CHANGED_FG_COLOR
@@ -454,7 +451,6 @@ static void
 draw_cell (GnucashGrid *grid,
            SheetBlock *block,
            VirtualLocation virt_loc,
-           GdkDrawable *drawable,
            int x, int y, int width, int height)
 {
     Table *table = grid->sheet->table;
@@ -472,7 +468,7 @@ draw_cell (GnucashGrid *grid,
     guint32 argb, color_type;
     int x_offset;
 
-    gdk_gc_set_background (grid->gc, &gn_white);
+    gdk_cairo_set_source_color (grid->gc, &gn_white);
 
     if (grid->sheet->use_theme_colors)
     {
@@ -493,14 +489,14 @@ draw_cell (GnucashGrid *grid,
         bg_color = gnucash_color_argb_to_gdk (argb);
     }
 
-    gdk_gc_set_foreground (grid->gc, bg_color);
-    gdk_draw_rectangle (drawable, grid->gc, TRUE,
-                        x + 1, y + 1, width - 1, height - 1);
+    gdk_cairo_set_source_color (grid->gc, bg_color);
+    cairo_rectangle (grid->gc, x + 1, y + 1, width - 1, height - 1);
+    cairo_stroke (grid->gc);
 
     get_cell_borders (grid->sheet, virt_loc, &borders);
 
     /* top */
-    draw_cell_line (drawable, grid->gc, bg_color,
+    draw_cell_line (grid->gc, bg_color,
                     borders.top >= borders.left ? x : x + 1,
                     y,
                     (borders.top >= borders.right ?
@@ -509,7 +505,7 @@ draw_cell (GnucashGrid *grid,
                     borders.top);
 
     /* bottom */
-    draw_cell_line (drawable, grid->gc, bg_color,
+    draw_cell_line (grid->gc, bg_color,
                     borders.bottom >= borders.left ? x : x + 1,
                     y + height,
                     (borders.bottom >= borders.right ?
@@ -518,7 +514,7 @@ draw_cell (GnucashGrid *grid,
                     borders.bottom);
 
     /* left */
-    draw_cell_line (drawable, grid->gc, bg_color,
+    draw_cell_line (grid->gc, bg_color,
                     x,
                     borders.left > borders.top ? y : y + 1,
                     x,
@@ -527,7 +523,7 @@ draw_cell (GnucashGrid *grid,
                     borders.left);
 
     /* right */
-    draw_cell_line (drawable, grid->gc, bg_color,
+    draw_cell_line (grid->gc, bg_color,
                     x + width,
                     borders.right > borders.top ? y : y + 1,
                     x + width,
@@ -536,7 +532,7 @@ draw_cell (GnucashGrid *grid,
                     borders.right);
 
     if (hatching)
-        gnucash_draw_hatching (drawable, grid->gc,
+        gnucash_draw_hatching (grid->gc,
                                x, y, width, height);
 
     /* dividing line upper (red) */
@@ -545,10 +541,14 @@ draw_cell (GnucashGrid *grid,
     {
         if (virt_loc.vcell_loc.virt_row == table->model->dividing_row_upper)
         {
-            gdk_gc_set_foreground (grid->gc, &gn_red);
-            gdk_draw_line (drawable, grid->gc, x, y - 1, x + width, y - 1);
-            gdk_draw_line (drawable, grid->gc, x, y,   x + width, y);
-            gdk_draw_line (drawable, grid->gc, x, y + 1, x + width, y + 1);
+            gdk_cairo_set_source_color (grid->gc, &gn_red);
+            cairo_move_to (grid->gc, x, y - 1);
+            cairo_line_to (grid->gc, x + width, y - 1);
+            cairo_move_to (grid->gc, x, y);
+            cairo_line_to (grid->gc, x + width, y);
+            cairo_move_to (grid->gc, x, y + 1);
+            cairo_line_to (grid->gc, x + width, y + 1);
+            cairo_stroke(grid->gc);
         }
     }
 
@@ -558,13 +558,14 @@ draw_cell (GnucashGrid *grid,
         if (virt_loc.vcell_loc.virt_row ==
                 (table->model->dividing_row_upper - 1))
         {
-            gdk_gc_set_foreground (grid->gc, &gn_red);
-            gdk_draw_line (drawable, grid->gc, x, y + height - 1,
-                           x + width, y + height - 1);
-            gdk_draw_line (drawable, grid->gc, x, y + height,
-                           x + width, y + height);
-            gdk_draw_line (drawable, grid->gc, x, y + height + 1,
-                           x + width, y + height + 1);
+            gdk_cairo_set_source_color (grid->gc, &gn_red);
+            cairo_move_to (grid->gc, x, y + height - 1);
+            cairo_line_to (grid->gc, x + width, y + height - 1);
+            cairo_move_to (grid->gc, x, y + height);
+            cairo_line_to (grid->gc, x + width, y + height);
+            cairo_move_to (grid->gc, x, y + height + 1);
+            cairo_line_to (grid->gc, x + width, y + height + 1);
+            cairo_stroke  (grid->gc);
         }
     }
 
@@ -574,10 +575,14 @@ draw_cell (GnucashGrid *grid,
     {
         if (virt_loc.vcell_loc.virt_row == table->model->dividing_row)
         {
-            gdk_gc_set_foreground (grid->gc, &gn_blue);
-            gdk_draw_line (drawable, grid->gc, x, y - 1, x + width, y - 1);
-            gdk_draw_line (drawable, grid->gc, x, y,   x + width, y);
-            gdk_draw_line (drawable, grid->gc, x, y + 1, x + width, y + 1);
+            gdk_cairo_set_source_color (grid->gc, &gn_blue);
+            cairo_move_to (grid->gc, x, y - 1);
+            cairo_line_to (grid->gc, x + width, y - 1);
+            cairo_move_to (grid->gc, x, y);
+            cairo_line_to (grid->gc, x + width, y);
+            cairo_move_to (grid->gc, x, y + 1);
+            cairo_line_to (grid->gc, x + width, y + 1);
+            cairo_stroke  (grid->gc);
         }
     }
 
@@ -587,13 +592,14 @@ draw_cell (GnucashGrid *grid,
         if (virt_loc.vcell_loc.virt_row ==
                 (table->model->dividing_row - 1))
         {
-            gdk_gc_set_foreground (grid->gc, &gn_blue);
-            gdk_draw_line (drawable, grid->gc, x, y + height - 1,
-                           x + width, y + height - 1);
-            gdk_draw_line (drawable, grid->gc, x, y + height,
-                           x + width, y + height);
-            gdk_draw_line (drawable, grid->gc, x, y + height + 1,
-                           x + width, y + height + 1);
+            gdk_cairo_set_source_color (grid->gc, &gn_blue);
+            cairo_move_to (grid->gc, x, y + height - 1);
+            cairo_line_to (grid->gc, x + width, y + height - 1);
+            cairo_move_to (grid->gc, x, y + height);
+            cairo_line_to (grid->gc, x + width, y + height);
+            cairo_move_to (grid->gc, x, y + height + 1);
+            cairo_line_to (grid->gc, x + width, y + height + 1);
+            cairo_stroke  (grid->gc);
         }
     }
 
@@ -603,10 +609,14 @@ draw_cell (GnucashGrid *grid,
     {
         if (virt_loc.vcell_loc.virt_row == table->model->dividing_row_lower)
         {
-            gdk_gc_set_foreground (grid->gc, &gn_blue);
-            gdk_draw_line (drawable, grid->gc, x, y - 1, x + width, y - 1);
-            gdk_draw_line (drawable, grid->gc, x, y,   x + width, y);
-            gdk_draw_line (drawable, grid->gc, x, y + 1, x + width, y + 1);
+            gdk_cairo_set_source_color (grid->gc, &gn_blue);
+            cairo_move_to (grid->gc, x, y - 1);
+            cairo_line_to (grid->gc, x + width, y - 1);
+            cairo_move_to (grid->gc, x, y);
+            cairo_line_to (grid->gc, x + width, y);
+            cairo_move_to (grid->gc, x, y + 1);
+            cairo_line_to (grid->gc, x + width, y + 1);
+            cairo_stroke  (grid->gc);
         }
     }
 
@@ -616,13 +626,14 @@ draw_cell (GnucashGrid *grid,
         if (virt_loc.vcell_loc.virt_row ==
                 (table->model->dividing_row_lower - 1))
         {
-            gdk_gc_set_foreground (grid->gc, &gn_blue);
-            gdk_draw_line (drawable, grid->gc, x, y + height - 1,
-                           x + width, y + height - 1);
-            gdk_draw_line (drawable, grid->gc, x, y + height,
-                           x + width, y + height);
-            gdk_draw_line (drawable, grid->gc, x, y + height + 1,
-                           x + width, y + height + 1);
+            gdk_cairo_set_source_color (grid->gc, &gn_blue);
+            cairo_move_to (grid->gc, x, y + height - 1);
+            cairo_line_to (grid->gc, x + width, y + height - 1);
+            cairo_move_to (grid->gc, x, y + height);
+            cairo_line_to (grid->gc, x + width, y + height);
+            cairo_move_to (grid->gc, x, y + height + 1);
+            cairo_line_to (grid->gc, x + width, y + height + 1);
+            cairo_stroke  (grid->gc);
         }
     }
 
@@ -654,7 +665,7 @@ draw_cell (GnucashGrid *grid,
         fg_color = gnucash_color_argb_to_gdk (argb);
     }
 
-    gdk_gc_set_foreground (grid->gc, fg_color);
+    gdk_cairo_set_source_color (grid->gc, fg_color);
 
     /* If this is the currently open transaction and
        there is no text in this cell */
@@ -665,7 +676,7 @@ draw_cell (GnucashGrid *grid,
         text = gnc_table_get_label (table, virt_loc);
         if ((text == NULL) || (*text == '\0'))
             goto exit;
-        gdk_gc_set_foreground (grid->gc, &gn_light_gray);
+        gdk_cairo_set_source_color (grid->gc, &gn_light_gray);
         pango_layout_set_text (layout, text, strlen (text));
         pango_font_description_set_style (font, PANGO_STYLE_ITALIC);
         pango_context_set_font_description (context, font);
@@ -689,8 +700,8 @@ draw_cell (GnucashGrid *grid,
     rect.width  = MAX (0, width - (2 * CELL_HPADDING));
     rect.height = height - 2;
 
-    gdk_gc_set_clip_rectangle (grid->gc, &rect);
-
+    gdk_cairo_rectangle (grid->gc, &rect);
+    cairo_clip (grid->gc);
 
     switch (gnc_table_get_align (table, virt_loc))
     {
@@ -712,15 +723,8 @@ draw_cell (GnucashGrid *grid,
         break;
     }
 
-
-
-    gdk_draw_layout (drawable,
-                     grid->gc,
-                     x + CELL_HPADDING + x_offset,
-                     y + CELL_VPADDING + 1,
-                     layout);
-
-    gdk_gc_set_clip_rectangle (grid->gc, NULL);
+    cairo_move_to (grid->gc, rect.x + x_offset, rect.y + 1);
+    pango_cairo_show_layout (grid->gc, layout);
 
 exit:
     pango_font_description_set_style (font, PANGO_STYLE_NORMAL);
@@ -774,7 +778,7 @@ draw_block (GnucashGrid *grid,
             if (y_paint + h < y)
                 continue;
 
-            draw_cell (grid, block, virt_loc, drawable,
+            draw_cell (grid, block, virt_loc,
                        x_paint - x, y_paint - y, w, h);
         }
     }

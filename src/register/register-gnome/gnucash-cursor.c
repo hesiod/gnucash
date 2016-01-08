@@ -232,41 +232,33 @@ gnucash_item_cursor_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
     GnucashCursor *cursor = GNUCASH_CURSOR(item->parent);
     gint dx, dy, dw, dh;
 
+    GdkRectangle rect = { .x = item_cursor->x - x,
+                          .y = item_cursor->y - y,
+                          .width = item_cursor->w,
+                          .height = item_cursor->h };
+
+    cairo_set_antialias(cursor->gc, CAIRO_ANTIALIAS_NONE);
+    cairo_set_line_width(cursor->gc, 1);
+
     switch (item_cursor->type)
     {
     case GNUCASH_CURSOR_BLOCK:
-        dx = item_cursor->x - x;
-        dy = item_cursor->y - y;
-        dw = item_cursor->w;
-        dh = item_cursor->h;
-
         /* draw the rectangle around the entire active
            virtual row */
-        gdk_gc_set_line_attributes (cursor->gc, 1,
-                                    GDK_LINE_SOLID, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
+        gdk_cairo_set_source_color (cursor->gc, &gn_black);
 
-        gdk_gc_set_foreground (cursor->gc, &gn_black);
-
-        gdk_draw_rectangle (drawable, cursor->gc, FALSE,
-                            dx, dy, dw, dh - 1);
-        gdk_draw_line (drawable, cursor->gc,
-                       dx, dy + dh, dx + dw, dy + dh);
+        gdk_cairo_rectangle (cursor->gc, &rect);
+        cairo_move_to (cursor->gc, rect.x, rect.y + rect.height);
+        cairo_line_to (cursor->gc, rect.x + rect.width, rect.y + rect.height);
+        cairo_stroke (cursor->gc);
 
         break;
 
     case GNUCASH_CURSOR_CELL:
-        dx = item_cursor->x - x;
-        dy = item_cursor->y - y;
-        dw = item_cursor->w;
-        dh = item_cursor->h;
+                gdk_cairo_set_source_color (cursor->gc, &gn_black);
 
-        gdk_gc_set_line_attributes (cursor->gc, 1,
-                                    GDK_LINE_SOLID, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
-
-        gdk_gc_set_foreground (cursor->gc, &gn_black);
-
-        gdk_draw_rectangle (drawable, cursor->gc, FALSE,
-                            dx, dy, dw, dh);
+        gdk_cairo_rectangle (cursor->gc, &rect);
+        cairo_stroke (cursor->gc);
         break;
     }
 }
@@ -374,7 +366,7 @@ gnucash_cursor_realize (GnomeCanvasItem *item)
 
     window = gtk_widget_get_window (GTK_WIDGET (item->canvas));
 
-    cursor->gc = gdk_gc_new (window);
+    cursor->gc = gdk_cairo_create (window);
 }
 
 

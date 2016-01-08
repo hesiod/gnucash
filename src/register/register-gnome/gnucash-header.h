@@ -56,7 +56,7 @@ typedef struct
     int height;
     int width;
 
-    GdkGC *gc;
+    cairo_t *gc;
     GdkCursor *normal_cursor;
     GdkCursor *resize_cursor;
 } GncHeader;

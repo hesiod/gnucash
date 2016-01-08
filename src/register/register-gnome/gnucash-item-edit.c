@@ -357,37 +357,37 @@ gnc_item_edit_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
     gnc_item_edit_draw_info (item_edit, x, y, &info);
 
     /* Draw the background */
-    gdk_gc_set_foreground (item_edit->gc, info.bg_color);
-    gdk_draw_rectangle (drawable, item_edit->gc, TRUE,
+    gdk_cairo_set_source_color (item_edit->gc, info.bg_color);
+    cairo_rectangle (item_edit->gc,
                         info.bg_rect.x, info.bg_rect.y,
                         info.bg_rect.width, info.bg_rect.height);
+    cairo_stroke (item_edit->gc);
 
     if (info.hatching)
-        gnucash_draw_hatching (drawable, item_edit->gc,
+        gnucash_draw_hatching (item_edit->gc,
                                info.hatch_rect.x,
                                info.hatch_rect.y,
                                info.hatch_rect.width,
                                info.hatch_rect.height);
 
     /* Draw the foreground text and cursor */
-    gdk_gc_set_clip_rectangle (item_edit->gc, &info.text_rect);
+    gdk_cairo_rectangle (item_edit->gc, &info.text_rect);
+    cairo_clip (item_edit->gc);
 
-    gdk_gc_set_foreground (item_edit->gc, info.fg_color);
+    gdk_cairo_set_source_color (item_edit->gc, info.fg_color);
 
-    gdk_draw_layout (drawable,
-                     item_edit->gc,
-                     info.text_rect.x + CELL_HPADDING + item_edit->x_offset,
-                     info.text_rect.y + CELL_VPADDING,
-                     info.layout);
+    cairo_move_to (item_edit->gc,
+                   info.text_rect.x + CELL_HPADDING + item_edit->x_offset,
+                   info.text_rect.y + CELL_VPADDING);
+    pango_cairo_show_layout (item_edit->gc, info.layout);
 
-    gdk_draw_line (drawable,
-                   item_edit->gc,
+    cairo_move_to (item_edit->gc,
                    info.cursor_rect.x + CELL_HPADDING + item_edit->x_offset,
-                   info.cursor_rect.y + CELL_VPADDING,
+                   info.cursor_rect.y + CELL_VPADDING);
+    cairo_line_to (item_edit->gc,
                    info.cursor_rect.x + CELL_HPADDING + item_edit->x_offset,
                    info.cursor_rect.y + CELL_VPADDING + info.cursor_rect.height);
-
-    gdk_gc_set_clip_rectangle (item_edit->gc, NULL);
+    cairo_stroke  (item_edit->gc);
 
     gnc_item_edit_free_draw_info_members (&info);
 }
@@ -470,7 +470,7 @@ gnc_item_edit_realize (GnomeCanvasItem *item)
     item_edit = GNC_ITEM_EDIT (item);
     window = gtk_widget_get_window (GTK_WIDGET (canvas));
 
-    item_edit->gc = gdk_gc_new (window);
+    item_edit->gc = gdk_cairo_create (window);
 }
 
 
@@ -572,7 +572,7 @@ gnc_item_edit_init (GncItemEdit *item_edit)
     item->y2 = 1;
 
     /* Set invalid values so that we know when we have been fully
-    	   initialized */
+           initialized */
     item_edit->sheet = NULL;
     item_edit->parent = NULL;
     item_edit->editor = NULL;
@@ -711,9 +711,9 @@ gnc_item_edit_set_cursor_pos (GncItemEdit *item_edit,
         layout = gtk_entry_get_layout (GTK_ENTRY(item_edit->editor));
         text = pango_layout_get_text (layout);
         pango_layout_xy_to_index (layout,
-				  ((x - o_x) - CELL_HPADDING) * PANGO_SCALE,
-				  10 * PANGO_SCALE, &textByteIndex,
-				  &textTrailing);
+                                  ((x - o_x) - CELL_HPADDING) * PANGO_SCALE,
+                                  10 * PANGO_SCALE, &textByteIndex,
+                                  &textTrailing);
         textIndex = (int) g_utf8_pointer_to_offset (text, text + textByteIndex);
         pos = textIndex + textTrailing;
     }

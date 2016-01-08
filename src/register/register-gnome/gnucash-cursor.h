@@ -81,7 +81,7 @@ typedef struct
     /* precomputed pixel coords for the block cursor*/
     gint x, y, w, h;
 
-    GdkGC *gc;
+    cairo_t *gc;
     SheetBlockStyle *style;
 } GnucashCursor;
 

@@ -47,7 +47,7 @@ GtkWidget *gnucash_grid_new 	 (GnucashSheet *sheet);
 gboolean   gnucash_grid_find_loc_by_pixel (GnucashGrid *grid, gint x, gint y,
         VirtualLocation *vcell_loc);
 
-void       gnucash_draw_hatching (GdkDrawable *drawable, GdkGC *gc,
+void       gnucash_draw_hatching (cairo_t *gc,
                                   int x, int y, int width, int height);
 /** @} */
 #endif /* GNUCASH_GRID_H */
