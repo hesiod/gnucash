@@ -1,0 +1,9 @@
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+BinPackParameters: true
+BreakBeforeBraces: Linux
+Language: Cpp
+SpaceBeforeParens: Always
+SpacesInCStyleCastParentheses: true
+Standard: Cpp11
+IndentWidth: 4
