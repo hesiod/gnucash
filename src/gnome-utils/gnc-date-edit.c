@@ -80,7 +80,7 @@ static int date_accel_key_press(GtkWidget *widget,
                                 gpointer data);
 
 
-static GtkHBoxClass *parent_class;
+static GtkBoxClass *parent_class;
 
 /**
  * gnc_date_edit_get_type:
@@ -108,7 +108,7 @@ gnc_date_edit_get_type (void)
             NULL,
         };
 
-        date_edit_type = g_type_register_static (GTK_TYPE_HBOX,
+        date_edit_type = g_type_register_static (GTK_TYPE_BOX,
                          "GNCDateEdit",
                          &date_edit_info, 0);
     }
@@ -520,10 +520,10 @@ gnc_date_edit_set_time_internal (GNCDateEdit *gde, time64 the_time)
     /* Update the calendar. */
     if (!gde->in_selected_handler)
     {
-	gtk_calendar_select_day(GTK_CALENDAR (gde->calendar), 1);
-	gtk_calendar_select_month(GTK_CALENDAR (gde->calendar),
-				  mytm->tm_mon, 1900 + mytm->tm_year);
-	gtk_calendar_select_day(GTK_CALENDAR (gde->calendar), mytm->tm_mday);
+    gtk_calendar_select_day(GTK_CALENDAR (gde->calendar), 1);
+    gtk_calendar_select_month(GTK_CALENDAR (gde->calendar),
+                  mytm->tm_mon, 1900 + mytm->tm_year);
+    gtk_calendar_select_day(GTK_CALENDAR (gde->calendar), mytm->tm_mday);
     }
 
     /* Set the time of day. */
@@ -606,7 +606,7 @@ gnc_date_edit_class_init (GNCDateEditClass *klass)
     object_class->dispose = gnc_date_edit_dispose;
     object_class->finalize = gnc_date_edit_finalize;
 
-    parent_class = g_type_class_ref(GTK_TYPE_HBOX);
+    parent_class = g_type_class_ref(GTK_TYPE_BOX);
 
     date_edit_signals [TIME_CHANGED] =
         g_signal_new ("time_changed",
@@ -856,19 +856,20 @@ create_children (GNCDateEdit *gde)
                       G_CALLBACK (gnc_date_edit_button_toggled), gde);
     gtk_box_pack_start (GTK_BOX (gde), gde->date_button, FALSE, FALSE, 0);
 
-    hbox = gtk_hbox_new (FALSE, 3);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
     gtk_container_add (GTK_CONTAINER (gde->date_button), hbox);
     gtk_widget_show (GTK_WIDGET(hbox));
 
     /* Calendar label, only shown if the date editor has a time field */
     gde->cal_label = gtk_label_new (_("Calendar"));
-    gtk_misc_set_alignment (GTK_MISC (gde->cal_label), 0.0, 0.5);
+    gtk_label_set_xalign (GTK_LABEL (gde->cal_label), 0.0);
+    gtk_label_set_yalign (GTK_LABEL (gde->cal_label), 0.5);
     gtk_box_pack_start (GTK_BOX (hbox), gde->cal_label, TRUE, TRUE, 0);
     if (gde->flags & GNC_DATE_EDIT_SHOW_TIME)
         gtk_widget_show (GTK_WIDGET(gde->cal_label));
 
     /* Graphic for the popup button. */
-    arrow = gtk_arrow_new (GTK_ARROW_DOWN, GTK_SHADOW_NONE);
+    arrow = gtk_image_new_from_icon_name ("go-down", GTK_ICON_SIZE_MENU);
     gtk_box_pack_start (GTK_BOX (hbox), arrow, TRUE, FALSE, 0);
     gtk_widget_show (GTK_WIDGET(arrow));
 
@@ -943,7 +944,7 @@ create_children (GNCDateEdit *gde)
     g_signal_connect (gde->calendar, "button-release-event",
                       G_CALLBACK(gnc_date_edit_button_released), gde);
     g_signal_connect (G_OBJECT (gde->calendar), "day-selected",
-		      G_CALLBACK (day_selected), gde);
+              G_CALLBACK (day_selected), gde);
     g_signal_connect (G_OBJECT (gde->calendar),
                       "day-selected-double-click",
                       G_CALLBACK  (day_selected_double_click), gde);

@@ -65,7 +65,7 @@ static void gnc_date_delta_forall     (GtkContainer      *container,
                                        GtkCallback	  callback,
                                        gpointer	          callbabck_data);
 
-static GtkHBoxClass *parent_class;
+static GtkBoxClass *parent_class;
 
 /**
  * gnc_date_delta_get_type:
@@ -92,7 +92,7 @@ gnc_date_delta_get_type (void)
             (GInstanceInitFunc) gnc_date_delta_init
         };
 
-        date_delta_type = g_type_register_static (gtk_hbox_get_type (),
+        date_delta_type = g_type_register_static (gtk_box_get_type (),
                           "GNCDateDelta",
                           &date_delta_info,
                           0);

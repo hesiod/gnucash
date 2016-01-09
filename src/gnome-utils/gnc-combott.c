@@ -134,7 +134,7 @@ gnc_combott_get_type (void)
             (GInstanceInitFunc) gctt_init,
         };
 
-        combott_type = g_type_register_static (GTK_TYPE_HBOX,
+        combott_type = g_type_register_static (GTK_TYPE_BOX,
                                                "GncCombott",
                                                &combott_info, 0);
     }
@@ -215,12 +215,12 @@ gctt_init (GncCombott *combott)
     priv->text_col = 0;
     priv->tip_col = 1;
 
-    hbox = gtk_hbox_new(FALSE, 0);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
-    arrow = gtk_arrow_new(GTK_ARROW_DOWN, GTK_SHADOW_OUT);
+    arrow = gtk_image_new_from_icon_name ("go-down", GTK_ICON_SIZE_MENU);
     gtk_box_pack_end (GTK_BOX (hbox), arrow, FALSE, FALSE, 0);
 
-    sep = gtk_vseparator_new();
+    sep = gtk_separator_new(GTK_ORIENTATION_VERTICAL);
     gtk_box_pack_end (GTK_BOX (hbox), sep, FALSE, FALSE, 0);
 
     label = gtk_label_new(NULL);
@@ -407,7 +407,8 @@ gctt_rebuild_menu (GncCombott *combott, GtkTreeModel *model)
         /* Add the tooltip to the child label */
         label = gtk_bin_get_child(GTK_BIN(menu_items));
         gtk_widget_set_tooltip_text (label, tip_data);
-        gtk_misc_set_alignment (GTK_MISC(label), 0, 0.5);
+        gtk_label_set_xalign (GTK_LABEL(label), 0);
+        gtk_label_set_yalign (GTK_LABEL(label), 0.5);
 
         /* ...and add it to the menu. */
         gtk_menu_shell_append (GTK_MENU_SHELL (priv->menu), menu_items);
@@ -470,6 +471,7 @@ gctt_combott_menu_position (GtkMenu  *menu,
     GtkWidget *child;
     GtkRequisition req;
     GtkAllocation alloc;
+    GValue xthickness = G_VALUE_INIT;
 
     child = gtk_bin_get_child (GTK_BIN (priv->button));
 
@@ -484,7 +486,11 @@ gctt_combott_menu_position (GtkMenu  *menu,
 
     gdk_window_get_root_coords (gtk_widget_get_window (child), sx, sy, &sx, &sy);
 
-    sx -= gtk_widget_get_style (GTK_WIDGET (priv->button))->xthickness;
+
+    gtk_widget_style_get_property (GTK_WIDGET (priv->button),
+                                   "xthickness",
+                                   &xthickness);
+    sx -= g_value_get_int (&xthickness);
 
     gtk_widget_size_request (GTK_WIDGET (menu), &req);
 
@@ -600,7 +606,8 @@ menuitem_response_cb (GtkMenuItem *item, gpointer *user_data )
 
     /* Set the button Label */
     gtk_label_set_text(GTK_LABEL(priv->label), label_text);
-    gtk_misc_set_alignment (GTK_MISC(priv->label), 0, 0.5);
+    gtk_label_set_xalign (GTK_LABEL(priv->label), 0);
+    gtk_label_set_yalign (GTK_LABEL(priv->label), 0.5);
 
     /* Get the coresponding entry in the list store */
     valid = gtk_tree_model_get_iter_first (priv->model, &iter);
@@ -709,7 +716,8 @@ gnc_combott_set_active (GncCombott *combott, gint index)
                         priv->active = index + 1;
                         priv->active_iter = iter;
                         gtk_label_set_text(GTK_LABEL(priv->label), str_data);
-                        gtk_misc_set_alignment (GTK_MISC(priv->label), 0, 0.5);
+                        gtk_label_set_xalign (GTK_LABEL(priv->label), 0);
+                        gtk_label_set_yalign (GTK_LABEL(priv->label), 0.5);
                         g_signal_emit (combott, combott_signals[CHANGED], 0);
                     }
 
