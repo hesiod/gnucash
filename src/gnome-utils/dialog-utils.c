@@ -77,15 +77,19 @@ gnc_get_deficit_color(GdkColor *color)
 void
 gnc_set_label_color(GtkWidget *label, gnc_numeric value)
 {
+  // FIXME Use css
+#if 0
     gboolean deficit;
-    GdkColormap *cm;
     GtkStyle *style;
+    GdkVisual *visual;
 
     if (!gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_NEGATIVE_IN_RED))
         return;
 
+    visual = gdk_widget_get_visual (GTK_WIDGET(label));
+    if (visual == NULL)
+      visual = gdk_visual_get_system (screen);
     cm = gtk_widget_get_colormap(GTK_WIDGET(label));
-    gtk_widget_ensure_style(GTK_WIDGET(label));
     style = gtk_widget_get_style(GTK_WIDGET(label));
 
     style = gtk_style_copy(style);
@@ -103,6 +107,7 @@ gnc_set_label_color(GtkWidget *label, gnc_numeric value)
     gtk_widget_set_style(label, style);
 
     g_object_unref(style);
+#endif
 }
 
 

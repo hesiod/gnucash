@@ -719,7 +719,7 @@ gxi_update_string_box (GncXmlImportData *data)
     if (data->string_box)
         gtk_widget_destroy (data->string_box);
 
-    data->string_box = gtk_vbox_new (FALSE, 6);
+    data->string_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
     vbox = GTK_BOX (data->string_box);
 
     data->n_unassigned = 0;

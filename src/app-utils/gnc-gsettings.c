@@ -61,29 +61,19 @@ static QofLogModule log_module = "gnc.app-utils.gsettings";
 /************************************************************/
 static gboolean gnc_gsettings_is_valid_key(GSettings *settings, const gchar *key)
 {
-    gchar **keys = NULL;
-    gint i = 0;
     gboolean found = FALSE;
+    GValue val = G_VALUE_INIT;
 
     // Check if the key is valid key within settings
     if (!G_IS_SETTINGS(settings))
         return FALSE;
 
-    // Get list of keys
-    keys = g_settings_list_keys(settings);
-
-    while (keys && keys[i])
-    {
-        if (!g_strcmp0(key, keys[i]))
-        {
-            found = TRUE;
-            break;
-        }
-        i++;
-    }
-
-    // Free keys
-    g_strfreev(keys);
+    g_value_init (&val, G_TYPE_SETTINGS_SCHEMA);
+    g_object_get_property (G_OBJECT(settings),
+                           "settings-schema",
+                           &val);
+    found = g_settings_schema_has_key (g_value_get_object(&val), key);
+    g_value_unset (&val);
 
     return found;
 }

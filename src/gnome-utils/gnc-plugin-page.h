@@ -36,6 +36,7 @@
 #ifndef __GNC_PLUGIN_PAGE_H
 #define __GNC_PLUGIN_PAGE_H
 
+#include <gtk/gtk.h>
 #include <glib.h>
 #include "qof.h"
 
@@ -60,19 +61,19 @@ typedef struct GncPluginPage
     GObject gobject;		/**< The parent object data. */
 
     GtkWidget *window;		/**< The window that contains the
-					 *   display widget for this plugin.
-					 *   This field is private to the
-					 *   gnucash window management
-					 *   code.  */
+                                         *   display widget for this plugin.
+                                         *   This field is private to the
+                                         *   gnucash window management
+                                         *   code.  */
     GtkWidget *notebook_page;	/**< The display widget for this
-					 *   plugin.  This field is private to
-					 *   the gnucash window management
-					 *   code.  */
+                                         *   plugin.  This field is private to
+                                         *   the gnucash window management
+                                         *   code.  */
     GtkWidget *summarybar;		/**< The summary bar widget (if any)
-					 *   that is associated with this
-					 *   plugin.  This field is private to
-					 *   the gnucash window management
-					 *   code.  */
+                                         *   that is associated with this
+                                         *   plugin.  This field is private to
+                                         *   the gnucash window management
+                                         *   code.  */
 } GncPluginPage;
 
 
@@ -268,7 +269,7 @@ GncPluginPage *gnc_plugin_page_recreate_page (GtkWidget *window,
  *  @param merge A pointer to the UI manager data structure for a
  *  window. */
 void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page,
-                                    GtkUIManager *merge);
+                                    GtkBuilder *merge);
 
 
 /** Remove the actions for a content page from the specified window.
@@ -279,7 +280,7 @@ void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page,
  *  @param merge A pointer to the UI manager data structure for a
  *  window. */
 void gnc_plugin_page_unmerge_actions (GncPluginPage *plugin_page,
-                                      GtkUIManager *merge);
+                                      GtkBuilder *merge);
 
 
 /** Retrieve the textual name of a plugin.
@@ -489,7 +490,7 @@ void gnc_plugin_page_set_ui_description (GncPluginPage *page,
  *  @param page The page whose UI information should be retrieved.
  *
  *  @return A pointer to the GtkUIManager object for this page. */
-GtkUIManager *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
+GtkBuilder *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
 
 
 /** Retrieve the GtkActionGroup object associated with this page.
@@ -498,7 +499,7 @@ GtkUIManager *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
  *  retrieved.
  *
  *  @return A pointer to the GtkActionGroup object for this page. */
-GtkActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
+GSimpleActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
 
 
 /** Create the GtkActionGroup object associated with this page.
@@ -512,7 +513,7 @@ GtkActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
  *
  *  @return A pointer to the newly created GtkActionGroup object for
  *  this page. */
-GtkActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
+GSimpleActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
         const gchar *group_name);
 
 /** Retrieve a GtkAction object associated with this page.
@@ -523,7 +524,7 @@ GtkActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
  *  @param name The name of the GtkAction to find.
  *
  *  @return A pointer to the retuested GtkAction object or NULL. */
-GtkAction *gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name);
+GAction *gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name);
 
 /* Signals */
 void gnc_plugin_page_inserted (GncPluginPage *plugin_page);

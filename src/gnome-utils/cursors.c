@@ -50,7 +50,7 @@ gnc_ui_set_cursor (GdkWindow *win, GNCCursorType type, gboolean update_now)
         return;
 
     if (type != GNC_CURSOR_NORMAL)
-        cursor = gdk_cursor_new ((GdkCursorType)type);
+        cursor = gdk_cursor_new_for_display (gdk_window_get_display (win), (GdkCursorType)type);
 
     gdk_window_set_cursor (win, cursor);
 
@@ -61,7 +61,7 @@ gnc_ui_set_cursor (GdkWindow *win, GNCCursorType type, gboolean update_now)
     }
 
     if (type != GNC_CURSOR_NORMAL)
-        gdk_cursor_unref (cursor);
+        g_object_unref (cursor);
 }
 
 

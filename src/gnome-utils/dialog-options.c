@@ -721,7 +721,7 @@ gnc_option_create_date_widget (GNCOption *option)
     }
     else if (g_strcmp0(type, "both") == 0)
     {
-        box = gtk_hbox_new(FALSE, 5);
+        box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
         ab_button = gtk_radio_button_new(NULL);
         g_signal_connect(G_OBJECT(ab_button), "toggled",
@@ -833,7 +833,7 @@ gnc_option_create_radiobutton_widget(char *name, GNCOption *option)
     frame = gtk_frame_new (name);
 
     /* Create the button box */
-    box = gtk_hbox_new (FALSE, 5);
+    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_container_add (GTK_CONTAINER (frame), box);
 
     /* Iterate over the options and create a radio button for each one */
@@ -884,7 +884,7 @@ gnc_option_create_currency_accounting_widget (char *name, GNCOption *option)
     frame = gtk_frame_new (name);
 
     /* Create the verticle button box */
-    vbox1 = gtk_vbox_new (FALSE, 5);
+    vbox1 = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
     gtk_container_add (GTK_CONTAINER (frame), vbox1);
 
     /* Iterate over the three options and create a radio button for each one */
@@ -907,8 +907,8 @@ gnc_option_create_currency_accounting_widget (char *name, GNCOption *option)
         gtk_widget_set_tooltip_text(widget, tip && *tip ? _(tip) : "");
         /* Use hbox & vbox2 for all buttons so they are all at the same level;
            easier to get in set/get ui functions */
-        hbox = gtk_hbox_new(FALSE, 5);
-        vbox2 = gtk_vbox_new(FALSE, 5);
+        hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+        vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
         gtk_box_pack_start (GTK_BOX (vbox2), widget, FALSE, FALSE, 0);
         gtk_box_pack_start (GTK_BOX (hbox), vbox2, FALSE, FALSE, 0);
         if (i == 1) /* book-currency */
@@ -928,7 +928,7 @@ gnc_option_create_currency_accounting_widget (char *name, GNCOption *option)
                          "changed",
                          G_CALLBACK(gnc_option_changed_widget_cb),
                          option);
-            vbox2 = gtk_vbox_new(FALSE, 5);
+            vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
             gtk_widget_set_tooltip_text(vbox2, tip && *tip ? _(tip) : "");
             gtk_box_pack_start (GTK_BOX (vbox2), widget_label, FALSE, FALSE, 0);
             gtk_box_pack_start (GTK_BOX (vbox2),
@@ -979,7 +979,7 @@ gnc_option_create_currency_accounting_widget (char *name, GNCOption *option)
             }
             tip = gnc_currency_accounting_option_policy_documentation(option);
             widget_label = gtk_label_new( _("Default Gains Policy") );
-            vbox2 = gtk_vbox_new(FALSE, 5);
+            vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
             gtk_widget_set_tooltip_text(vbox2, tip && *tip ? _(tip) : "");
             gtk_box_pack_start (GTK_BOX (vbox2), widget_label, FALSE, FALSE, 0);
             gtk_box_pack_start (GTK_BOX (vbox2),
@@ -1075,7 +1075,7 @@ gnc_option_create_account_widget(GNCOption *option, char *name)
 
     frame = gtk_frame_new(name);
 
-    vbox = gtk_vbox_new(FALSE, 0);
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add(GTK_CONTAINER(frame), vbox);
 
     tree = GTK_WIDGET(gnc_tree_view_account_new (FALSE));
@@ -1129,7 +1129,7 @@ gnc_option_create_account_widget(GNCOption *option, char *name)
     gtk_container_set_border_width(GTK_CONTAINER(scroll_win), 5);
     gtk_container_add(GTK_CONTAINER(scroll_win), tree);
 
-    bbox = gtk_hbutton_box_new();
+    bbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_SPREAD);
     gtk_box_pack_start(GTK_BOX(vbox), bbox, FALSE, FALSE, 10);
 
@@ -1168,7 +1168,7 @@ gnc_option_create_account_widget(GNCOption *option, char *name)
     {
         /* Put the "Show hidden" checkbox on a separate line since the 4 buttons make
            the dialog too wide. */
-        bbox = gtk_hbutton_box_new();
+        bbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
         gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_START);
         gtk_box_pack_start(GTK_BOX(vbox), bbox, FALSE, FALSE, 0);
     }
@@ -1239,7 +1239,7 @@ gnc_option_create_list_widget(GNCOption *option, char *name)
     gint i;
 
     frame = gtk_frame_new(name);
-    hbox = gtk_hbox_new(FALSE, 0);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_container_add(GTK_CONTAINER(frame), hbox);
 
     store = gtk_list_store_new(1, G_TYPE_STRING);
@@ -1273,7 +1273,7 @@ gnc_option_create_list_widget(GNCOption *option, char *name)
     g_signal_connect(selection, "changed",
                      G_CALLBACK(gnc_option_list_changed_cb), option);
 
-    bbox = gtk_vbutton_box_new();
+    bbox = gtk_button_box_new(GTK_ORIENTATION_VERTICAL);
     gtk_button_box_set_layout(GTK_BUTTON_BOX(bbox), GTK_BUTTONBOX_SPREAD);
     gtk_box_pack_start(GTK_BOX(hbox), bbox, FALSE, FALSE, 10);
 
@@ -1425,16 +1425,16 @@ gnc_options_dialog_append_page(GNCOptionWin * propertybox,
     gtk_widget_show(page_label);
 
     /* Build this options page */
-    page_content_box = gtk_vbox_new(FALSE, 2);
+    page_content_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     gtk_container_set_border_width(GTK_CONTAINER(page_content_box), 12);
 
     options_scrolled_win = gtk_scrolled_window_new(NULL, NULL);
     gtk_box_pack_start(GTK_BOX(page_content_box), options_scrolled_win, TRUE, TRUE, 0);
 
     /* Build space for the content - the options box */
-    options_box = gtk_vbox_new(FALSE, 5);
+    options_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
     gtk_container_set_border_width(GTK_CONTAINER(options_box), 0);
-    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(options_scrolled_win), options_box);
+    gtk_container_add(GTK_CONTAINER(options_scrolled_win), options_box);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(options_scrolled_win), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 
     /* Create all the options */
@@ -1446,7 +1446,7 @@ gnc_options_dialog_append_page(GNCOptionWin * propertybox,
     }
 
     /* Add a button box at the bottom of the page */
-    buttonbox = gtk_hbutton_box_new();
+    buttonbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     gtk_button_box_set_layout (GTK_BUTTON_BOX (buttonbox),
                                GTK_BUTTONBOX_EDGE);
     gtk_container_set_border_width(GTK_CONTAINER (buttonbox), 5);
@@ -1929,7 +1929,7 @@ gnc_option_set_ui_widget_boolean (GNCOption *option, GtkBox *page_box,
 {
     GtkWidget *value;
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     value = gtk_check_button_new_with_label(name);
 
     gnc_option_set_widget (option, value);
@@ -1956,10 +1956,11 @@ gnc_option_set_ui_widget_string (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     value = gtk_entry_new();
 
     gnc_option_set_widget (option, value);
@@ -1995,7 +1996,7 @@ gnc_option_set_ui_widget_text (GNCOption *option, GtkBox *page_box,
 
     gtk_container_add(GTK_CONTAINER(frame), scroll);
 
-    *enclosing = gtk_hbox_new(FALSE, 10);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
     value = gtk_text_view_new();
     gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(value), GTK_WRAP_WORD);
     gtk_text_view_set_editable(GTK_TEXT_VIEW(value), TRUE);
@@ -2025,10 +2026,11 @@ gnc_option_set_ui_widget_currency (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     value = gnc_currency_edit_new();
 
     gnc_option_set_widget (option, value);
@@ -2055,10 +2057,11 @@ gnc_option_set_ui_widget_commodity (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     value = gnc_general_select_new(GNC_GENERAL_SELECT_TYPE_SELECT,
                                    gnc_commodity_edit_get_string,
                                    gnc_commodity_edit_new_select,
@@ -2092,10 +2095,11 @@ gnc_option_set_ui_widget_multichoice (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     value = gnc_option_create_multichoice_widget(option);
     gnc_option_set_widget (option, value);
@@ -2120,10 +2124,11 @@ gnc_option_set_ui_widget_date (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     value = gnc_option_create_date_widget(option);
 
@@ -2190,7 +2195,8 @@ gnc_option_set_ui_widget_account_sel (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
     acct_type_list = gnc_option_get_account_type_list(option);
@@ -2205,7 +2211,7 @@ gnc_option_set_ui_widget_account_sel (GNCOption *option, GtkBox *page_box,
        TRUE? */
     gnc_option_set_ui_value(option, TRUE);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     gtk_box_pack_start(GTK_BOX(*enclosing), label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(*enclosing), value, FALSE, FALSE, 0);
     gtk_widget_show_all(*enclosing);
@@ -2255,10 +2261,11 @@ gnc_option_set_ui_widget_number_range (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     gnc_option_get_range_info(option, &lower_bound, &upper_bound,
                               &num_decimals, &step_size);
@@ -2316,10 +2323,11 @@ gnc_option_set_ui_widget_color (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     use_alpha = gnc_option_use_alpha(option);
 
@@ -2351,10 +2359,11 @@ gnc_option_set_ui_widget_font (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     value = gtk_font_button_new();
     g_object_set(G_OBJECT(value),
                  "use-font", TRUE,
@@ -2389,10 +2398,11 @@ gnc_option_set_ui_widget_pixmap (GNCOption *option, GtkBox *page_box,
     ENTER("option %p(%s), name %s", option, gnc_option_name(option), name);
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     button = gtk_button_new_with_label(_("Clear"));
     gtk_widget_set_tooltip_text(button, _("Clear any selected image file."));
@@ -2435,7 +2445,7 @@ gnc_option_set_ui_widget_radiobutton (GNCOption *option, GtkBox *page_box,
 {
     GtkWidget *value;
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     value = gnc_option_create_radiobutton_widget(name, option);
     gnc_option_set_widget (option, value);
@@ -2474,10 +2484,11 @@ gnc_option_set_ui_widget_budget (GNCOption *option, GtkBox *page_box,
 
     colon_name = g_strconcat(name, ":", NULL);
     label = gtk_label_new(colon_name);
-    gtk_misc_set_alignment(GTK_MISC(label), 1.0, 0.5);
+    gtk_label_set_xalign(GTK_LABEL(label), 1.0);
+    gtk_label_set_yalign(GTK_LABEL(label), 0.5);;
     g_free(colon_name);
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     value = gnc_option_create_budget_widget(option);
 
@@ -2504,7 +2515,7 @@ gnc_option_set_ui_widget_currency_accounting (GNCOption *option,
 {
     GtkWidget *value;
 
-    *enclosing = gtk_hbox_new(FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
 
     value = gnc_option_create_currency_accounting_widget(name, option);
     gnc_option_set_widget (option, value);

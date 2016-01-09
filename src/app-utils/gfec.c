@@ -76,7 +76,7 @@ gfec_catcher(void *data, SCM tag, SCM throw_args)
             helper_data.scm_string = &result;
 
             // The conversion to string can itself throw as well
-            scm_internal_stack_catch(SCM_BOOL_T,
+            scm_internal_catch(SCM_BOOL_T,
                                      helper_scm_to_string,
                                      (void *) &helper_data,
                                      gfec_catcher,
@@ -200,7 +200,7 @@ gfec_apply(SCM proc, SCM arglist, gfec_error_handler error_handler)
     apply_rec.proc = proc;
     apply_rec.arglist = arglist;
 
-    result = scm_internal_stack_catch(SCM_BOOL_T,
+    result = scm_internal_catch(SCM_BOOL_T,
                                       gfec_apply_helper,
                                       &apply_rec,
                                       gfec_catcher,

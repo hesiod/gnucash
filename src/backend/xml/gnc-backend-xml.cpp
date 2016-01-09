@@ -172,7 +172,7 @@ gnc_xml_be_get_file_lock (FileBackend *be)
     strcpy (pathbuf, be->lockfile);
     path = strrchr (pathbuf, '.');
     while (snprintf (path, pathbuf_size - (path - pathbuf), ".%lx.%d.LNK", gethostid(), getpid())
-	   >= static_cast<int>(pathbuf_size - (path - pathbuf)))
+           >= static_cast<int>(pathbuf_size - (path - pathbuf)))
     {
         pathbuf_size += 100;
         tmpbuf = (char *) realloc (pathbuf, pathbuf_size);
@@ -720,7 +720,7 @@ gnc_xml_be_write_to_file(FileBackend *fbe,
     strcpy(tmp_name, datafile);
     strcat(tmp_name, ".tmp-XXXXXX");
 
-    if (!mktemp(tmp_name))
+    if (!mkstemp(tmp_name))
     {
         qof_backend_set_error(be, ERR_BACKEND_MISC);
         qof_backend_set_message( be, "Failed to make temp file" );

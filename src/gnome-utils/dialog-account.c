@@ -208,7 +208,7 @@ gnc_account_to_ui(AccountWindow *aw)
     Account *account;
     gnc_commodity * commodity;
     const char *string;
-    GdkColor color;
+    GdkRGBA color;
     gboolean flag, nonstd_scu;
     gint index;
 
@@ -230,9 +230,9 @@ gnc_account_to_ui(AccountWindow *aw)
 
     string = xaccAccountGetColor (account);
     if (string == NULL) string = "";
-    if (gdk_color_parse(string, &color))
+    if (gdk_rgba_parse(&color, string))
     {
-        gtk_color_button_set_color(GTK_COLOR_BUTTON(aw->color_entry_button), &color);
+        gtk_color_button_get_rgba(GTK_COLOR_BUTTON(aw->color_entry_button), &color);
     }
 
     commodity = xaccAccountGetCommodity (account);
@@ -337,7 +337,7 @@ gnc_ui_to_account(AccountWindow *aw)
     Account *parent_account;
     const char *old_string;
     const char *string;
-    GdkColor color;
+    GdkRGBA color;
     gboolean flag;
     gnc_numeric balance;
     gboolean use_equity, nonstd;
@@ -376,8 +376,8 @@ gnc_ui_to_account(AccountWindow *aw)
     if (g_strcmp0 (string, old_string) != 0)
         xaccAccountSetDescription (account, string);
 
-    gtk_color_button_get_color(GTK_COLOR_BUTTON(aw->color_entry_button), &color );
-    string = gdk_color_to_string(&color);
+    gtk_color_button_get_rgba(GTK_COLOR_BUTTON(aw->color_entry_button), &color );
+    string = gdk_rgba_to_string(&color);
     if (g_strcmp0 (string, DEFAULT_COLOR) == 0)
         string = "Not Set";
 
@@ -643,35 +643,39 @@ verify_children_compatible (AccountWindow *aw)
                                           GTK_WINDOW(aw->dialog),
                                           GTK_DIALOG_DESTROY_WITH_PARENT |
                                           GTK_DIALOG_MODAL,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                          GTK_STOCK_OK, GTK_RESPONSE_OK,
+                                          "_Cancel", GTK_RESPONSE_CANCEL,
+                                          "_OK", GTK_RESPONSE_OK,
                                           NULL);
 
     gtk_window_set_skip_taskbar_hint (GTK_WINDOW (dialog), TRUE);
 
-    hbox = gtk_hbox_new (FALSE, 12);
-    vbox = gtk_vbox_new (FALSE, 12);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
 
     gtk_box_pack_start (
         GTK_BOX (hbox),
-        gtk_image_new_from_stock (GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG),
+        gtk_image_new_from_icon_name ("dialog-information", GTK_ICON_SIZE_DIALOG),
         FALSE, FALSE, 0);
 
     /* primary label */
     label = gtk_label_new (_("Give the children the same type?"));
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
     gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
+    gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+    gtk_label_set_yalign (GTK_LABEL (label), 0.0);
     {
-        gint size;
+        /*gint size;
         PangoFontDescription *font_desc;
+        GtkStyleContext *ctx = gtk_widget_get_style_context (label);
+        GtkStateFlags state = gtk_widget_get_state_flags (label);
+        gtk_style_context_get (ctx, state, GTK_STYLE_PROPERTY_FONT, NULL);
 
-        size = pango_font_description_get_size (gtk_widget_get_style (label)->font_desc);
+        size = pango_font_description_get_size (font_desc);
         font_desc = pango_font_description_new ();
         pango_font_description_set_weight (font_desc, PANGO_WEIGHT_BOLD);
         pango_font_description_set_size (font_desc, size * PANGO_SCALE_LARGE);
-        gtk_widget_modify_font (label, font_desc);
-        pango_font_description_free (font_desc);
+        gtk_widget_override_font (label, font_desc);
+        pango_font_description_free (font_desc);*/
     }
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
@@ -683,7 +687,8 @@ verify_children_compatible (AccountWindow *aw)
     g_free (str);
     gtk_label_set_line_wrap (GTK_LABEL (label), TRUE);
     gtk_label_set_selectable (GTK_LABEL (label), TRUE);
-    gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.0);
+    gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+    gtk_label_set_yalign (GTK_LABEL (label), 0.0);
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
 
     /* children */
@@ -1219,11 +1224,11 @@ gnc_account_name_changed_cb(GtkWidget *widget, gpointer data)
 void
 gnc_account_color_default_cb(GtkWidget *widget, gpointer data)
 {
-    GdkColor color;
+    GdkRGBA color;
     AccountWindow *aw = data;
 
-    gdk_color_parse( DEFAULT_COLOR, &color);
-    gtk_color_button_set_color(GTK_COLOR_BUTTON(aw->color_entry_button), &color);
+    gdk_rgba_parse( &color, DEFAULT_COLOR );
+    gtk_color_button_set_rgba(GTK_COLOR_BUTTON(aw->color_entry_button), &color);
 
 }
 
@@ -1908,23 +1913,23 @@ gnc_account_renumber_update_examples (RenumberDialog *data)
     prefix = gtk_editable_get_chars(GTK_EDITABLE(data->prefix), 0, -1);
     interval = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(data->interval));
     if (interval <= 0)
-	interval = 10;
+        interval = 10;
     num_digits = (unsigned int)log10((double)(data->num_children * interval)) + 1;
 
     if (strlen (prefix))
-	str = g_strdup_printf("%s-%0*d", prefix, num_digits, interval);
+        str = g_strdup_printf("%s-%0*d", prefix, num_digits, interval);
     else
-	str = g_strdup_printf("%0*d", num_digits, interval);
+        str = g_strdup_printf("%0*d", num_digits, interval);
 
     gtk_label_set_text(GTK_LABEL(data->example1), str);
     g_free(str);
 
     if (strlen (prefix))
-	str = g_strdup_printf("%s-%0*d", prefix, num_digits,
-			      interval * data->num_children);
+        str = g_strdup_printf("%s-%0*d", prefix, num_digits,
+                              interval * data->num_children);
     else
-	str = g_strdup_printf("%0*d", num_digits,
-			      interval * data->num_children);
+        str = g_strdup_printf("%0*d", num_digits,
+                              interval * data->num_children);
 
     gtk_label_set_text(GTK_LABEL(data->example2), str);
     g_free(str);
@@ -1961,27 +1966,27 @@ gnc_account_renumber_response_cb (GtkDialog *dialog,
     {
         gtk_widget_hide(data->dialog);
         children = gnc_account_get_children_sorted(data->parent);
-	if (children == NULL)
-	{
-	    PWARN ("Can't renumber children of an account with no children!");
-	    g_free (data);
-	    return;
-	}
+        if (children == NULL)
+        {
+            PWARN ("Can't renumber children of an account with no children!");
+            g_free (data);
+            return;
+        }
         prefix = gtk_editable_get_chars(GTK_EDITABLE(data->prefix), 0, -1);
         interval =
             gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(data->interval));
-	if (interval <= 0)
-	    interval = 10;
+        if (interval <= 0)
+            interval = 10;
         num_digits = (unsigned int)log10 ((double)(data->num_children * interval) + 1);
 
         gnc_set_busy_cursor (NULL, TRUE);
         for (tmp = children, i = 1; tmp; tmp = g_list_next(tmp), i += 1)
         {
-	    if (strlen (prefix))
-		str = g_strdup_printf("%s-%0*d", prefix,
-				      num_digits, interval * i);
-	    else
-		str = g_strdup_printf("%0*d", num_digits, interval * i);
+            if (strlen (prefix))
+                str = g_strdup_printf("%s-%0*d", prefix,
+                                      num_digits, interval * i);
+            else
+                str = g_strdup_printf("%0*d", num_digits, interval * i);
             xaccAccountSetCode(tmp->data, str);
             g_free(str);
         }
@@ -2011,14 +2016,14 @@ gnc_account_renumber_create_dialog (GtkWidget *window, Account *account)
 
     builder = gtk_builder_new();
     gnc_builder_add_from_file (builder, "dialog-account.glade",
-			       "interval_adjustment");
+                               "interval_adjustment");
     gnc_builder_add_from_file (builder, "dialog-account.glade",
-			       "Renumber Accounts");
+                               "Renumber Accounts");
     data->dialog = GTK_WIDGET(gtk_builder_get_object (builder,
-						      "Renumber Accounts"));
+                                                      "Renumber Accounts"));
     gtk_window_set_transient_for(GTK_WINDOW(data->dialog), GTK_WINDOW(window));
     g_object_set_data_full(G_OBJECT(data->dialog), "builder", builder,
-			   g_object_unref);
+                           g_object_unref);
 
     widget = GTK_WIDGET(gtk_builder_get_object (builder, "header_label"));
     string = g_strdup_printf(_( "Renumber the immediate sub-accounts of %s? "

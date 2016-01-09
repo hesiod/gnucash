@@ -55,15 +55,15 @@
 typedef struct GncMainWindow
 {
     GtkWindow gtk_window;	/**< The parent object for a main window. */
-    GtkUIManager *ui_merge; /**< A pointer to the UI Manager data
-				   structure for the whole window. */
+    GtkBuilder *ui_merge; /**< A pointer to the UI Manager data
+                                   structure for the whole window. */
 } GncMainWindow;
 
 /** The class data structure for a main window object. */
 typedef struct
 {
     GtkWindowClass gtk_window;	/**< The parent class for a
-					   main window. */
+                                           main window. */
 
     /* callbacks */
     void (*page_added)   (GncMainWindow *window,
@@ -159,9 +159,9 @@ void gnc_main_window_foreach_page (GncMainWindowPageFunc fn,
 GncPluginPage *gnc_main_window_get_current_page (GncMainWindow *window);
 
 
-/** Returns the pointer to the GtkUIManager which is used for the menu
+/** Returns the pointer to the GtkBuilder which is used for the menu
  * item merging. */
-GtkUIManager *gnc_main_window_get_uimanager (GncMainWindow *window);
+GtkBuilder *gnc_main_window_get_uimanager (GncMainWindow *window);
 
 
 /** Update the name of the page in the main window.
@@ -204,7 +204,7 @@ main_window_update_page_color (GncPluginPage *page,
  */
 void gnc_main_window_manual_merge_actions (GncMainWindow *window,
         const gchar *group_name,
-        GtkActionGroup *group,
+        GSimpleActionGroup *group,
         guint merge_id);
 
 
@@ -239,9 +239,9 @@ void gnc_main_window_manual_merge_actions (GncMainWindow *window,
  */
 void gnc_main_window_merge_actions (GncMainWindow *window,
                                     const gchar *group_name,
-                                    GtkActionEntry *entries,
+                                    GActionEntry *entries,
                                     guint n_entries,
-                                    GtkToggleActionEntry *toggle_entries,
+                                    GActionEntry *toggle_entries,
                                     guint n_toggle_entries,
                                     const gchar *filename,
                                     gpointer user_data);
@@ -284,11 +284,11 @@ void gnc_main_window_actions_updated (GncMainWindow *window);
  *  @param group_name The name of a set of actions.  This must be a
  *  name provided when the actions were installed.
  *
- *  @return A pointer to a GtkActionGroup that was added with the
+ *  @return A pointer to a GSimpleActionGroup that was added with the
  *  specified name.  If the name cannot be found, then NULL will be
  *  returned.
  */
-GtkActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
+GSimpleActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
         const gchar *group_name);
 
 
@@ -340,7 +340,7 @@ void gnc_main_window_restore_default_state(GncMainWindow *window);
 
 /**
  * gnc_gtk_action_group_set_translation_domain:
- * @param action_group a #GtkActionGroup
+ * @param action_group a #GSimpleActionGroup
  * @param domain the translation domain to use for dgettext() calls
  *
  * Sets the translation domain and uses dgettext() for translating the
@@ -357,7 +357,7 @@ void gnc_main_window_restore_default_state(GncMainWindow *window);
  * gtk_action_group_set_translation_domain again.
  **/
 void
-gnc_gtk_action_group_set_translation_domain (GtkActionGroup *action_group,
+gnc_gtk_action_group_set_translation_domain (GSimpleActionGroup *action_group,
         const gchar    *domain);
 
 
@@ -403,7 +403,7 @@ void gnc_main_window_all_action_set_sensitive (const gchar *action_name, gboolea
  *  specified name. If the name cannot be found, then NULL will be
  *  returned.
  */
-GtkAction *gnc_main_window_find_action (GncMainWindow *window, const gchar *name);
+GSimpleAction *gnc_main_window_find_action (GncMainWindow *window, const gchar *name);
 
 /**
  * Shows all main windows.

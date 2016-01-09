@@ -1023,7 +1023,7 @@ gnc_ui_build_commodity_dialog(const char * selected_namespace,
         widget = GTK_WIDGET(gtk_builder_get_object (builder, "unknown_source_alignment"));
         gtk_container_child_get(GTK_CONTAINER(retval->table), widget,
                                 "top-attach", &row, NULL);
-        gtk_table_set_row_spacing(GTK_TABLE(retval->table), row, 0);
+        //gtk_table_set_row_spacing(GTK_TABLE(retval->table), row, 0);
         gtk_widget_destroy(widget);
         widget = GTK_WIDGET(gtk_builder_get_object (builder, "unknown_source_box"));
         gtk_widget_destroy(widget);
@@ -1316,7 +1316,7 @@ gnc_ui_commodity_dialog_to_object(CommodityWindow * w)
             else
                 gnc_commodity_set_quote_tz(c, NULL);
 
-	    gnc_commodity_set_user_symbol(c, user_symbol);
+            gnc_commodity_set_user_symbol(c, user_symbol);
 
             gnc_commodity_commit_edit(c);
             return TRUE;
@@ -1331,10 +1331,10 @@ gnc_ui_commodity_dialog_to_object(CommodityWindow * w)
      */
     if (g_utf8_collate(name_space, "template") == 0)
     {
-	gnc_warning_dialog (w->dialog,
-			    _("%s is a reserved commodity type."
-			      " Please use something else."), "template");
-	return FALSE;
+        gnc_warning_dialog (w->dialog,
+                            _("%s is a reserved commodity type."
+                              " Please use something else."), "template");
+        return FALSE;
     }
 
     if (fullname && fullname[0] &&

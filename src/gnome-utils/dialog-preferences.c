@@ -400,9 +400,9 @@ gnc_prefs_build_widget_table (GtkBuilder *builder,
 struct copy_data
 {
     /** The table being copied from. */
-    GtkTable *table_from;
+    GtkGrid *table_from;
     /** The table being copied to. */
-    GtkTable *table_to;
+    GtkGrid *table_to;
     /** The number of lines offset from the old table to the new
      *  table. */
     gint row_offset;
@@ -460,7 +460,6 @@ gnc_prefs_move_table_entry (GtkWidget *child,
                             gpointer data)
 {
     struct copy_data *copydata = data;
-    GtkAttachOptions x_opts, y_opts;
     gint bottom, top, left, right, x_pad, y_pad;
 
     ENTER("child %p, copy data %p", child, data);
@@ -469,17 +468,12 @@ gnc_prefs_move_table_entry (GtkWidget *child,
                             "left-attach", &left,
                             "right-attach", &right,
                             "top-attach", &top,
-                            "x-options", &x_opts,
-                            "x-padding", &x_pad,
-                            "y-options", &y_opts,
-                            "y-padding", &y_pad,
                             NULL);
 
     g_object_ref(child);
     gtk_container_remove(GTK_CONTAINER(copydata->table_from), child);
-    gtk_table_attach(copydata->table_to, child, left, right,
-                     top + copydata->row_offset, bottom + copydata->row_offset,
-                     x_opts, y_opts, x_pad, y_pad);
+    gtk_grid_attach(copydata->table_to, child, left, right,
+                     top + copydata->row_offset, bottom + copydata->row_offset);
     g_object_unref(child);
     LEAVE(" ");
 }
@@ -553,7 +547,7 @@ gnc_preferences_build_page (gpointer data,
     }
 
     /* Copied tables must match the size of the main table */
-    if (!GTK_IS_TABLE(new_content))
+    if (!GTK_IS_GRID(new_content))
     {
         g_critical("The object name %s in file %s is not a GtkTable.  It cannot "
                    "be added to the preferences dialog.",
@@ -580,7 +574,7 @@ gnc_preferences_build_page (gpointer data,
     {
         /* No existing content with this name.  Create a blank page */
         rows = 0;
-        existing_content = gtk_table_new(0, 4, FALSE);
+        existing_content = gtk_grid_new(); //0, 4, FALSE);
         gtk_container_set_border_width(GTK_CONTAINER(existing_content), 6);
         label = gtk_label_new(add_in->tabname);
         gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
@@ -600,14 +594,15 @@ gnc_preferences_build_page (gpointer data,
     {
         label = gtk_label_new("");
         gtk_widget_show(label);
-        gtk_table_attach(GTK_TABLE(existing_content), label, 0, 1, rows, rows + 1,
-                         GTK_FILL, GTK_FILL, 0, 0);
+        gtk_grid_attach(GTK_GRID(existing_content), label,
+                         0, 1,
+                         rows, rows + 1);
         rows++;
     }
 
     /* Now copy all the entries in the table */
-    copydata.table_from = GTK_TABLE(new_content);
-    copydata.table_to = GTK_TABLE(existing_content);
+    copydata.table_from = GTK_GRID(new_content);
+    copydata.table_to = GTK_GRID(existing_content);
     copydata.row_offset = rows;
     gtk_container_foreach(GTK_CONTAINER(new_content), gnc_prefs_move_table_entry,
                           &copydata);
@@ -1002,7 +997,7 @@ gnc_prefs_connect_one (const gchar *name,
         DEBUG("  %s - entry", name);
         gnc_prefs_connect_entry(GTK_ENTRY(widget));
     }
-    else if (GTK_IS_HBOX(widget))
+    else if (GTK_IS_BOX(widget))
     {
         /* Test custom widgets are all children of a hbox */
         GtkWidget *widget_child;
@@ -1121,8 +1116,8 @@ gnc_preferences_dialog_create(void)
     book = gnc_get_current_book();
     g_date_clear (&fy_end, 1);
     qof_instance_get (QOF_INSTANCE (book),
-		      "fy-end", &fy_end,
-		      NULL);
+                      "fy-end", &fy_end,
+                      NULL);
     box = GTK_WIDGET(gtk_builder_get_object (builder,
                      "pref/" GNC_PREFS_GROUP_ACCT_SUMMARY "/" GNC_PREF_START_PERIOD));
     period = gnc_period_select_new(TRUE);

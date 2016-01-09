@@ -119,12 +119,12 @@ typedef struct
     const gchar *actions_name;
     /** An array of actions that should automatically be added to
      *  any GnuCash "main" content window that is opened. */
-    GtkActionEntry *actions;
+    GActionEntry *actions;
     /** The number of actions in the actions array. */
     guint n_actions;
     /** An array of toggle actions that should automatically be added to
      *  any GnuCash "main" content window that is opened. */
-    GtkToggleActionEntry *toggle_actions;
+    GActionEntry *toggle_actions;
     /** The number of toggle actions in the toggle actions array. */
     guint n_toggle_actions;
     /** A NULL terminated list of actions that should be considered
@@ -249,7 +249,7 @@ typedef struct
  *  @param toolbar_labels A pointer to a NULL terminated array of data
  *  action_toolbar_labels items.
  */
-void gnc_plugin_init_short_names (GtkActionGroup *action_group,
+void gnc_plugin_init_short_names (GSimpleActionGroup *action_group,
                                   action_toolbar_labels *toolbar_labels);
 
 
@@ -264,7 +264,7 @@ void gnc_plugin_init_short_names (GtkActionGroup *action_group,
  *  @param name A list of actions names to be marked important.  This
  *  list must be NULL terminated.
  */
-void gnc_plugin_set_important_actions (GtkActionGroup *action_group,
+void gnc_plugin_set_important_actions (GSimpleActionGroup *action_group,
                                        const gchar **names);
 
 
@@ -286,7 +286,7 @@ void gnc_plugin_set_important_actions (GtkActionGroup *action_group,
  *  @param value A boolean specifying the new state for the specified
  *  property.
  */
-void gnc_plugin_update_actions (GtkActionGroup *action_group,
+void gnc_plugin_update_actions (GSimpleActionGroup *action_group,
                                 const gchar **action_names,
                                 const gchar *property_name,
                                 gboolean value);
@@ -307,8 +307,8 @@ void gnc_plugin_update_actions (GtkActionGroup *action_group,
  *  @return The merge_id number for the newly merged UI.  If an error
  *  occurred, the return value is 0.
  */
-gint gnc_plugin_add_actions (GtkUIManager *ui_merge,
-                             GtkActionGroup *action_group,
+gint gnc_plugin_add_actions (GtkBuilder *ui_merge,
+                             GSimpleActionGroup *action_group,
                              const gchar *filename);
 G_END_DECLS
 

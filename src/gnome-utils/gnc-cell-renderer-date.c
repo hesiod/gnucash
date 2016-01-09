@@ -40,7 +40,7 @@
 #include "gnc-date.h"
 
 enum {
-	PROP_0,
+        PROP_0,
         PROP_USE_BUTTONS,
 };
 
@@ -105,7 +105,7 @@ GType
 gnc_cell_renderer_date_get_type (void)
 {
 	static GType cell_text_type = 0;
-	
+
 	if (!cell_text_type) {
 		static const GTypeInfo cell_text_info = {
 			sizeof (GncCellRendererDateClass),
@@ -118,13 +118,13 @@ gnc_cell_renderer_date_get_type (void)
 			0,              /* n_preallocs */
 			(GInstanceInitFunc) gcrd_init,
 		};
-		
+
 		cell_text_type = g_type_register_static (GNC_TYPE_CELL_RENDERER_POPUP,
 							 "GncCellRendererDate",
 							 &cell_text_info,
 							 0);
 	}
-	
+
 	return cell_text_type;
 }
 
@@ -143,15 +143,15 @@ gcrd_init (GncCellRendererDate *date)
 	gtk_container_add (GTK_CONTAINER (popup->popup_window), frame);
 	gtk_frame_set_shadow_type (GTK_FRAME (frame), GTK_SHADOW_OUT);
 
-	vbox = gtk_vbox_new (FALSE, 6);
+	vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_add (GTK_CONTAINER (frame), vbox);
 	gtk_container_set_border_width (GTK_CONTAINER (vbox), 6);
-	
+
 	date->calendar = gtk_calendar_new ();
 	popup->focus_window = date->calendar;
 	gtk_box_pack_start (GTK_BOX (vbox), date->calendar, TRUE, TRUE, 0);
 
-        date->button_box = gtk_hbutton_box_new ();
+	date->button_box = gtk_button_box_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_box_set_spacing (GTK_BOX (date->button_box), 6);
 	gtk_box_pack_start (GTK_BOX (vbox), date->button_box, FALSE, FALSE, 0);
 
@@ -176,14 +176,14 @@ gcrd_init (GncCellRendererDate *date)
 	g_signal_connect (date->calendar, "day-selected",
 			  G_CALLBACK (gcrd_day_selected),
 			  date);
-	g_signal_connect (date->calendar, "day-selected-double-click", 
+	g_signal_connect (date->calendar, "day-selected-double-click",
 			  G_CALLBACK (gcrd_selected_double_click),
 			  date);
 
 	//Set calendar to show current date when displayed
 	date->time = gnc_time (NULL);
 
-        gtk_widget_show_all (frame);
+	gtk_widget_show_all (frame);
 }
 
 static void
@@ -194,7 +194,7 @@ gcrd_class_init (GncCellRendererDateClass *klass)
 	GObjectClass                  *gobject_class;
 
 	popup_class = GNC_CELL_RENDERER_POPUP_CLASS (klass);
-	cell_class = GTK_CELL_RENDERER_CLASS (klass);	
+	cell_class = GTK_CELL_RENDERER_CLASS (klass);
 	parent_class = GNC_CELL_RENDERER_POPUP_CLASS (g_type_class_peek_parent (klass));
 	gobject_class = G_OBJECT_CLASS (klass);
 
@@ -202,14 +202,14 @@ gcrd_class_init (GncCellRendererDateClass *klass)
 	gobject_class->get_property = gcrd_get_property;
 
 	cell_class->start_editing = gcrd_start_editing;
-		
+
 	popup_class->show_popup = gcrd_show;
 	popup_class->hide_popup = gcrd_hide;
 
 	g_object_class_install_property (
 		gobject_class,
-                 PROP_USE_BUTTONS,
-                 g_param_spec_boolean ("use-buttons",
+		 PROP_USE_BUTTONS,
+		 g_param_spec_boolean ("use-buttons",
 				       NULL,
 				       NULL,
 				       TRUE,
@@ -226,7 +226,7 @@ gcrd_set_property (GObject      *object,
 	GncCellRendererDate *date;
 
 	date = GNC_CELL_RENDERER_DATE (object);
-	
+
 	switch (param_id) {
 	case PROP_USE_BUTTONS:
 		date->use_buttons = g_value_get_boolean (value);
@@ -252,7 +252,7 @@ gcrd_get_property (GObject    *object,
 	GncCellRendererDate *date;
 
 	date = GNC_CELL_RENDERER_DATE (object);
-	
+
 	switch (param_id) {
 	case PROP_USE_BUTTONS:
 		g_value_set_boolean (value, date->use_buttons);
@@ -274,7 +274,7 @@ gcrd_start_editing (GtkCellRenderer      *cell,
 		    GtkCellRendererState  flags)
 {
 	GNC_CELL_RENDERER_POPUP (cell)->editing_canceled = FALSE;
-	
+
 	if (GTK_CELL_RENDERER_CLASS (parent_class)->start_editing) {
 		return GTK_CELL_RENDERER_CLASS (parent_class)->start_editing (
 							cell,
@@ -326,7 +326,7 @@ gcrd_show (GncCellRendererPopup *cell,
 
         if (!(g_strcmp0(text, "")))
         {
-	    date->time = gnc_time (NULL);
+            date->time = gnc_time (NULL);
             gcrd_time2dmy ( date->time, &day, &month, &year);
         }
         else
@@ -340,7 +340,7 @@ gcrd_show (GncCellRendererPopup *cell,
 
 	gtk_calendar_select_day (GTK_CALENDAR (date->calendar), day);
 	gtk_calendar_mark_day (GTK_CALENDAR (date->calendar), day);
-	
+
 }
 
 GtkCellRenderer *
@@ -351,7 +351,7 @@ gnc_cell_renderer_date_new (gboolean use_buttons)
 	cell = g_object_new (GNC_TYPE_CELL_RENDERER_DATE,
 			     "use-buttons", use_buttons,
 			     NULL);
-	
+
 	return GTK_CELL_RENDERER (cell);
 }
 
@@ -360,11 +360,11 @@ gcrd_today_clicked (GtkWidget *button, GncCellRendererDate *cell)
 {
 	time64  today;
 	gint    year, month, day;
-	
+
 	today = gnc_time (NULL);
 
-        gcrd_time2dmy ( today, &day, &month, &year);
-	
+	gcrd_time2dmy ( today, &day, &month, &year);
+
 	gtk_calendar_clear_marks (GTK_CALENDAR (cell->calendar));
 	gtk_calendar_select_month (GTK_CALENDAR (cell->calendar), month - 1, year);
 	gtk_calendar_select_day (GTK_CALENDAR (cell->calendar), day);
@@ -375,7 +375,7 @@ static void
 gcrd_selected_double_click (GtkWidget *calendar, GncCellRendererDate *cell)
 {
 	GncCellRendererPopup *popup;
-	
+
 	popup = GNC_CELL_RENDERER_POPUP (cell);
 
 	gcrd_ok_clicked (popup->popup_window, cell);
@@ -385,7 +385,7 @@ static void
 gcrd_cancel_clicked (GtkWidget *popup_window, GncCellRendererDate *cell)
 {
 	GncCellRendererPopup *popup;
-	
+
 	popup = GNC_CELL_RENDERER_POPUP (cell);
 
 	popup->editing_canceled = TRUE;
@@ -396,7 +396,7 @@ static void
 gcrd_ok_clicked (GtkWidget *popup_window, GncCellRendererDate *cell)
 {
 	GncCellRendererPopup *popup;
-	
+
 	popup = GNC_CELL_RENDERER_POPUP (cell);
 
 	gcrd_day_selected (popup_window, cell);
@@ -419,7 +419,7 @@ gcrd_day_selected (GtkWidget *popup_window, GncCellRendererDate *cell)
 			       &month,
 			       &day);
 
-        t = gcrd_dmy2time ( day, month + 1, year);
+	t = gcrd_dmy2time ( day, month + 1, year);
 
 	cell->time = t;
 
@@ -433,22 +433,40 @@ gcrd_day_selected (GtkWidget *popup_window, GncCellRendererDate *cell)
 
 static gboolean
 gcrd_grab_on_window (GdkWindow *window,
-		     guint32    activate_time)
+                     guint32    activate_time)
 {
-	if ((gdk_pointer_grab (window, TRUE,
-			       GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK |
-			       GDK_POINTER_MOTION_MASK,
-			       NULL, NULL, activate_time) == 0)) {
-		if (gdk_keyboard_grab (window, TRUE,
-			       activate_time) == 0)
-			return TRUE;
-		else {
-			gdk_pointer_ungrab (activate_time);
-			return FALSE;
-		}
-	}
+  GdkDeviceManager *dm = gdk_display_get_device_manager(gdk_window_get_display(window));
+  GdkDevice *kbd;
+  GdkDevice *mouse;
+  if (dm == NULL)
+    return FALSE;
 
-	return FALSE;
+  GList *devices = gdk_device_manager_list_devices (dm, GDK_DEVICE_TYPE_MASTER);
+  if (g_list_length(devices) > 0) {
+
+    }
+  g_list_free(devices);
+
+  // FIXME Which grab ownership is right?
+        GdkGrabStatus status = gdk_device_grab (
+              device,
+              window,
+              GDK_OWNERSHIP_APPLICATION,
+              TRUE,
+              GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK,
+              NULL,
+              activate_time);
+        if (status == GDK_GRAB_SUCCESS) {
+                if (gdk_keyboard_grab (window, TRUE,
+                               activate_time) == 0)
+                        return TRUE;
+                else {
+                        gdk_pointer_ungrab (activate_time);
+                        return FALSE;
+                }
+        }
+
+        return FALSE;
 }
 
 
@@ -457,9 +475,9 @@ gboolean
 gcrd_time2dmy (time64 raw_time, gint *day, gint *month, gint *year)
 {
     struct tm * timeinfo;
-  
+
     timeinfo = gnc_localtime (&raw_time);
- 
+
     *day = timeinfo->tm_mday;
     *month = timeinfo->tm_mon + 1;
     *year = timeinfo->tm_year + 1900;
@@ -498,8 +516,8 @@ gcrd_string_dmy2time (const gchar *date_string)
 
     if(qof_scan_date (date_string, &day, &month, &year))
     {
-	struct tm when;
-	memset (&when, 0, sizeof (when));
+        struct tm when;
+        memset (&when, 0, sizeof (when));
         when.tm_year = year - 1900;
         when.tm_mon = month - 1 ;
         when.tm_mday = day;
@@ -508,7 +526,7 @@ gcrd_string_dmy2time (const gchar *date_string)
     }
     else
     {
-	return gnc_time (NULL);
+        return gnc_time (NULL);
     }
 }
 

@@ -252,7 +252,7 @@ static guint main_window_signals[LAST_SIGNAL] = { 0 };
  *  This includes some placeholder actions for the menus that are
  *  visible in the menu bar but have no action associated with
  *  them. */
-static GtkActionEntry gnc_menu_actions [] =
+static GActionEntry gnc_menu_actions [] =
 {
     /* Toplevel */
 
@@ -388,7 +388,7 @@ static guint gnc_menu_n_actions = G_N_ELEMENTS (gnc_menu_actions);
 
 /** An array of all of the toggle action provided by the main window
  *  code. */
-static GtkToggleActionEntry toggle_actions [] =
+static GActionEntry toggle_actions [] =
 {
     {
         "ViewToolbarAction", NULL, N_("_Toolbar"), NULL,
@@ -1650,8 +1650,8 @@ static gchar *generate_statusbar_lastmodified_message()
                     that has the a.m. or p.m. string in its locale, second
                     string is for locales that do not have that string. */
                     char *time_string =
-			gnc_print_time64(statbuf.st_mtime,
-					 _("Last modified on %a, %b %e, %Y at %I:%M%P"));
+                        gnc_print_time64(statbuf.st_mtime,
+                                         _("Last modified on %a, %b %e, %Y at %I:%M%P"));
                     //g_warning("got time %ld, str=%s\n", mtime, time_string);
                     /* Translators: This message appears in the status bar after opening the file. */
                     message = g_strdup_printf(_("File %s opened. %s"),
@@ -2627,7 +2627,7 @@ gnc_main_window_destroy (GtkObject *object)
         g_list_free (plugins);
     }
     if (priv->about_dialog)
-	g_object_unref (priv->about_dialog);
+        g_object_unref (priv->about_dialog);
     GTK_OBJECT_CLASS (parent_class)->destroy (object);
 }
 
@@ -4307,11 +4307,11 @@ get_file (const gchar *partial)
     filename = gnc_filepath_locate_doc_file(partial);
     if (filename && g_file_get_contents(filename, &text, &length, NULL))
     {
-	if (length)
-	{
-	    g_free(filename);
-	    return text;
-	}
+        if (length)
+        {
+            g_free(filename);
+            return text;
+        }
         g_free(text);
     }
     g_free (filename);
@@ -4369,7 +4369,7 @@ gnc_main_window_cmd_help_about (GtkAction *action, GncMainWindow *window)
 
     if (priv->about_dialog == NULL)
     {
-	const gchar *fixed_message = _("The GnuCash personal finance manager. "
+        const gchar *fixed_message = _("The GnuCash personal finance manager. "
                                    "The GNU way to manage your money!");
 	const gchar *copyright = _("© 1997-2016 Contributors");
 	gchar **authors = get_file_strsplit("AUTHORS");
@@ -4384,16 +4384,16 @@ gnc_main_window_cmd_help_about (GtkAction *action, GncMainWindow *window)
                     2nd %s is the scm type (svn/svk/git/bzr);
                     3rd %s is the scm revision number;
                     4th %s is the build date */
-	message = g_strdup_printf(_("%s\nThis copy was built from %s rev %s on %s."),
-				  fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
-				  GNUCASH_BUILD_DATE);
+        message = g_strdup_printf(_("%s\nThis copy was built from %s rev %s on %s."),
+                                  fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
+                                  GNUCASH_BUILD_DATE);
 #else
     /* Translators: 1st %s is a fixed message, which is translated independently;
                     2nd %s is the scm (svn/svk/git/bzr) revision number;
                     3rd %s is the build date */
-	message = g_strdup_printf(_("%s\nThis copy was built from rev %s on %s."),
-				  fixed_message, GNUCASH_SCM_REV,
-				  GNUCASH_BUILD_DATE);
+        message = g_strdup_printf(_("%s\nThis copy was built from rev %s on %s."),
+                                  fixed_message, GNUCASH_SCM_REV,
+                                  GNUCASH_BUILD_DATE);
 #endif
 	priv->about_dialog = gtk_about_dialog_new ();
 	g_object_set (priv->about_dialog,
@@ -4408,10 +4408,10 @@ gnc_main_window_cmd_help_about (GtkAction *action, GncMainWindow *window)
       * Enter your name or that of your team and an email contact for feedback.
       * The string can have multiple rows, so you can also add a list of
       * contributors. */
-		      "translator-credits", _("translator_credits"),
-		      "version", VERSION,
-		      "website", "http://www.gnucash.org",
-		      NULL);
+                      "translator-credits", _("translator_credits"),
+                      "version", VERSION,
+                      "website", "http://www.gnucash.org",
+                      NULL);
 
 	g_free(message);
 	if (license)     g_free(license);

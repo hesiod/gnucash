@@ -22,9 +22,7 @@
 
 #include "config.h"
 
-#ifdef GNOME
-# include <gtk/gtk.h>
-#endif
+#include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <time.h>
 #include <string.h>

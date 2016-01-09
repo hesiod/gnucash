@@ -291,9 +291,9 @@ new_tax_table_dialog (TaxTableWindow *ttw, gboolean new_table,
         gtk_widget_hide (ntt->name_entry);
         /* Tables are great for layout, but a pain when you hide widgets */
         widget = GTK_WIDGET(gtk_builder_get_object (builder, "ttd_table"));
-        gtk_table_set_row_spacing (GTK_TABLE(widget), 0, 0);
-        gtk_table_set_row_spacing (GTK_TABLE(widget), 1, 0);
-        gtk_table_set_row_spacing (GTK_TABLE(widget), 2, 0);
+        gtk_grid_set_row_spacing (GTK_GRID(widget), 0);
+        gtk_grid_set_row_spacing (GTK_GRID(widget), 1);
+        gtk_grid_set_row_spacing (GTK_GRID(widget), 2);
         gtk_widget_grab_focus (gnc_amount_edit_gtk_entry
                                (GNC_AMOUNT_EDIT (ntt->amount_entry)));
     }

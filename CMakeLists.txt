@@ -23,11 +23,11 @@ SET (GNUCASH_LATEST_STABLE_SERIES 2.6)
 
 SET (PACKAGE gnucash)
 SET (PACKAGE_NAME GnuCash)
-SET (PACKAGE_VERSION 2.6.99)
+SET (PACKAGE_VERSION "${VERSION}")
 SET (PACKAGE_BUGREPORT gnucash-devel@gnucash.org)
 SET (PACKAGE_TARNAME ${PACKAGE})
 SET (PACKAGE_STRING "${PACKAGE_NAME} ${PACKAGE_VERSION}")
-SET (PACKAGE_URL "")
+SET (PACKAGE_URL "gnucash.org")
 
 # Change this in development versions when changing anything that
 # affects stored data structures. Reset to zero when bumping version.
@@ -106,7 +106,7 @@ IF (WIN32)
   SET(CMAKE_FRAMEWORK_PATH_TMP ${CMAKE_PREFIX_PATH})
   SET(DEV_SUBDIRS aqbanking gnome goffice guile gwenhywfar libgsf libofx libsoup libxslt webkit)
   FOREACH(subdir ${DEV_SUBDIRS})
-    LIST(APPEND CMAKE_FRAMEWORK_PATH_TMP ${CMAKE_PREFIX_PATH}/${subdir})
+	LIST(APPEND CMAKE_FRAMEWORK_PATH_TMP ${CMAKE_PREFIX_PATH}/${subdir})
   ENDFOREACH()
   # Setting CMAKE_FRAMEWORK_PATH, which is intended for OS X, is a terrible hack here. But I don't
   # want to mess with CMAKE_PREFIX_PATH.
@@ -155,9 +155,14 @@ GNC_PKG_CHECK_MODULES (GNOMECANVAS REQUIRED libgnomecanvas-2.0)
 GNC_PKG_CHECK_MODULES (LIBXSLT REQUIRED libxslt)
 GNC_PKG_CHECK_MODULES (WEBKIT REQUIRED webkit-1.0>=1.2)
 IF (WITH_GNUCASH)
-  GNC_PKG_CHECK_MODULES (GTK2 REQUIRED gtk+-2.0>=2.24.0)
+  #GNC_PKG_CHECK_MODULES (GTK2 REQUIRED gtk+-2.0>=2.24.0)
+  GNC_PKG_CHECK_MODULES (GTK3 REQUIRED gtk+-3.0>=3.18.0)
   GNC_PKG_CHECK_MODULES (GOFFICE REQUIRED libgoffice-0.8>=0.8.17)
 ENDIF (WITH_GNUCASH)
+
+include_directories(${GTK3_INCLUDE_DIRS})
+link_directories(${GTK3_LIBRARY_DIRS})
+add_definitions(${GTK3_CFLAGS_OTHER})
 
 GNC_PKG_CHECK_MODULES (ZLIB REQUIRED zlib)
 IF (WITH_CUTECASH)
@@ -204,8 +209,8 @@ FIND_PATH (REGEX_INCLUDE_PATH NAMES regex.h
 FIND_LIBRARY (REGEX_LIBRARY NAMES regex)
 IF (WIN32)
   FIND_PATH (HTMLHELP_INCLUDE_PATH NAMES htmlhelp.h
-             PATHS /usr/include
-             HINTS ${CMAKE_PREFIX_PATH}/hh/include)
+			 PATHS /usr/include
+			 HINTS ${CMAKE_PREFIX_PATH}/hh/include)
   FIND_LIBRARY (HTMLHELP_LIBRARY htmlhelp HINTS ${CMAKE_PREFIX_PATH}/hh/lib)
 ENDIF (WIN32)
 
@@ -232,17 +237,17 @@ IF (GUILE2_FOUND) # found guile-2.0
   SET(GUILE_LDFLAGS ${GUILE2_LDFLAGS})
 
   IF (NOT GUILE_EXECUTABLE)
-    MESSAGE (SEND_ERROR "The guile executable was not found, but is required. Please set GUILE_EXECUTABLE.")
+	MESSAGE (SEND_ERROR "The guile executable was not found, but is required. Please set GUILE_EXECUTABLE.")
   ENDIF (NOT GUILE_EXECUTABLE)
   IF (NOT GUILD_EXECUTABLE)
-    MESSAGE (SEND_ERROR "The guild executable was not found, but is required. Please set GUILD_EXECUTABLE.")
+	MESSAGE (SEND_ERROR "The guild executable was not found, but is required. Please set GUILD_EXECUTABLE.")
   ENDIF (NOT GUILD_EXECUTABLE)
   MESSAGE(STATUS "Using guile-2.0.x")
 ELSE()
   # look for guile 1.8
   GNC_PKG_CHECK_MODULES (GUILE1 guile-1.8>=1.8.8 QUIET)
   IF (NOT GUILE1_FOUND)
-    MESSAGE (SEND_ERROR "Neither guile 1.8 nor guile 2.0 where find. Please set PKG_CONFIG_PATH one of these is found.")
+	MESSAGE (SEND_ERROR "Neither guile 1.8 nor guile 2.0 where find. Please set PKG_CONFIG_PATH one of these is found.")
   ENDIF(NOT GUILE1_FOUND)
 
   SET(GUILE_INCLUDE_DIRS ${GUILE1_INCLUDE_DIRS})
@@ -263,11 +268,11 @@ IF (WITH_AQBANKING)
   GNC_PKG_CHECK_MODULES (GWENHYWFAR REQUIRED gwenhywfar)
   GNC_PKG_CHECK_MODULES (AQBANKING REQUIRED aqbanking)
   IF(WITH_GNUCASH)
-    GNC_PKG_CHECK_MODULES (GWENGUI_GTK2 REQUIRED gwengui-gtk2)
-    GNC_PKG_CHECK_MODULES (KTOBLZCHECK ktoblzcheck)
-    IF(KTOBLZCHECK_FOUND)
-      SET(HAVE_KTOBLZCHECK_H 1)
-    ENDIF(KTOBLZCHECK_FOUND)
+	GNC_PKG_CHECK_MODULES (GWENGUI_GTK2 REQUIRED gwengui-gtk2)
+	GNC_PKG_CHECK_MODULES (KTOBLZCHECK ktoblzcheck)
+	IF(KTOBLZCHECK_FOUND)
+	  SET(HAVE_KTOBLZCHECK_H 1)
+	ENDIF(KTOBLZCHECK_FOUND)
   ENDIF(WITH_GNUCASH)
 ENDIF (WITH_AQBANKING)
 
@@ -278,22 +283,22 @@ ENDIF(WITH_OFX)
 
 IF(APPLE)
   EXECUTE_PROCESS(
-      COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=target gdk-2.0
-      OUTPUT_VARIABLE TARGET_RESULT
-      OUTPUT_STRIP_TRAILING_WHITESPACE
+	  COMMAND ${PKG_CONFIG_EXECUTABLE} --variable=target gdk-2.0
+	  OUTPUT_VARIABLE TARGET_RESULT
+	  OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   IF(TARGET_RESULT STREQUAL "quartz")
-    SET(GNC_PLATFORM_COCOA 1)
-    SET(GDK_QUARTZ 1)
-    GNC_PKG_CHECK_MODULES(GTK_MAC gtk-mac-integration-gtk2)
-    IF (GTK_MAC_FOUND)
-      SET(MAC_INTEGRATION 1)
-      FIND_LIBRARY(COCOA_LIBRARY Cocoa)
-      FIND_LIBRARY(SECURITY_LIBRARY Security)
-      FIND_LIBRARY(CARBON_LIBRARY Carbon)
-      SET(OSX_EXTRA_COMPILE_FLAGS -xobjective-c)
-      SET(OSX_EXTRA_LIBRARIES objc ${COCOA_LIBRARY} ${SECURITY_LIBRARY} ${CARBON_LIBRARY})
-    ENDIF(GTK_MAC_FOUND)
+	SET(GNC_PLATFORM_COCOA 1)
+	SET(GDK_QUARTZ 1)
+	GNC_PKG_CHECK_MODULES(GTK_MAC gtk-mac-integration-gtk2)
+	IF (GTK_MAC_FOUND)
+	  SET(MAC_INTEGRATION 1)
+	  FIND_LIBRARY(COCOA_LIBRARY Cocoa)
+	  FIND_LIBRARY(SECURITY_LIBRARY Security)
+	  FIND_LIBRARY(CARBON_LIBRARY Carbon)
+	  SET(OSX_EXTRA_COMPILE_FLAGS -xobjective-c)
+	  SET(OSX_EXTRA_LIBRARIES objc ${COCOA_LIBRARY} ${SECURITY_LIBRARY} ${CARBON_LIBRARY})
+	ENDIF(GTK_MAC_FOUND)
   ENDIF()
 ENDIF(APPLE)
 
@@ -313,10 +318,10 @@ FIND_LIBRARY (LIBDBI_LIBRARY dbi HINTS ${CMAKE_PREFIX_PATH}/libdbi/lib)
 FIND_PATH (LIBDBI_DRIVERS_DIR dbd HINTS ${CMAKE_PREFIX_PATH}/lib ${CMAKE_PREFIX_PATH}/libdbi-drivers/lib)
 IF (WITH_SQL)
   IF (NOT LIBDBI_INCLUDE_PATH)
-    MESSAGE (SEND_ERROR "Include file <dbi/dbi.h> was not found - did you install libdbi0-dev or libdbi-dev?")
+	MESSAGE (SEND_ERROR "Include file <dbi/dbi.h> was not found - did you install libdbi0-dev or libdbi-dev?")
   ENDIF (NOT LIBDBI_INCLUDE_PATH)
   IF (NOT LIBDBI_LIBRARY)
-    MESSAGE (SEND_ERROR "Library libdbi was not found")
+	MESSAGE (SEND_ERROR "Library libdbi was not found")
   ENDIF (NOT LIBDBI_LIBRARY)
   SET(HAVE_DBI_DBI_H 1)
 ENDIF (WITH_SQL)
@@ -401,17 +406,17 @@ IF (GNC_BUILD_AS_INSTALL)
 
   SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/lib/gnucash)
   IF (XCODE_VERSION)
-    # FIXME: These settings break the ability to manipulate different configurations (Debug,
-    # FIXME: Release, etc.) in Xcode. We'll need to change the module loading C code if
-    # we want to support multi config.
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib/gnucash)
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib/gnucash)
+	# FIXME: These settings break the ability to manipulate different configurations (Debug,
+	# FIXME: Release, etc.) in Xcode. We'll need to change the module loading C code if
+	# we want to support multi config.
+	SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib/gnucash)
+	SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib/gnucash)
   ENDIF()
   # For binarines
   SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/bin)
   IF (XCODE_VERSION)
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin)
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin)
+	SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
   ENDIF()
 ENDIF()
 # ############################################################
@@ -448,23 +453,23 @@ ADD_SUBDIRECTORY(cmake)
 
 IF (GNC_BUILD_AS_INSTALL)
   SET_TARGET_PROPERTIES(gnc-qof gnc-core-utils gnc-module gnc-backend-sql gnc-backend-xml-utils
-    gnc-business-ledger gnc-gnome PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/lib
-    IF (XCODE_VERSION)
-      LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib
-      LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib
-    ENDIF()
+	gnc-business-ledger gnc-gnome PROPERTIES
+	LIBRARY_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/lib
+	IF (XCODE_VERSION)
+	  LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib
+	  LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/lib
+	ENDIF()
 
-    RUNTIME_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/bin
-    IF (XCODE_VERSION)
-      RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin
-      RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin
-    ENDIF()
+	RUNTIME_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/bin
+	IF (XCODE_VERSION)
+	  RUNTIME_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/bin
+	  RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin
+	ENDIF()
   )
   IF (WIN32)
-    SET_TARGET_PROPERTIES(gncmod-backend-xml gncmod-stylesheets gncmod-utility-reports PROPERTIES
-      LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    )
+	SET_TARGET_PROPERTIES(gncmod-backend-xml gncmod-stylesheets gncmod-utility-reports PROPERTIES
+	  LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+	)
   ENDIF()
 ENDIF()
 # Install DOC files from top level directory
@@ -519,10 +524,10 @@ IF (WIN32)
   SET(MINGW_DLLS ${CMAKE_PREFIX_PATH}/mingw/bin/libstdc++-6.dll ${CMAKE_PREFIX_PATH}/mingw/bin/libgcc_s_dw2-1.dll)
   INSTALL(PROGRAMS ${MINGW_DLLS} DESTINATION bin)
   IF (GNC_BUILD_AS_INSTALL)
-    FILE(COPY ${MINGW_DLLS} DESTINATION ${BINDIR_BUILD}
-      # Do permissions matter for windows?
-      FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-    )
+	FILE(COPY ${MINGW_DLLS} DESTINATION ${BINDIR_BUILD}
+	  # Do permissions matter for windows?
+	  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+	)
   ENDIF()
 
 

@@ -35,6 +35,7 @@
 
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
 
@@ -1755,7 +1756,8 @@ gnc_tree_view_add_toggle_column (GncTreeView *view,
     gnc_tree_view_append_column (view, column);
 
     /* Also add the full title to the object as a tooltip */
-    gtk_widget_set_tooltip_text(column->button, column_title);
+    gtk_widget_set_tooltip_text(gtk_tree_view_column_get_button(column),
+                                column_title);
 
     return column;
 }
