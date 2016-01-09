@@ -9,7 +9,7 @@ SET (SWIG_GNOME_UTILS_C ${CMAKE_CURRENT_BINARY_DIR}/swig-gnome-utils.c)
 GNC_ADD_SWIG_COMMAND (${SWIG_GNOME_UTILS_C} ${CMAKE_CURRENT_SOURCE_DIR}/gnome-utils.i)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/gschemas/org.gnucash.warnings.gschema.xml.in.in
-               ${CMAKE_CURRENT_BINARY_DIR}/gschemas/org.gnucash.warnings.gschema.xml.in)
+			   ${CMAKE_CURRENT_BINARY_DIR}/gschemas/org.gnucash.warnings.gschema.xml.in)
 
 SET (WARNINGS_SCHEMA gschemas/org.gnucash.warnings.gschema.xml.in)
 SET (GNC_WARNINGS_C ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.c)
@@ -19,13 +19,13 @@ ADD_CUSTOM_COMMAND(
   OUTPUT ${GNC_WARNINGS_C}
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA} make-gnc-warnings-c.xsl
   COMMAND
-    ${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_C} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-c.xsl ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA}
+	${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_C} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-c.xsl ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA}
 )
 ADD_CUSTOM_COMMAND(
   OUTPUT ${GNC_WARNINGS_H}
   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA} make-gnc-warnings-h.xsl
   COMMAND
-    ${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_H} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-h.xsl ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA}
+	${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_H} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-h.xsl ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA}
 )
 
 SET (gnome_utils_SOURCES
@@ -58,7 +58,7 @@ SET (gnome_utils_SOURCES
   gnc-currency-edit.c
   gnc-date-delta.c
   gnc-date-edit.c
-  gnc-date-format.c 
+  gnc-date-format.c
   gnc-dense-cal.c
   gnc-dense-cal-model.c
   gnc-dense-cal-store.c
@@ -71,7 +71,6 @@ SET (gnome_utils_SOURCES
   gnc-gobject-utils.c
   gnc-gtk-utils.c
   gnc-gui-query.c
-  gnc-icons.c
   gnc-keyring.c
   gnc-main-window.c
   gnc-menu-extensions.c
@@ -160,7 +159,6 @@ SET (gnome_utils_HEADERS
   gnc-general-select.h
   gnc-gnome-utils.h
   gnc-gui-query.h
-  gnc-icons.h
   gnc-keyring.h
   gnc-main-window.h
   gnc-menu-extensions.h
@@ -206,10 +204,10 @@ ADD_LIBRARY (gncmod-gnome-utils
 )
 
 TARGET_LINK_LIBRARIES(gncmod-gnome-utils gncmod-app-utils gncmod-engine gnc-backend-xml-utils
-     ${GTK2_LDFLAGS} ${GTK_MAC_LDFLAGS})
+	 ${GTK2_LDFLAGS} ${GTK_MAC_LDFLAGS})
 
 TARGET_COMPILE_DEFINITIONS(gncmod-gnome-utils PUBLIC ${GTK_MAC_CFLAGS_OTHER}
-    PRIVATE -DG_LOG_DOMAIN=\"gnc.gui\")
+	PRIVATE -DG_LOG_DOMAIN=\"gnc.gui\")
 
 IF (MAC_INTEGRATION)
   TARGET_COMPILE_OPTIONS(gncmod-gnome-utils PRIVATE ${OSX_EXTRA_COMPILE_FLAGS})
@@ -217,12 +215,12 @@ IF (MAC_INTEGRATION)
 ENDIF(MAC_INTEGRATION)
 
 TARGET_INCLUDE_DIRECTORIES(gncmod-gnome-utils
-    PUBLIC
-      ${GTK2_INCLUDE_DIRS}
-      ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE
-      ${GTK_MAC_INCLUDE_DIRS}
-      ${CMAKE_CURRENT_BINARY_DIR}
+	PUBLIC
+	  ${GTK2_INCLUDE_DIRS}
+	  ${CMAKE_CURRENT_SOURCE_DIR}
+	PRIVATE
+	  ${GTK_MAC_INCLUDE_DIRS}
+	  ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 

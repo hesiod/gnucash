@@ -43,7 +43,6 @@
 #include "gnc-component-manager.h"
 #include "gnc-splash.h"
 #include "gnc-window.h"
-#include "gnc-icons.h"
 #include "dialog-options.h"
 #include "dialog-commodity.h"
 #include "dialog-totd.h"
@@ -717,7 +716,6 @@ gnc_gui_init(void)
     gtk_accel_map_load(map);
     g_free(map);
 
-    gnc_load_stock_icons();
     gnc_totd_dialog(GTK_WINDOW(main_window), TRUE);
 
     LEAVE ("");
