@@ -29,11 +29,11 @@ typedef struct _ExtensionInfo
 {
     SCM extension;
 
-    GtkActionEntry ae;
+    GActionEntry ae;
     gchar *path;
     gchar *sort_key;
     const gchar *typeStr;
-    GtkUIManagerItemType type;
+    //GtkBuilderItemType type;
     gboolean accel_assigned;
 } ExtensionInfo;
 

@@ -169,21 +169,6 @@ gnc_configure_date_completion (void)
     qof_date_completion_set(dc, backmonths);
 }
 
-void
-gnc_gtk_add_rc_file (void)
-{
-    const gchar *var;
-    gchar *str;
-
-    var = g_get_home_dir ();
-    if (var)
-    {
-        str = g_build_filename (var, ".gtkrc-2.0.gnucash", (char *)NULL);
-        gtk_rc_add_default_file (str);
-        g_free (str);
-    }
-}
-
 #ifdef MAC_INTEGRATION
 
 /* Don't be alarmed if this function looks strange to you: It's
@@ -435,25 +420,25 @@ gnc_launch_assoc (const char *uri)
      * file URI so we have to do it. */
     if (strcmp (g_uri_parse_scheme(uri), "file") == 0)
     {
-	gchar *filename = g_filename_from_uri (uri, NULL, NULL);
-	winuri = (wchar_t *)g_utf8_to_utf16(filename, -1, NULL, NULL, NULL);
+    gchar *filename = g_filename_from_uri (uri, NULL, NULL);
+    winuri = (wchar_t *)g_utf8_to_utf16(filename, -1, NULL, NULL, NULL);
     }
     else
-	winuri = (wchar_t *)g_utf8_to_utf16(uri, -1, NULL, NULL, NULL);
+    winuri = (wchar_t *)g_utf8_to_utf16(uri, -1, NULL, NULL, NULL);
 
     if (winuri)
     {
-	wchar_t *wincmd = (wchar_t *)g_utf8_to_utf16("open", -1,
-						     NULL, NULL, NULL);
-	if ((INT_PTR)ShellExecuteW(NULL, wincmd, winuri,
-				   NULL, NULL, SW_SHOWNORMAL) <= 32)
-	{
-	    const gchar *message =
-		_("GnuCash could not find the associated file");
-	    gnc_error_dialog(NULL, "%s: %s", message, uri);
-	}
-	g_free (wincmd);
-	g_free (winuri);
+    wchar_t *wincmd = (wchar_t *)g_utf8_to_utf16("open", -1,
+                             NULL, NULL, NULL);
+    if ((INT_PTR)ShellExecuteW(NULL, wincmd, winuri,
+                   NULL, NULL, SW_SHOWNORMAL) <= 32)
+    {
+        const gchar *message =
+        _("GnuCash could not find the associated file");
+        gnc_error_dialog(NULL, "%s: %s", message, uri);
+    }
+    g_free (wincmd);
+    g_free (winuri);
     }
 }
 
@@ -721,10 +706,10 @@ gnc_gui_init(void)
     map = gnc_build_dotgnucash_path(ACCEL_MAP_NAME);
     if (!g_file_test (map, G_FILE_TEST_EXISTS))
     {
-	g_free (map);
-	data_dir = gnc_path_get_pkgdatadir();
-	map = g_build_filename(data_dir, "ui", "osx_accel_map", NULL);
-	g_free(data_dir);
+    g_free (map);
+    data_dir = gnc_path_get_pkgdatadir();
+    map = g_build_filename(data_dir, "ui", "osx_accel_map", NULL);
+    g_free(data_dir);
     }
 #else
     map = gnc_build_dotgnucash_path(ACCEL_MAP_NAME);

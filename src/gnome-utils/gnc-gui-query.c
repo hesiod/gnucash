@@ -293,7 +293,6 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
     GtkWidget *vbox;
     GtkWidget *main_vbox;
     GtkWidget *label;
-    GtkWidget *alignment;
     GtkWidget *radio_button;
     GtkWidget *dialog;
     GtkWidget *dvbox;
@@ -310,14 +309,10 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
     gtk_box_pack_start(GTK_BOX(main_vbox), label, FALSE, FALSE, 0);
     gtk_widget_show(label);
 
-    alignment = gtk_alignment_new(0.0, 0.0, 1.0, 1.0);
-    gtk_alignment_set_padding (GTK_ALIGNMENT(alignment), 0, 0, 12, 0);
-    gtk_box_pack_start(GTK_BOX(main_vbox), alignment, FALSE, FALSE, 0);
-    gtk_widget_show(alignment);
-
-    vbox = gtk_vbox_new(TRUE, 3);
+    vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 3);
     gtk_container_set_border_width(GTK_CONTAINER(vbox), 6);
-    gtk_container_add(GTK_CONTAINER(alignment), vbox);
+    gtk_box_set_spacing(GTK_BOX(main_vbox), 12);
+    gtk_box_pack_start(GTK_BOX(main_vbox), vbox, FALSE, FALSE, 0);
     gtk_widget_show(vbox);
 
     for (node = radio_list, i = 0; node; node = node->next, i++)
@@ -340,10 +335,10 @@ gnc_choose_radio_option_dialog(GtkWidget *parent,
     }
 
     if (!button_name)
-        button_name = GTK_STOCK_OK;
+        button_name = _("Open");
     dialog = gtk_dialog_new_with_buttons (title, GTK_WINDOW(parent),
                                           GTK_DIALOG_DESTROY_WITH_PARENT,
-                                          GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                          _("Cancel"), GTK_RESPONSE_CANCEL,
                                           button_name, GTK_RESPONSE_OK,
                                           NULL);
 

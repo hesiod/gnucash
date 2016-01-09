@@ -406,7 +406,7 @@ struct _GncRecurrenceComp
 
     GtkBox *vbox;
     GtkBox *hbox;
-    GtkHButtonBox *hbb;
+    GtkButtonBox *hbb;
     gint num_rec;
     GtkButton *buttRemove;
     GtkButton *buttAdd;
@@ -534,14 +534,15 @@ gnc_recurrence_comp_init(GncRecurrenceComp *grc)
 {
     GtkWidget *vb;
 
-    grc->hbb = GTK_HBUTTON_BOX(gtk_hbutton_box_new());
+    grc->hbb = GTK_BUTTON_BOX(gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL));
     grc->vbox = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 1));
     grc->rlist = NULL;
 
-    grc->buttAdd = GTK_BUTTON(gtk_button_new_from_stock(GTK_STOCK_ADD));
+    // FIXME Size?
+    grc->buttAdd = GTK_BUTTON(gtk_button_new_from_icon_name("list-add", GTK_ICON_SIZE_MENU));
     g_signal_connect(G_OBJECT(grc->buttAdd), "clicked",
                      G_CALLBACK(addClicked), grc);
-    grc->buttRemove = GTK_BUTTON(gtk_button_new_from_stock(GTK_STOCK_REMOVE));
+    grc->buttRemove = GTK_BUTTON(gtk_button_new_from_icon_name("list-remove", GTK_ICON_SIZE_MENU));
     g_signal_connect(G_OBJECT(grc->buttRemove), "clicked",
                      G_CALLBACK(removeClicked), grc);
 

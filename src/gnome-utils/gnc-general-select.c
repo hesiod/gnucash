@@ -81,7 +81,7 @@ gnc_general_select_get_type (void)
             NULL,
         };
 
-        general_select_type = g_type_register_static(GTK_BOX,
+        general_select_type = g_type_register_static(GTK_TYPE_BOX,
                               "GNCGeneralSelect",
                               &general_select_info, 0);
     }
@@ -119,7 +119,7 @@ gnc_general_select_class_init (GNCGeneralSelectClass *klass)
 
     object_class = (GObjectClass*) klass;
 
-    parent_class = g_type_class_ref(GTK_BOX);
+    parent_class = g_type_class_ref(GTK_TYPE_BOX);
 
     general_select_signals[SELECTION_CHANGED] =
         g_signal_new("changed",

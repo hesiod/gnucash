@@ -33,16 +33,22 @@
 #include "gnc-filepath-utils.h"
 #include "gnc-gnome-utils.h"
 
-static GtkStockItem items[] =
+typedef struct
 {
-    { GNC_STOCK_ACCOUNT,        N_("Account"),         0, 0, NULL },
-    { GNC_STOCK_DELETE_ACCOUNT, N_("_Delete Account"), 0, 0, NULL },
-    { GNC_STOCK_EDIT_ACCOUNT,   N_("_Edit Account"),   0, 0, NULL },
-    { GNC_STOCK_NEW_ACCOUNT,    N_("_New Account"),    0, 0, NULL },
-    { GNC_STOCK_OPEN_ACCOUNT,   N_("_Open Account"),   0, 0, NULL },
-    { GNC_STOCK_TRANSFER,       N_("_Transfer..."),    0, 0, NULL },
-    { GNC_STOCK_SPLIT_TRANS,    N_("S_plit Transaction"), 0, 0, NULL },
-    { GNC_STOCK_JUMP_TO,        N_("_Jump"),              0, 0, NULL },
+  gchar *stock_id;
+  gchar *label;
+} GncIconDef;
+
+static GncIconDef items[] =
+{
+    { GNC_STOCK_ACCOUNT,        N_("Account") },
+    { GNC_STOCK_DELETE_ACCOUNT, N_("_Delete Account") },
+    { GNC_STOCK_EDIT_ACCOUNT,   N_("_Edit Account") },
+    { GNC_STOCK_NEW_ACCOUNT,    N_("_New Account") },
+    { GNC_STOCK_OPEN_ACCOUNT,   N_("_Open Account") },
+    { GNC_STOCK_TRANSFER,       N_("_Transfer...") },
+    { GNC_STOCK_SPLIT_TRANS,    N_("S_plit Transaction") },
+    { GNC_STOCK_JUMP_TO,        N_("_Jump") },
 };
 
 typedef struct _item_file
