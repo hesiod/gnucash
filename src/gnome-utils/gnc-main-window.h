@@ -54,7 +54,7 @@
 /** The instance data structure for a main window object. */
 typedef struct GncMainWindow
 {
-    GtkWindow gtk_window;	/**< The parent object for a main window. */
+    GtkApplicationWindow gtk_window;	/**< The parent object for a main window. */
     GtkBuilder *ui_merge; /**< A pointer to the UI Manager data
                                    structure for the whole window. */
 } GncMainWindow;
@@ -62,7 +62,7 @@ typedef struct GncMainWindow
 /** The class data structure for a main window object. */
 typedef struct
 {
-    GtkWindowClass gtk_window;	/**< The parent class for a
+    GtkApplicationWindowClass gtk_window;	/**< The parent class for a
                                            main window. */
 
     /* callbacks */
