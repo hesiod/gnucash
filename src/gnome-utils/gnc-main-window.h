@@ -357,7 +357,7 @@ void gnc_main_window_restore_default_state(GncMainWindow *window);
  * gtk_action_group_set_translation_domain again.
  **/
 void
-gnc_gtk_action_group_set_translation_domain (GSimpleActionGroup *action_group,
+gnc_gtk_action_group_set_translation_domain (GtkBuilder *action_group,
         const gchar    *domain);
 
 
