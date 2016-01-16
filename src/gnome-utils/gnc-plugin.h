@@ -249,7 +249,7 @@ typedef struct
  *  @param toolbar_labels A pointer to a NULL terminated array of data
  *  action_toolbar_labels items.
  */
-void gnc_plugin_init_short_names (GSimpleActionGroup *action_group,
+void gnc_plugin_init_short_names (GActionGroup *action_group,
                                   action_toolbar_labels *toolbar_labels);
 
 
@@ -264,7 +264,7 @@ void gnc_plugin_init_short_names (GSimpleActionGroup *action_group,
  *  @param name A list of actions names to be marked important.  This
  *  list must be NULL terminated.
  */
-void gnc_plugin_set_important_actions (GSimpleActionGroup *action_group,
+void gnc_plugin_set_important_actions (GActionGroup *action_group,
                                        const gchar **names);
 
 
@@ -286,7 +286,7 @@ void gnc_plugin_set_important_actions (GSimpleActionGroup *action_group,
  *  @param value A boolean specifying the new state for the specified
  *  property.
  */
-void gnc_plugin_update_actions (GSimpleActionGroup *action_group,
+void gnc_plugin_update_actions (GActionGroup *action_group,
                                 const gchar **action_names,
                                 const gchar *property_name,
                                 gboolean value);
@@ -308,7 +308,7 @@ void gnc_plugin_update_actions (GSimpleActionGroup *action_group,
  *  occurred, the return value is 0.
  */
 gint gnc_plugin_add_actions (GtkBuilder *ui_merge,
-                             GSimpleActionGroup *action_group,
+                             GActionGroup *action_group,
                              const gchar *filename);
 G_END_DECLS
 

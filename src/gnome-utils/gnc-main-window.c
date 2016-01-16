@@ -126,7 +126,7 @@ static guint secs_to_save = 0;
 static void gnc_main_window_class_init (GncMainWindowClass *klass);
 static void gnc_main_window_init (GncMainWindow *window, GncMainWindowClass *klass);
 static void gnc_main_window_finalize (GObject *object);
-static void gnc_main_window_destroy (GObject *object);
+static void gnc_main_window_destroy (GtkWidget *object);
 
 static void gnc_main_window_setup_window (GncMainWindow *window);
 static void gnc_window_main_window_init (GncWindowIface *iface);
@@ -143,28 +143,28 @@ static void gnc_main_window_plugin_removed (GncPlugin *manager, GncPlugin *plugi
 static void gnc_main_window_engine_commit_error_callback( gpointer data, QofBackendError errcode );
 
 /* Command callbacks */
-static void gnc_main_window_cmd_page_setup (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_file_properties (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_file_close (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_file_quit (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_edit_cut (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_edit_copy (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_edit_paste (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_edit_preferences (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_view_refresh (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_view_toolbar (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_view_summary (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_view_statusbar (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_actions_reset_warnings (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_actions_rename_page (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_window_new (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_window_move_page (GSimpleAction *action, GncMainWindow *window);
+static void gnc_main_window_cmd_page_setup (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_file_properties (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_file_close (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_file_quit (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_edit_cut (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_edit_copy (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_edit_paste (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_edit_preferences (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_view_refresh (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_view_toolbar (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_view_summary (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_view_statusbar (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_actions_reset_warnings (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_actions_rename_page (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_window_new (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_window_move_page (GSimpleAction *action, GVariant *parameter, gpointer window);
 #ifndef MAC_INTEGRATION
-static void gnc_main_window_cmd_window_raise (GSimpleAction *action, GSimpleAction *current, GncMainWindow *window);
+static void gnc_main_window_cmd_window_raise (GSimpleAction *action, GVariant *parameter, gpointer window);
 #endif
-static void gnc_main_window_cmd_help_tutorial (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_help_contents (GSimpleAction *action, GncMainWindow *window);
-static void gnc_main_window_cmd_help_about (GSimpleAction *action, GncMainWindow *window);
+static void gnc_main_window_cmd_help_tutorial (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_help_contents (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_help_about (GSimpleAction *action, GVariant *parameter, gpointer window);
 
 static void do_popup_menu(GncPluginPage *page, GdkEventButton *event);
 static gboolean gnc_main_window_popup_menu_cb (GtkWidget *widget, GncPluginPage *page);
@@ -210,7 +210,7 @@ typedef struct GncMainWindowPrivate
     /** The group of all actions provided by the main window
      *  itself.  This does not include any action provided by menu
      *  or content plugins. */
-    GSimpleActionGroup *action_group;
+    GActionGroup *action_group;
 
     /** A list of all pages that are installed in this window. */
     GList *installed_pages;
@@ -240,7 +240,7 @@ typedef struct
     guint merge_id;
     /** The action group itself.  This contains all actions added
      *  by a single menu or content plugin. */
-    GSimpleActionGroup *action_group;
+    GActionGroup *action_group;
 } MergedActionEntry;
 
 /** A holding place for all the signals generated by the main window
@@ -253,184 +253,146 @@ static guint main_window_signals[LAST_SIGNAL] = { 0 };
  *  This includes some placeholder actions for the menus that are
  *  visible in the menu bar but have no action associated with
  *  them. */
-#if 0
 static GActionEntry gnc_menu_actions [] =
 {
     /* Toplevel */
 
-    { "FileAction", NULL, N_("_File"), NULL, NULL, NULL, },
-    { "EditAction", NULL, N_("_Edit"), NULL, NULL, NULL },
-    { "ViewAction", NULL, N_("_View"), NULL, NULL, NULL },
-    { "ActionsAction", NULL, N_("_Actions"), NULL, NULL, NULL },
-    { "TransactionAction", NULL, N_("Tra_nsaction"), NULL, NULL, NULL },
-    { "ReportsAction", NULL, N_("_Reports"), NULL, NULL, NULL },
-    { "ToolsAction", NULL, N_("_Tools"), NULL, NULL, NULL },
-    { "ExtensionsAction", NULL, N_("E_xtensions"), NULL, NULL, NULL },
-    { "WindowsAction", NULL, N_("_Windows"), NULL, NULL, NULL },
-    { "HelpAction", NULL, N_("_Help"), NULL, NULL, NULL },
+    { "FileAction", NULL, NULL, NULL, NULL },
+    { "EditAction", NULL, NULL, NULL, NULL },
+    { "ViewAction", NULL, NULL, NULL, NULL },
+    { "ActionsAction", NULL, NULL, NULL, NULL },
+    { "TransactionAction", NULL, NULL, NULL, NULL },
+    { "ReportsAction", NULL, NULL, NULL, NULL },
+    { "ToolsAction", NULL, NULL, NULL, NULL },
+    { "ExtensionsAction", NULL, NULL, NULL, NULL },
+    { "WindowsAction", NULL, NULL, NULL, NULL },
+    { "HelpAction", NULL, NULL, NULL, NULL },
 
     /* File menu */
 
-    { "FileImportAction", NULL, N_("_Import"), NULL, NULL, NULL },
-    { "FileExportAction", NULL, N_("_Export"), NULL, NULL, NULL },
+    { "FileImportAction", NULL, NULL, NULL, NULL },
+    { "FileExportAction", NULL, NULL, NULL, NULL },
     {
-        "FilePrintAction", "document-print", N_("_Print..."), "<control>p",
-        N_("Print the currently active page"), NULL
+        "FilePrintAction", NULL, NULL, NULL, NULL
     },
     {
-        "FilePageSetupAction", "document-page-setup", N_("Pa_ge Setup..."), "<control><shift>p",
-        N_("Specify the page size and orientation for printing"),
-        G_CALLBACK (gnc_main_window_cmd_page_setup)
+        "FilePageSetupAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_page_setup
     },
     {
-        "FilePropertiesAction", "document-properties", N_("Proper_ties"), "<Alt>Return",
-        N_("Edit the properties of the current file"),
-        G_CALLBACK (gnc_main_window_cmd_file_properties)
+        "FilePropertiesAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_file_properties
     },
     {
-        "FileCloseAction", "window-close", N_("_Close"), NULL,
-        N_("Close the currently active page"),
-        G_CALLBACK (gnc_main_window_cmd_file_close)
+        "FileCloseAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_file_close
     },
     {
-        "FileQuitAction", "application-exit", N_("_Quit"), NULL,
-        N_("Quit this application"),
-        G_CALLBACK (gnc_main_window_cmd_file_quit)
+        "FileQuitAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_file_quit
     },
 
     /* Edit menu */
 
     {
-        "EditCutAction", "edit-cut", N_("Cu_t"), NULL,
-        N_("Cut the current selection and copy it to clipboard"),
-        G_CALLBACK (gnc_main_window_cmd_edit_cut)
+        "EditCutAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_edit_cut
     },
     {
-        "EditCopyAction", "edit-copy", N_("_Copy"), NULL,
-        N_("Copy the current selection to clipboard"),
-        G_CALLBACK (gnc_main_window_cmd_edit_copy)
+        "EditCopyAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_edit_copy
     },
     {
-        "EditPasteAction", "edit-paste", N_("_Paste"), NULL,
-        N_("Paste the clipboard content at the cursor position"),
-        G_CALLBACK (gnc_main_window_cmd_edit_paste)
+        "EditPasteAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_edit_paste
     },
     {
-        "EditPreferencesAction", "preferences-desktop", N_("Pr_eferences"), NULL,
-        N_("Edit the global preferences of GnuCash"),
-        G_CALLBACK (gnc_main_window_cmd_edit_preferences)
+        "EditPreferencesAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_edit_preferences
     },
 
     /* View menu */
 
     {
-        "ViewSortByAction", NULL, N_("_Sort By..."), NULL,
-        N_("Select sorting criteria for this page view"), NULL
+        "ViewSortByAction", NULL, NULL, NULL, NULL
     },
     {
-        "ViewFilterByAction", NULL, N_("_Filter By..."), NULL,
-        N_("Select the account types that should be displayed."), NULL
+        "ViewFilterByAction", NULL, NULL, NULL, NULL
     },
     {
-        "ViewRefreshAction", "view-refresh", N_("_Refresh"), "<control>r",
-        N_("Refresh this window"),
-        G_CALLBACK (gnc_main_window_cmd_view_refresh)
+        "ViewRefreshAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_view_refresh
     },
 
     /* Actions menu */
 
-    { "ScrubMenuAction", NULL, N_("_Check & Repair"), NULL, NULL, NULL },
+    { "ScrubMenuAction", NULL, NULL, NULL, NULL },
     {
-        "ActionsForgetWarningsAction", NULL, N_("Reset _Warnings..."), NULL,
-        N_("Reset the state of all warning messages so they will be shown again."),
-        G_CALLBACK (gnc_main_window_cmd_actions_reset_warnings)
+        "ActionsForgetWarningsAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_actions_reset_warnings
     },
     {
-        "ActionsRenamePageAction", NULL, N_("Re_name Page"), NULL,
-        N_("Rename this page."),
-        G_CALLBACK (gnc_main_window_cmd_actions_rename_page)
+        "ActionsRenamePageAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_actions_rename_page
     },
 
     /* Windows menu */
 
     {
-        "WindowNewAction", "window-new", N_("_New Window"), NULL,
-        N_("Open a new top-level GnuCash window."),
-        G_CALLBACK (gnc_main_window_cmd_window_new)
+        "WindowNewAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_window_new
     },
     {
-        "WindowMovePageAction", NULL, N_("New Window with _Page"), NULL,
-        N_("Move the current page to a new top-level GnuCash window."),
-        G_CALLBACK (gnc_main_window_cmd_window_move_page)
+        "WindowMovePageAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_window_move_page
     },
 
     /* Help menu */
 
     {
-        "HelpTutorialAction", "help-faq", N_("Tutorial and Concepts _Guide"), NULL,
-        N_("Open the GnuCash Tutorial"),
-        G_CALLBACK (gnc_main_window_cmd_help_tutorial)
+        "HelpTutorialAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_help_tutorial
     },
     {
-        "HelpContentsAction", "help-contents", N_("_Contents"), "F1",
-        N_("Open the GnuCash Help"),
-        G_CALLBACK (gnc_main_window_cmd_help_contents)
+        "HelpContentsAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_help_contents
     },
     {
-        "HelpAboutAction", "help-about", N_("_About"), NULL,
-        N_("About GnuCash"),
-        G_CALLBACK (gnc_main_window_cmd_help_about)
+        "HelpAboutAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_help_about
     },
+     /* Toggle actions */
+    {
+        "ViewToolbarAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_view_toolbar
+    },
+    {
+        "ViewSummaryAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_view_summary
+    },
+    {
+        "ViewStatusbarAction", NULL, NULL, NULL,
+        gnc_main_window_cmd_view_statusbar
+    },
+#ifndef MAC_INTEGRATION
+     /** An array of all of the radio action provided by the main window
+      *  code. */
+     { "Window0Action", NULL, NULL, NULL, NULL },
+     { "Window1Action", NULL, NULL, NULL, NULL },
+     { "Window2Action", NULL, NULL, NULL, NULL },
+     { "Window3Action", NULL, NULL, NULL, NULL },
+     { "Window4Action", NULL, NULL, NULL, NULL },
+     { "Window5Action", NULL, NULL, NULL, NULL },
+     { "Window6Action", NULL, NULL, NULL, NULL },
+     { "Window7Action", NULL, NULL, NULL, NULL },
+     { "Window8Action", NULL, NULL, NULL, NULL },
+     { "Window9Action", NULL, NULL, NULL, NULL },
+#endif
 };
 /** The number of actions provided by the main window. */
 static guint gnc_menu_n_actions = G_N_ELEMENTS (gnc_menu_actions);
+static guint n_radio_entries = 10;
 
-/** An array of all of the toggle action provided by the main window
- *  code. */
-static GActionEntry toggle_actions [] =
-{
-    {
-        "ViewToolbarAction", NULL, N_("_Toolbar"), NULL,
-        N_("Show/hide the toolbar on this window"),
-        G_CALLBACK (gnc_main_window_cmd_view_toolbar), TRUE
-    },
-    {
-        "ViewSummaryAction", NULL, N_("Su_mmary Bar"), NULL,
-        N_("Show/hide the summary bar on this window"),
-        G_CALLBACK (gnc_main_window_cmd_view_summary), TRUE
-    },
-    {
-        "ViewStatusbarAction", NULL, N_("Stat_us Bar"), NULL,
-        N_("Show/hide the status bar on this window"),
-        G_CALLBACK (gnc_main_window_cmd_view_statusbar), TRUE
-    },
-};
-/** The number of toggle actions provided by the main window. */
-static guint n_toggle_actions = G_N_ELEMENTS (toggle_actions);
-
-
-#ifndef MAC_INTEGRATION
-/** An array of all of the radio action provided by the main window
- *  code. */
-static GActionEntry radio_entries [] =
-{
-    { "Window0Action", NULL, N_("Window _1"), NULL, NULL, 0 },
-    { "Window1Action", NULL, N_("Window _2"), NULL, NULL, 1 },
-    { "Window2Action", NULL, N_("Window _3"), NULL, NULL, 2 },
-    { "Window3Action", NULL, N_("Window _4"), NULL, NULL, 3 },
-    { "Window4Action", NULL, N_("Window _5"), NULL, NULL, 4 },
-    { "Window5Action", NULL, N_("Window _6"), NULL, NULL, 5 },
-    { "Window6Action", NULL, N_("Window _7"), NULL, NULL, 6 },
-    { "Window7Action", NULL, N_("Window _8"), NULL, NULL, 7 },
-    { "Window8Action", NULL, N_("Window _9"), NULL, NULL, 8 },
-    { "Window9Action", NULL, N_("Window _0"), NULL, NULL, 9 },
-};
-
-/** The number of radio actions provided by the main window. */
-static guint n_radio_entries = G_N_ELEMENTS (radio_entries);
-#endif
-
-#endif
 
 /** These are the "important" actions provided by the main window.
  *  Their labels will appear when the toolbar is set to "Icons and
@@ -649,7 +611,7 @@ static void
 gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *data)
 {
     GncMainWindowPrivate *priv;
-    GSimpleAction *action;
+    GAction *action;
     GActionGroup *group;
     gint *pos, *geom, *order;
     gsize length;
@@ -949,7 +911,7 @@ gnc_main_window_restore_all_windows(const GKeyFile *keyfile)
 void
 gnc_main_window_restore_default_state(GncMainWindow *window)
 {
-    GSimpleAction *action;
+    GAction *action;
 
     /* The default state should be to have an Account Tree page open
      * in the window. */
@@ -1759,7 +1721,7 @@ gnc_main_window_update_one_menu_action (GncMainWindow *window,
                                         struct menu_update *data)
 {
     GncMainWindowPrivate *priv;
-    GSimpleAction* action;
+    GAction* action;
 
     ENTER("window %p, action %s, label %s, visible %d", window,
           data->action_name, data->label, data->visible);
@@ -1789,7 +1751,7 @@ static void
 gnc_main_window_update_radio_button (GncMainWindow *window)
 {
     GncMainWindowPrivate *priv;
-    GSimpleAction *action, *first_action;
+    GAction *action, *first_action;
     GSList *action_list;
     gchar *action_name;
     gint index;
@@ -1808,9 +1770,11 @@ gnc_main_window_update_radio_button (GncMainWindow *window)
     action_name = g_strdup_printf("Window%dAction", index);
     action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group), action_name);
 
+    // FIXME Why do we need this?
     /* Block the signal so as not to affect window ordering (top to
      * bottom) on the screen */
-    action_list = gtk_radio_action_get_group(G_ACTION(action));
+#if 0
+    action_list = gtk_radio_action_get_group(action);
     if (action_list)
     {
         first_action = g_slist_last(action_list)->data;
@@ -1824,6 +1788,7 @@ gnc_main_window_update_radio_button (GncMainWindow *window)
                                           G_CALLBACK(gnc_main_window_cmd_window_raise),
                                           window);
     }
+#endif
     g_free(action_name);
     LEAVE(" ");
 }
@@ -2592,7 +2557,7 @@ gnc_main_window_finalize (GObject *object)
 
 
 static void
-gnc_main_window_destroy (GObject *object)
+gnc_main_window_destroy (GtkWidget *object)
 {
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
@@ -3071,7 +3036,7 @@ gnc_main_window_get_current_page (GncMainWindow *window)
 void
 gnc_main_window_manual_merge_actions (GncMainWindow *window,
                                       const gchar *group_name,
-                                      GSimpleActionGroup *group,
+                                      GActionGroup *group,
                                       guint merge_id)
 {
     GncMainWindowPrivate *priv;
@@ -3128,16 +3093,16 @@ gnc_main_window_merge_actions (GncMainWindow *window,
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     entry = g_new0 (MergedActionEntry, 1);
-    entry->action_group = g_simple_action_group_new ();
-    gnc_gtk_action_group_set_translation_domain (entry->action_group, GETTEXT_PACKAGE);
-    g_action_group_add_action_entries (entry->action_group, actions, n_actions, data);
+    entry->action_group = G_ACTION_GROUP (g_simple_action_group_new ());
+    g_action_map_add_action_entries (G_ACTION_MAP(entry->action_group),
+                                     actions, n_actions, data);
     if (toggle_actions != NULL && n_toggle_actions > 0)
     {
-        gtk_action_group_add_toggle_actions (entry->action_group,
+        g_action_map_add_action_entries (G_ACTION_MAP(entry->action_group),
                                              toggle_actions, n_toggle_actions,
                                              data);
     }
-    gtk_ui_manager_insert_action_group (window->ui_merge, entry->action_group, 0);
+    gtk_builder_insert_action_group (window->ui_merge, entry->action_group, 0);
     entry->merge_id = gtk_builder_add_from_file (window->ui_merge, pathname, &error);
     g_assert(entry->merge_id || error);
     if (entry->merge_id)
@@ -3184,10 +3149,11 @@ gnc_main_window_unmerge_actions (GncMainWindow *window,
     g_hash_table_remove (priv->merged_actions_table, group_name);
 }
 
-GSimpleAction *
+GAction *
 gnc_main_window_find_action (GncMainWindow *window, const gchar *name)
 {
-    return g_action_map_lookup_action (gtk_builder_get_application (window->ui_merge), name);
+    return g_action_map_lookup_action (
+           G_ACTION_MAP(gtk_builder_get_application (window->ui_merge)), name);
 }
 
 
@@ -3195,7 +3161,7 @@ gnc_main_window_find_action (GncMainWindow *window, const gchar *name)
  *  This function can be used to get an group of action to be
  *  manipulated when the front page of a window has changed.
  */
-GSimpleActionGroup *
+GActionGroup *
 gnc_main_window_get_action_group (GncMainWindow *window,
                                   const gchar *group_name)
 {
@@ -3248,7 +3214,7 @@ gnc_main_window_update_edit_actions_sensitivity (GncMainWindow *window, gboolean
     GncMainWindowPrivate *priv;
     GncPluginPage *page;
     GtkWidget *widget = gtk_window_get_focus (GTK_WINDOW (window));
-    GSimpleAction *action;
+    GAction *action;
     gboolean can_copy = FALSE, can_cut = FALSE, can_paste = FALSE;
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
@@ -3295,6 +3261,8 @@ gnc_main_window_update_edit_actions_sensitivity (GncMainWindow *window, gboolean
 #endif
     }
 
+    // FIXME Replace this
+#if 0
     action = gnc_main_window_find_action (window, "EditCopyAction");
     gtk_action_set_sensitive (action, can_copy);
     gtk_action_set_visible (action, !hide || can_copy);
@@ -3304,12 +3272,13 @@ gnc_main_window_update_edit_actions_sensitivity (GncMainWindow *window, gboolean
     action = gnc_main_window_find_action (window, "EditPasteAction");
     gtk_action_set_sensitive (action, can_paste);
     gtk_action_set_visible (action,  !hide || can_paste);
+#endif
 }
 
 static void
 gnc_main_window_enable_edit_actions_sensitivity (GncMainWindow *window)
 {
-    GSimpleAction *action;
+    GAction *action;
 
     action = gnc_main_window_find_action (window, "EditCopyAction");
     gtk_action_set_sensitive (action, TRUE);
@@ -3341,25 +3310,25 @@ gnc_main_window_init_menu_updaters (GncMainWindow *window)
 {
     GtkWidget *edit_menu_item, *edit_menu;
 
-    edit_menu_item = gtk_ui_manager_get_widget
-                     (window->ui_merge, "/menubar/Edit");
+    edit_menu_item = GTK_WIDGET(gtk_builder_get_object
+                     (window->ui_merge, "/menubar/Edit"));
     edit_menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM (edit_menu_item));
 
     g_signal_connect (edit_menu, "show",
-                      G_CALLBACK (gnc_main_window_edit_menu_show_cb), window);
+                      gnc_main_window_edit_menu_show_cb), window);
     g_signal_connect (edit_menu, "hide",
-                      G_CALLBACK (gnc_main_window_edit_menu_hide_cb), window);
+                      gnc_main_window_edit_menu_hide_cb), window);
 }
 
 /* CS: This callback functions will set the statusbar text to the
- * "tooltip" property of the currently selected GSimpleAction.
+ * "tooltip" property of the currently selected GAction.
  *
  * This code is directly copied from gtk+/test/testmerge.c.
  * Thanks to (L)GPL! */
 typedef struct _ActionStatus ActionStatus;
 struct _ActionStatus
 {
-    GSimpleAction *action;
+    GAction *action;
     GtkWidget *statusbar;
 };
 
@@ -3406,7 +3375,7 @@ unset_tip (GtkWidget *widget)
 
 static void
 connect_proxy (GtkBuilder *merge,
-               GSimpleAction    *action,
+               GAction    *action,
                GtkWidget    *proxy,
                GtkWidget    *statusbar)
 {
@@ -3433,8 +3402,8 @@ connect_proxy (GtkBuilder *merge,
             g_object_set_data_full (G_OBJECT (proxy), "action-status",
                                     data, action_status_destroy);
 
-            g_signal_connect (proxy, "select",  G_CALLBACK (set_tip), NULL);
-            g_signal_connect (proxy, "deselect", G_CALLBACK (unset_tip), NULL);
+            g_signal_connect (proxy, "select",  set_tip), NULL);
+            g_signal_connect (proxy, "deselect", unset_tip), NULL);
         }
     }
 }
@@ -3452,16 +3421,15 @@ gnc_main_window_window_menu (GncMainWindow *window)
 #endif
     GError *error = NULL;
     g_assert(filename);
-    merge_id = gtk_ui_manager_add_ui_from_file(window->ui_merge, filename,
+    merge_id = gtk_builder_add_from_file(window->ui_merge, filename,
                &error);
     g_free(filename);
     g_assert(merge_id);
 #ifndef MAC_INTEGRATION
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    gtk_action_group_add_radio_actions (priv->action_group,
-                                        radio_entries, n_radio_entries,
-                                        0,
-                                        G_CALLBACK(gnc_main_window_cmd_window_raise),
+    g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
+                                        gnc_menu_actions, gnc_menu_n_actions,
+                                        //FIXME G_CALLBACK(gnc_main_window_cmd_window_raise),
                                         window);
 #endif
 };
@@ -3481,7 +3449,7 @@ gnc_main_window_setup_window (GncMainWindow *window)
 
     /* Catch window manager delete signal */
     g_signal_connect (G_OBJECT (window), "delete-event",
-                      G_CALLBACK (gnc_main_window_delete_event), window);
+                      G_CALLBACK(gnc_main_window_delete_event), window);
 
     /* Create widgets and add them to the window */
     main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
@@ -3501,9 +3469,9 @@ gnc_main_window_setup_window (GncMainWindow *window)
                  (char *)NULL);
     gtk_widget_show (priv->notebook);
     g_signal_connect (G_OBJECT (priv->notebook), "switch-page",
-                      G_CALLBACK (gnc_main_window_switch_page), window);
+                      gnc_main_window_switch_page), window);
     g_signal_connect (G_OBJECT (priv->notebook), "page-reordered",
-                      G_CALLBACK (gnc_main_window_page_reordered), window);
+                      gnc_main_window_page_reordered), window);
     gtk_box_pack_start (GTK_BOX (main_vbox), priv->notebook,
                         TRUE, TRUE, 0);
 
@@ -3511,7 +3479,6 @@ gnc_main_window_setup_window (GncMainWindow *window)
     gtk_widget_show (priv->statusbar);
     gtk_box_pack_start (GTK_BOX (main_vbox), priv->statusbar,
                         FALSE, TRUE, 0);
-    gtk_window_set_has_resize_grip( GTK_WINDOW(priv->statusbar), TRUE );
 
     priv->progressbar = gtk_progress_bar_new ();
     gtk_progress_bar_set_text(GTK_PROGRESS_BAR(priv->progressbar), " ");
@@ -3524,13 +3491,11 @@ gnc_main_window_setup_window (GncMainWindow *window)
     window->ui_merge = gtk_builder_new ();
 
     /* Create menu and toolbar information */
-    priv->action_group = g_simple_action_group_new ();
+    priv->action_group = G_ACTION_GROUP(g_simple_action_group_new ());
     gtk_builder_set_translation_domain (window->ui_merge, GETTEXT_PACKAGE);
-    gtk_action_map_add_action_entries (priv->action_group, gnc_menu_actions,
-                                  gnc_menu_n_actions, window);
-    gtk_action_map_add_action_entries (priv->action_group,
-                                         toggle_actions, n_toggle_actions,
-                                         window);
+    g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
+                                     gnc_menu_actions,
+                                     gnc_menu_n_actions, window);
     gnc_plugin_update_actions(priv->action_group,
                               initially_insensitive_actions,
                               "sensitive", FALSE);
@@ -3545,24 +3510,24 @@ gnc_main_window_setup_window (GncMainWindow *window)
     gtk_ui_manager_insert_action_group (window->ui_merge, priv->action_group, 0);
 
     g_signal_connect (G_OBJECT (window->ui_merge), "add_widget",
-                      G_CALLBACK (gnc_main_window_add_widget), window);
+                      gnc_main_window_add_widget), window);
     /* Use the "connect-proxy" signal for tooltip display in the
        status bar */
     g_signal_connect (G_OBJECT (window->ui_merge), "connect-proxy",
-                      G_CALLBACK (connect_proxy), priv->statusbar);
+                      connect_proxy), priv->statusbar);
 
     filename = gnc_filepath_locate_ui_file("gnc-main-window-ui.xml");
 
     /* Can't do much without a ui. */
     g_assert (filename);
 
-    merge_id = gtk_ui_manager_add_ui_from_file (window->ui_merge,
+    merge_id = gtk_builder_add_from_file (window->ui_merge,
                filename, &error);
     g_assert(merge_id || error);
     if (merge_id)
     {
         gtk_window_add_accel_group (GTK_WINDOW (window),
-                                    gtk_ui_manager_get_accel_group(window->ui_merge));
+                                    gtk_builder_get_accel_group(window->ui_merge));
     }
     else
     {
@@ -3597,9 +3562,9 @@ gnc_main_window_setup_window (GncMainWindow *window)
     /* Now update the "eXtensions" menu */
     if (!gnc_prefs_is_extra_enabled())
     {
-        GSimpleAction*  action;
+        GAction*  action;
 
-        action = gtk_action_group_get_action(priv->action_group,
+        action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group),
                                              "ExtensionsAction");
         gtk_action_set_visible(action, FALSE);
     }
@@ -3611,9 +3576,9 @@ gnc_main_window_setup_window (GncMainWindow *window)
     g_list_free (plugins);
 
     g_signal_connect (G_OBJECT (manager), "plugin-added",
-                      G_CALLBACK (gnc_main_window_plugin_added), window);
+                      gnc_main_window_plugin_added), window);
     g_signal_connect (G_OBJECT (manager), "plugin-removed",
-                      G_CALLBACK (gnc_main_window_plugin_removed), window);
+                      gnc_main_window_plugin_removed), window);
 
     LEAVE(" ");
 }
@@ -3727,7 +3692,7 @@ gnc_main_window_add_widget (GtkBuilder *merge,
 
 /** Should a summary bar be visible in this window?  In order to
  *  prevent synchronization issues, the "ViewSummaryBar"
- *  GtkToggleAction is the sole source of information for whether or
+ *  GAction is the sole source of information for whether or
  *  not any summary bar should be visible in a window.
  *
  *  @param window A pointer to the window in question.
@@ -3738,17 +3703,18 @@ gnc_main_window_add_widget (GtkBuilder *merge,
  *  @return TRUE if the summarybar should be visible.
  */
 static gboolean
-gnc_main_window_show_summarybar (GncMainWindow *window, GSimpleAction *action)
+gnc_main_window_show_summarybar (GncMainWindow *window, GAction *action)
 {
     GncMainWindowPrivate *priv;
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     if (action == NULL)
-        action = gtk_action_group_get_action(priv->action_group,
+        action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group),
                                              "ViewSummaryAction");
     if (action == NULL)
         return TRUE;
-    return g_action_get_active(G_ACTION(action));
+
+    return g_variant_get_boolean(g_action_get_state(action));
 }
 
 /** This function is invoked when the GtkNotebook switches pages.  It
@@ -3888,7 +3854,8 @@ gnc_main_window_plugin_removed (GncPlugin *manager,
 /* Command callbacks */
 static void
 gnc_main_window_cmd_page_setup (GSimpleAction *action,
-                                GncMainWindow *window)
+                                GVariant      *parameter,
+                                gpointer       window)
 {
     GtkWindow *gtk_window;
 
@@ -3973,13 +3940,17 @@ gnc_book_options_dialog_cb (gboolean modal, gchar *title)
 }
 
 static void
-gnc_main_window_cmd_file_properties (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_file_properties (GSimpleAction *action,
+                                     GVariant      *parameter,
+                                     gpointer       window)
 {
     gnc_book_options_dialog_cb (FALSE, NULL);
 }
 
 static void
-gnc_main_window_cmd_file_close (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_file_close (GSimpleAction *action,
+                                GVariant      *parameter,
+                                gpointer       window)
 {
     GncMainWindowPrivate *priv;
     GncPluginPage *page;
@@ -3992,7 +3963,9 @@ gnc_main_window_cmd_file_close (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_file_quit (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_file_quit (GSimpleAction *action,
+                               GVariant      *parameter,
+                               gpointer       window)
 {
     if (!gnc_main_window_all_finish_pending())
         return;
@@ -4001,7 +3974,9 @@ gnc_main_window_cmd_file_quit (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_edit_cut (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_edit_cut (GSimpleAction *action,
+                              GVariant      *parameter,
+                              gpointer       window)
 {
     GtkWidget *widget = gtk_window_get_focus (GTK_WINDOW (window));
     GtkTextBuffer *text_buffer;
@@ -4023,7 +3998,9 @@ gnc_main_window_cmd_edit_cut (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_edit_copy (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_edit_copy (GSimpleAction *action,
+                               GVariant      *parameter,
+                               gpointer       window)
 {
     GtkWidget *widget = gtk_window_get_focus (GTK_WINDOW (window));
     GtkTextBuffer *text_buffer;
@@ -4043,7 +4020,9 @@ gnc_main_window_cmd_edit_copy (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_edit_paste (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_edit_paste (GSimpleAction *action,
+                                GVariant      *parameter,
+                                gpointer       window)
 {
     GtkWidget *widget = gtk_window_get_focus (GTK_WINDOW (window));
     GtkTextBuffer *text_buffer;
@@ -4063,24 +4042,32 @@ gnc_main_window_cmd_edit_paste (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_edit_preferences (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_edit_preferences (GSimpleAction *action,
+                                      GVariant      *parameter,
+                                      gpointer       window)
 {
     gnc_preferences_dialog ();
 }
 
 static void
-gnc_main_window_cmd_view_refresh (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_view_refresh (GSimpleAction *action,
+                                  GVariant      *parameter,
+                                  gpointer       window)
 {
 }
 
 static void
-gnc_main_window_cmd_actions_reset_warnings (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_actions_reset_warnings (GSimpleAction *action,
+                                            GVariant      *parameter,
+                                            gpointer       window)
 {
     gnc_reset_warnings_dialog(GTK_WINDOW(window));
 }
 
 static void
-gnc_main_window_cmd_actions_rename_page (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_actions_rename_page (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       window)
 {
     GncMainWindowPrivate *priv;
     GncPluginPage *page;
@@ -4110,7 +4097,9 @@ gnc_main_window_cmd_actions_rename_page (GSimpleAction *action, GncMainWindow *w
 }
 
 static void
-gnc_main_window_cmd_view_toolbar (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_view_toolbar (GSimpleAction *action,
+                                  GVariant      *parameter,
+                                  gpointer       window)
 {
     GncMainWindowPrivate *priv;
 
@@ -4126,7 +4115,9 @@ gnc_main_window_cmd_view_toolbar (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_view_summary (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_view_summary (GSimpleAction *action,
+                                  GVariant      *parameter,
+                                  gpointer       window)
 {
     GncMainWindowPrivate *priv;
     GList *item;
@@ -4141,12 +4132,16 @@ gnc_main_window_cmd_view_summary (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_view_statusbar (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_view_statusbar (GSimpleAction *action,
+                                    GVariant      *parameter,
+                                    gpointer       window)
 {
     GncMainWindowPrivate *priv;
+    GVariant *var;
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    if (g_action_get_active(GTK_TOGGLE_ACTION(action)))
+    var = g_action_get_state(action);
+    if (g_variant_get_boolean(var))
     {
         gtk_widget_show (priv->statusbar);
     }
@@ -4154,10 +4149,13 @@ gnc_main_window_cmd_view_statusbar (GSimpleAction *action, GncMainWindow *window
     {
         gtk_widget_hide (priv->statusbar);
     }
+    g_variant_unref(var);
 }
 
 static void
-gnc_main_window_cmd_window_new (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_window_new (GSimpleAction *action,
+                                GVariant      *parameter,
+                                gpointer       window)
 {
     GncMainWindow *new_window;
 
@@ -4169,7 +4167,9 @@ gnc_main_window_cmd_window_new (GSimpleAction *action, GncMainWindow *window)
 }
 
 static void
-gnc_main_window_cmd_window_move_page (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_window_move_page (GSimpleAction *action,
+                                      GVariant      *parameter,
+                                      gpointer       window)
 {
     GncMainWindowPrivate *priv;
     GncMainWindow *new_window;
@@ -4229,20 +4229,20 @@ gnc_main_window_cmd_window_move_page (GSimpleAction *action, GncMainWindow *wind
 #ifndef MAC_INTEGRATION
 static void
 gnc_main_window_cmd_window_raise (GSimpleAction *action,
-                                  GSimpleAction *current,
-                                  GncMainWindow *old_window)
+                                  GVariant      *parameter,
+                                  gpointer       old_window)
 {
     GncMainWindow *new_window;
-    GAction *action;
     gint32 value;
+    GVariant *var;
 
-    g_return_if_fail(GTK_IS_ACTION(action));
+    g_return_if_fail(G_IS_ACTION(action));
     g_return_if_fail(GNC_IS_MAIN_WINDOW(old_window));
 
     ENTER("action %p, current %p, window %p", action, current, old_window);
-    action = g_action_get_state(current);
-    value = g_variant_get_int32(action);
-    g_variant_unref(action);
+    var = g_action_get_state(current);
+    value = g_variant_get_int32(var);
+    g_variant_unref(var);
     new_window = g_list_nth_data(active_windows, value);
     gtk_window_present(GTK_WINDOW(new_window));
     /* revert the change in the radio group
@@ -4253,13 +4253,17 @@ gnc_main_window_cmd_window_raise (GSimpleAction *action,
 #endif /* !MAC_INTEGRATION */
 
 static void
-gnc_main_window_cmd_help_tutorial (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_help_tutorial (GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       window)
 {
     gnc_gnome_help (HF_GUIDE, NULL);
 }
 
 static void
-gnc_main_window_cmd_help_contents (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_help_contents (GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       window)
 {
     gnc_gnome_help (HF_HELP, NULL);
 }
@@ -4331,12 +4335,14 @@ url_signal_cb (GtkAboutDialog *dialog, gchar *uri, gpointer data)
 
 /** Create and display the "about" dialog for gnucash.
  *
- *  @param action The GSimpleAction for the "about" menu item.
+ *  @param action The GAction for the "about" menu item.
  *
  *  @param window The main window whose menu item was activated.
  */
 static void
-gnc_main_window_cmd_help_about (GSimpleAction *action, GncMainWindow *window)
+gnc_main_window_cmd_help_about (GSimpleAction *action,
+                                GVariant      *parameter,
+                                gpointer       window)
 {
     GncMainWindowPrivate *priv;
 
@@ -4394,9 +4400,9 @@ gnc_main_window_cmd_help_about (GSimpleAction *action, GncMainWindow *window)
     if (authors)     g_strfreev(authors);
     g_object_unref (logo);
     g_signal_connect (priv->about_dialog, "activate-link",
-              G_CALLBACK (url_signal_cb), NULL);
+              url_signal_cb), NULL);
     g_signal_connect (priv->about_dialog, "response",
-              G_CALLBACK (gtk_widget_hide), NULL);
+              gtk_widget_hide), NULL);
     gtk_window_set_transient_for (GTK_WINDOW (priv->about_dialog),
                       GTK_WINDOW (window));
     }
@@ -4583,7 +4589,7 @@ do_popup_menu(GncPluginPage *page, GdkEventButton *event)
         return;
     }
 
-    menu = gtk_ui_manager_get_widget(ui_merge, "/MainPopup");
+    menu = GTK_WIDGET(gtk_builder_get_object(ui_merge, "/MainPopup"));
     if (!menu)
     {
         LEAVE("no menu");
@@ -4655,22 +4661,12 @@ gnc_main_window_button_press_cb (GtkWidget *whatever,
 }
 
 
-/* CS: Code copied from gtk/GSimpleActiongroup.c */
-static gchar *
-dgettext_swapped (const gchar *msgid,
-                  const gchar *domainname)
-{
-    /* CS: Pass this through dgettext if and only if msgid is
-       nonempty. */
-    return (msgid && *msgid) ? dgettext (domainname, msgid) : (gchar*) msgid;
-}
-
 void
 gnc_main_window_all_action_set_sensitive (const gchar *action_name,
         gboolean sensitive)
 {
     GList *tmp;
-    GSimpleAction *action;
+    GAction *action;
 
     for (tmp = active_windows; tmp; tmp = g_list_next(tmp))
     {

@@ -204,7 +204,7 @@ main_window_update_page_color (GncPluginPage *page,
  */
 void gnc_main_window_manual_merge_actions (GncMainWindow *window,
         const gchar *group_name,
-        GSimpleActionGroup *group,
+        GActionGroup *group,
         guint merge_id);
 
 
@@ -284,11 +284,11 @@ void gnc_main_window_actions_updated (GncMainWindow *window);
  *  @param group_name The name of a set of actions.  This must be a
  *  name provided when the actions were installed.
  *
- *  @return A pointer to a GSimpleActionGroup that was added with the
+ *  @return A pointer to a GActionGroup that was added with the
  *  specified name.  If the name cannot be found, then NULL will be
  *  returned.
  */
-GSimpleActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
+GActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
         const gchar *group_name);
 
 
@@ -338,28 +338,6 @@ void gnc_main_window_save_all_windows(GKeyFile *keyfile);
  */
 void gnc_main_window_restore_default_state(GncMainWindow *window);
 
-/**
- * gnc_gtk_action_group_set_translation_domain:
- * @param action_group a #GSimpleActionGroup
- * @param domain the translation domain to use for dgettext() calls
- *
- * Sets the translation domain and uses dgettext() for translating the
- * @a label and @a tooltip of #GtkActionEntry<!-- -->s added by
- * gtk_action_group_add_actions().
- *
- * This is copied from gtk's gtk_action_group_set_translation_domain()
- * into GnuCash in order to fix problems when empty msgids were passed
- * through gettext().
- *
- * See http://bugzilla.gnome.org/show_bug.cgi?id=326200 . If that bug
- * is fixed in the gtk that we can rely open, then
- * gnc_gtk_action_group_set_translation_domain can be replaced by
- * gtk_action_group_set_translation_domain again.
- **/
-void
-gnc_gtk_action_group_set_translation_domain (GtkBuilder *action_group,
-        const gchar    *domain);
-
 
 /** Tell a window to finish any outstanding activities.  This function
  *  will call gnc_plugin_page_finish_pending for each installed page.
@@ -403,7 +381,7 @@ void gnc_main_window_all_action_set_sensitive (const gchar *action_name, gboolea
  *  specified name. If the name cannot be found, then NULL will be
  *  returned.
  */
-GSimpleAction *gnc_main_window_find_action (GncMainWindow *window, const gchar *name);
+GAction *gnc_main_window_find_action (GncMainWindow *window, const gchar *name);
 
 /**
  * Shows all main windows.
