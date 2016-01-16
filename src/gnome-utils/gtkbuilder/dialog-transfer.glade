@@ -63,7 +63,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="transfermain-vbox ">
+          <object class="GtkBox" id="transfermain-vbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
@@ -150,7 +150,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="num_entry ">
+                      <object class="GtkEntry" id="num_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -160,7 +160,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="description_entry ">
+                      <object class="GtkEntry" id="description_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -170,7 +170,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="memo_entry ">
+                      <object class="GtkEntry" id="memo_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -180,7 +180,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="amount_hbox ">
+                      <object class="GtkBox" id="amount_hbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -194,7 +194,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="date_hbox ">
+                      <object class="GtkBox" id="date_hbox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
@@ -254,7 +254,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="left_trans_window ">
+                          <object class="GtkScrolledWindow" id="left_trans_window">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="shadow_type">in</property>
@@ -285,7 +285,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="left_currency_label ">
+                              <object class="GtkLabel" id="left_currency_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">curr</property>
@@ -304,7 +304,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="left_show_button ">
+                          <object class="GtkCheckButton" id="left_show_button">
                             <property name="label" translatable="yes">Show Income/Expense</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -359,7 +359,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="right_trans_window ">
+                          <object class="GtkScrolledWindow" id="right_trans_window">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="shadow_type">in</property>
@@ -390,7 +390,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="right_currency_label ">
+                              <object class="GtkLabel" id="right_currency_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">curr</property>
@@ -409,7 +409,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="right_show_button ">
+                          <object class="GtkCheckButton" id="right_show_button">
                             <property name="label" translatable="yes">Show Income/Expense</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -445,7 +445,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="curr_transfer_table ">
+              <object class="GtkBox" id="curr_transfer_table">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
@@ -472,7 +472,7 @@
                     <property name="row_spacing">5</property>
                     <property name="column_spacing">5</property>
                     <child>
-                      <object class="GtkRadioButton" id="price_radio ">
+                      <object class="GtkRadioButton" id="price_radio">
                         <property name="label" translatable="yes">Exchange Rate:</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -487,7 +487,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRadioButton" id="amount_radio ">
+                      <object class="GtkRadioButton" id="amount_radio">
                         <property name="label" translatable="yes">To Amount:</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -509,7 +509,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="price_hbox ">
+                          <object class="GtkBox" id="price_hbox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
@@ -535,7 +535,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox" id="right_amount_hbox ">
+                          <object class="GtkBox" id="right_amount_hbox">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
@@ -556,7 +556,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="fetch ">
+                      <object class="GtkButton" id="fetch">
                         <property name="label" translatable="yes">_Fetch Rate</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -571,7 +571,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="conv_forward ">
+                      <object class="GtkLabel" id="conv_forward">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">label</property>
@@ -582,7 +582,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="conv_reverse ">
+                      <object class="GtkLabel" id="conv_reverse">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">label</property>

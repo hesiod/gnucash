@@ -120,7 +120,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="type_combobox ">
+                  <object class="GtkComboBox" id="type_combobox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="model">type_liststore</property>
@@ -131,7 +131,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="amount_box ">
+                  <object class="GtkBox" id="amount_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -145,7 +145,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkScrolledWindow" id="acct_window ">
+                  <object class="GtkScrolledWindow" id="acct_window">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="vexpand">True</property>
@@ -172,7 +172,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="name_entry ">
+                  <object class="GtkEntry" id="name_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </object>

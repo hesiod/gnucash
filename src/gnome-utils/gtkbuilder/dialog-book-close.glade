@@ -139,7 +139,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry" id="desc_entry ">
+                  <object class="GtkEntry" id="desc_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </object>
@@ -149,7 +149,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="expense_acct_box ">
+                  <object class="GtkBox" id="expense_acct_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -163,7 +163,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="income_acct_box ">
+                  <object class="GtkBox" id="income_acct_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -177,7 +177,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="date_box ">
+                  <object class="GtkBox" id="date_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>

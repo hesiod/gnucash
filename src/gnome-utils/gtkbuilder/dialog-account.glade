@@ -142,7 +142,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="name_entry ">
+                          <object class="GtkEntry" id="name_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -152,7 +152,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="code_entry ">
+                          <object class="GtkEntry" id="code_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -162,7 +162,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkEntry" id="description_entry ">
+                          <object class="GtkEntry" id="description_entry">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -259,7 +259,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="color_default_button ">
+                              <object class="GtkButton" id="color_default_button">
                                 <property name="label" translatable="yes">Default</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -383,7 +383,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkTreeView" id="type_view ">
+                          <object class="GtkTreeView" id="type_view">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="vexpand">True</property>
@@ -509,7 +509,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox" id="opening_balance_date_box ">
+                          <object class="GtkBox" id="opening_balance_date_box">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="hexpand">True</property>
@@ -562,7 +562,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkRadioButton" id="opening_equity_radio ">
+                          <object class="GtkRadioButton" id="opening_equity_radio">
                             <property name="label" translatable="yes">_Use equity 'Opening Balances' account</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -597,7 +597,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkScrolledWindow" id="transfer_account_scroll ">
+                          <object class="GtkScrolledWindow" id="transfer_account_scroll">
                             <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="can_focus">True</property>
@@ -925,7 +925,7 @@
             <property name="baseline_position">bottom</property>
             <property name="layout_style">end</property>
             <child>
-              <object class="GtkButton" id="cancelbutton ">
+              <object class="GtkButton" id="cancelbutton">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -939,7 +939,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="deletebutton ">
+              <object class="GtkButton" id="deletebutton">
                 <property name="label">gtk-delete</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -970,7 +970,7 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLabel" id="header ">
+                  <object class="GtkLabel" id="header">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Delete account</property>
@@ -994,12 +994,12 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkBox" id="transactions ">
+                  <object class="GtkBox" id="transactions">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkLabel" id="trans_rw ">
+                      <object class="GtkLabel" id="trans_rw">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">This account contains transactions. What would you like to do with these transactions?</property>
@@ -1012,7 +1012,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="trans_ro ">
+                      <object class="GtkLabel" id="trans_ro">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">This account contains read-only transactions which may not be deleted.</property>
@@ -1037,7 +1037,7 @@
                             <property name="receives_default">False</property>
                             <property name="xalign">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="gppat_set_insensitive_iff_rb_active" object="trans_mas_box " swapped="yes"/>
+                            <signal name="toggled" handler="gppat_set_insensitive_iff_rb_active" object="trans_mas_box" swapped="yes"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1050,7 +1050,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkRadioButton" id="trans_mrb ">
+                              <object class="GtkRadioButton" id="trans_mrb">
                                 <property name="label" translatable="yes">M_ove to:</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1067,7 +1067,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="trans_mas_box ">
+                              <object class="GtkBox" id="trans_mas_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
@@ -1126,7 +1126,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkRadioButton" id="sa_drb ">
+                          <object class="GtkRadioButton" id="sa_drb">
                             <property name="label" translatable="yes">Delete all subaccounts</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -1146,7 +1146,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkRadioButton" id="sa_mrb ">
+                              <object class="GtkRadioButton" id="sa_mrb">
                                 <property name="label" translatable="yes">M_ove to:</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1201,12 +1201,12 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox" id="subaccount_trans ">
+                  <object class="GtkBox" id="subaccount_trans">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkLabel" id="sa_trans_rw ">
+                      <object class="GtkLabel" id="sa_trans_rw">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">One or more sub-accounts contain transactions. What would you like to do with these transactions?</property>
@@ -1219,7 +1219,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="sa_trans_ro ">
+                      <object class="GtkLabel" id="sa_trans_ro">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">One or more sub-accounts contain read-only transactions which may not be deleted.</property>
@@ -1237,14 +1237,14 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkRadioButton" id="sa_trans_drb ">
+                          <object class="GtkRadioButton" id="sa_trans_drb">
                             <property name="label" translatable="yes">Delete all transactions</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="xalign">0</property>
                             <property name="draw_indicator">True</property>
-                            <signal name="toggled" handler="gppat_set_insensitive_iff_rb_active" object="sa_trans_mas_box " swapped="yes"/>
+                            <signal name="toggled" handler="gppat_set_insensitive_iff_rb_active" object="sa_trans_mas_box" swapped="yes"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1257,7 +1257,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkRadioButton" id="sa_trans_mrb ">
+                              <object class="GtkRadioButton" id="sa_trans_mrb">
                                 <property name="label" translatable="yes">M_ove to:</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
@@ -1274,7 +1274,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="sa_trans_mas_box ">
+                              <object class="GtkBox" id="sa_trans_mas_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>

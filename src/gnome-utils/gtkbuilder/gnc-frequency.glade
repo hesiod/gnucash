@@ -203,7 +203,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkLabel" id="freq_label ">
+                      <object class="GtkLabel" id="freq_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Frequency:</property>
@@ -215,7 +215,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBox" id="freq_combobox ">
+                      <object class="GtkComboBox" id="freq_combobox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="model">liststore2</property>
@@ -238,7 +238,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkLabel" id="startdate_label ">
+                      <object class="GtkLabel" id="startdate_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Start Date:</property>

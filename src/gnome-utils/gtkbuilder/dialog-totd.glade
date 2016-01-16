@@ -89,7 +89,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="totd_vbox ">
+          <object class="GtkBox" id="totd_vbox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>

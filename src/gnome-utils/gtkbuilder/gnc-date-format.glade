@@ -37,7 +37,7 @@
     <property name="title" translatable="yes">Date Format</property>
     <property name="resizable">False</property>
     <child>
-      <object class="GtkGrid" id="date_format_table ">
+      <object class="GtkGrid" id="date_format_table">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -96,7 +96,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkComboBox" id="format_combobox ">
+          <object class="GtkComboBox" id="format_combobox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="model">format-liststore</property>
@@ -112,7 +112,7 @@
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkRadioButton" id="month_number_button ">
+              <object class="GtkRadioButton" id="month_number_button">
                 <property name="label" translatable="yes">Number</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -128,7 +128,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="month_abbrev_button ">
+              <object class="GtkRadioButton" id="month_abbrev_button">
                 <property name="label" translatable="yes">Abbreviation</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -145,7 +145,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkRadioButton" id="month_name_button ">
+              <object class="GtkRadioButton" id="month_name_button">
                 <property name="label" translatable="yes">Name</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -168,7 +168,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkCheckButton" id="years_button ">
+          <object class="GtkCheckButton" id="years_button">
             <property name="label" translatable="yes">Include Century</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -182,7 +182,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="format_entry ">
+          <object class="GtkEntry" id="format_entry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="text" translatable="yes">%Y-%m-%d</property>
@@ -194,7 +194,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="sample_label ">
+          <object class="GtkLabel" id="sample_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">sample</property>

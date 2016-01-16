@@ -178,7 +178,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="fullname_entry ">
+                      <object class="GtkEntry" id="fullname_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -188,7 +188,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="mnemonic_entry ">
+                      <object class="GtkEntry" id="mnemonic_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -198,7 +198,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="user_symbol_entry ">
+                      <object class="GtkEntry" id="user_symbol_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -208,7 +208,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="code_entry ">
+                      <object class="GtkEntry" id="code_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -234,7 +234,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkSpinButton" id="fraction_spinbutton ">
+                          <object class="GtkSpinButton" id="fraction_spinbutton">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="tooltip_text" translatable="yes">Enter the smallest fraction in which the commodity can be traded. For Stocks which can only be traded in whole numbers, enter 1.</property>
@@ -256,7 +256,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBox" id="namespace_cbwe ">
+                      <object class="GtkComboBox" id="namespace_cbwe">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_entry">True</property>
@@ -291,7 +291,7 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkLabel" id="quote_label ">
+                  <object class="GtkLabel" id="quote_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Quote Source Information</property>
@@ -330,7 +330,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkCheckButton" id="get_quote_check ">
+                          <object class="GtkCheckButton" id="get_quote_check">
                             <property name="label" translatable="yes">_Get Online Quotes</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
@@ -440,7 +440,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="single_source_box ">
+                              <object class="GtkBox" id="single_source_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
@@ -454,7 +454,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="multi_source_box ">
+                              <object class="GtkBox" id="multi_source_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
@@ -468,7 +468,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="unknown_source_box ">
+                              <object class="GtkBox" id="unknown_source_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
@@ -482,7 +482,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox" id="quote_tz_box ">
+                              <object class="GtkBox" id="quote_tz_box">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="orientation">vertical</property>
@@ -692,7 +692,7 @@
                     <property name="has_entry">True</property>
                     <signal name="changed" handler="gnc_ui_select_commodity_namespace_changed_cb" swapped="no"/>
                     <child internal-child="entry">
-                      <object class="GtkEntry" id="combobox-entry2 ">
+                      <object class="GtkEntry" id="combobox-entry2">
                         <property name="can_focus">False</property>
                       </object>
                     </child>
@@ -703,7 +703,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="ss_commodity_cbwe ">
+                  <object class="GtkComboBox" id="ss_commodity_cbwe">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="model">liststore2</property>
