@@ -22,7 +22,7 @@
 	<menuitem name="ActionsReconcile" action="ActionsReconcileAction"/>
 	<menuitem name="ActionsAutoClear" action="ActionsAutoClearAction"/>
 	<menuitem name="ActionsStockSplit" action="ActionsStockSplitAction"/>
-	<menuitem name="ActionLots" action="ActionsLotsAction"/>
+	<menuitem name="ActionsLots" action="ActionsLotsAction"/>
 	<separator name="ActionsSep3"/>
 	<menu name="ScrubMenu" action="ScrubMenuAction">
 	  <menuitem name="Scrub" action="ScrubAction"/>
