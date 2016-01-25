@@ -1,77 +1,170 @@
-<ui>
-  <menubar>
-    <menu name="Edit" action="EditAction">
-      <placeholder name="EditSelectedPlaceholder">
-        <menuitem name="EditEditAccount" action="EditEditAccountAction"/>
-	<menuitem name="EditDeleteAccount" action="EditDeleteAccountAction"/>
-	<menuitem name="EditRenumberSubaccounts" action="EditRenumberSubaccountsAction"/>
-        <separator name="EditSep2"/>
-        <menuitem name="FileOpenAccount" action="FileOpenAccountAction"/>
-        <menuitem name="FileOpenSubaccounts" action="FileOpenSubaccountsAction"/>
-      </placeholder>
-    </menu>
-    <menu name="Actions" action="ActionsAction">
-      <placeholder name="ActionsPlaceholder">
-	<separator name="ActionsSep1"/>
-        <menuitem name="FileNewAccount" action="FileNewAccountAction"/>
-        <menuitem name="FileAddAccountHierarchyAssistant" action="FileAddAccountHierarchyAssistantAction"/>
-        <separator name="ActionsSep2"/>
-	<menuitem name="ActionsTransfer" action="ActionsTransferAction"/>
-	<menuitem name="ActionsReconcile" action="ActionsReconcileAction"/>
-	<menuitem name="ActionsAutoClear" action="ActionsAutoClearAction"/>
-	<menuitem name="ActionsStockSplit" action="ActionsStockSplitAction"/>
-	<menuitem name="ActionsLots" action="ActionsLotsAction"/>
-	<separator name="ActionsSep3"/>
-	<menu name="ScrubMenu" action="ScrubMenuAction">
-	  <menuitem name="Scrub" action="ScrubAction"/>
-	  <menuitem name="ScrubSub" action="ScrubSubAction"/>
-	  <menuitem name="ScrubAll" action="ScrubAllAction"/>
-	</menu>
-      </placeholder>
-    </menu>
-    <menu name="Extensions" action="ExtensionsAction">
-      <placeholder name="ExtensionsPlaceholder">
-	<menu name="Register2Test" action="Register2TestAction">
-	  <menuitem name="Register2TestAccount" action="Register2TestAccountAction"/>
-	  <menuitem name="Register2TestSubAccount" action="Register2TestSubAccountAction"/>
-	</menu>
-      </placeholder>
-    </menu>
-  </menubar>
-
-  <popup name="MainPopup" action="FakeToplevel">
-    <placeholder name="PopupPlaceholder2">
-      <menuitem name="AccountOpenAccount" action="FileOpenAccountAction"/>
-      <menuitem name="AccountOpenSubaccounts" action="FileOpenSubaccountsAction"/>
-      <menuitem name="AccountEditAccount" action="EditEditAccountAction"/>
-      <separator name="AccountSep1"/>
-      <menuitem name="AccountReconcile" action="ActionsReconcileAction"/>
-      <menuitem name="AccountAutoClear" action="ActionsAutoClearAction"/>
-      <menuitem name="AccountTransfer" action="ActionsTransferAction"/>
-      <menuitem name="AccountStockSplit" action="ActionsStockSplitAction"/>
-      <menuitem name="AccountLots" action="ActionsLotsAction"/>
-      <separator name="AccountSep2"/>
-      <menuitem name="AccountNewAccount" action="FileNewAccountAction"/>
-      <menuitem name="AccountDeleteAccount" action="EditDeleteAccountAction"/>
-      <separator name="AccountSep3"/>
-    </placeholder>
-    <placeholder name="PopupBottomPlaceholder">
-      <menu name="ScrubMenu" action="ScrubMenuAction">
-        <menuitem name="Scrub" action="ScrubAction"/>
-        <menuitem name="ScrubSub" action="ScrubSubAction"/>
-        <menuitem name="ScrubAll" action="ScrubAllAction"/>
-      </menu>
-    </placeholder>
-  </popup>
-
-  <toolbar name="DefaultToolbar">
-    <placeholder name="DefaultToolbarPlaceholder">
-      <separator name="ToolbarSep2"/>
-      <toolitem name="ToolbarOpenAccount" action="FileOpenAccountAction"/>
-      <toolitem name="ToolbarEditAccount" action="EditEditAccountAction"/>
-      <separator name="ToolbarSep3"/>
-      <toolitem name="ToolbarNewAccount" action="FileNewAccountAction"/>
-      <toolitem name="ToolbarDeleteAccount" action="EditDeleteAccountAction"/>
-    </placeholder>
-  </toolbar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-edit">
+        <section id="menubar-edit-selection-section">
+          <section id="menubar-edit-selection-edit-section">
+            <item>
+              <attribute name="label" translatable="yes">Edit Account</attribute>
+              <attribute name="action">edit.account.edit</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Delete Account</attribute>
+              <attribute name="action">edit.account.delete</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Renumber Subaccounts</attribute>
+              <attribute name="action">edit.account.renumber-sub</attribute>
+            </item>
+          </section>
+          <section id="menubar-edit-selection-open-section">
+            <item>
+              <attribute name="label" translatable="yes">Open Account</attribute>
+              <attribute name="action">edit.account.open</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Open Subaccounts</attribute>
+              <attribute name="action">edit.account.open-sub</attribute>
+            </item>
+          </section>
+        </section>
+      </submenu>
+      <submenu id="menubar-actions">
+        <section id="menubar-actions-section">
+          <section id="menubar-actions-account-new-section">
+            <item>
+              <attribute name="label" translatable="yes">New Account</attribute>
+              <attribute name="action">edit.account.new</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">New Account Hierarchy</attribute>
+              <attribute name="action">edit.account.new-hierarchy</attribute>
+            </item>
+          </section>
+          <section id="menubar-actions-account-edit-section">
+            <item>
+              <attribute name="label" translatable="yes">Transfer...</attribute>
+              <attribute name="action">edit.account.transfer</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Reconcile...</attribute>
+              <attribute name="action">edit.account.reconcile</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Auto-clear...</attribute>
+              <attribute name="action">edit.account.autoclear</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Stock Split...</attribute>
+              <attribute name="action">edit.account.stock-split</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">View Lots...</attribute>
+              <attribute name="action">edit.account.view-lots</attribute>
+            </item>
+          </section>
+        </section>
+        <section id="menubar-actions-scrub-section">
+          <submenu id="menubar-actions-scrub-submenu">
+            <item>
+              <attribute name="label" translatable="yes">This Account</attribute>
+              <attribute name="action">edit.account.scrub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Subaccounts</attribute>
+              <attribute name="action">edit.account.scrub-sub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Everything</attribute>
+              <attribute name="action">edit.account.scrub-all</attribute>
+            </item>
+      </submenu>
+    </section>
+  </menu>
+  <menu id="popup">
+    <section id="popup-section">
+      <section id="popup-account-section">
+        <section id="popup-account-file-section">
+          <item>
+            <attribute name="label" translatable="yes">Open Account</attribute>
+            <attribute name="action">edit.account.open</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Open Subaccounts</attribute>
+            <attribute name="action">edit.account.open-sub</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Edit Account</attribute>
+            <attribute name="action">edit.account.edit</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">New Account</attribute>
+            <attribute name="action">edit.account.new</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Delete Account</attribute>
+            <attribute name="action">edit.account.delete</attribute>
+          </item>
+        </section>
+        <section id="popup-account-actions-section">
+          <item>
+            <attribute name="label" translatable="yes">Transfer...</attribute>
+            <attribute name="action">edit.account.transfer</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Reconcile...</attribute>
+            <attribute name="action">edit.account.reconcile</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Auto-clear...</attribute>
+            <attribute name="action">edit.account.autoclear</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Stock Split...</attribute>
+            <attribute name="action">edit.account.stock-split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">View Lots...</attribute>
+            <attribute name="action">edit.account.view-lots</attribute>
+          </item>
+        </section>
+      </section>
+      <section id="popup-scrub-section">
+        <item>
+          <attribute name="label" translatable="yes">This Account</attribute>
+          <attribute name="action">edit.account.scrub</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Subaccounts</attribute>
+          <attribute name="action">edit.account.scrub-sub</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Everything</attribute>
+          <attribute name="action">edit.account.scrub-all</attribute>
+        </item>
+      </section>
+  </menu>
+  <menu id="toolbar">
+    <section id="toolbar-section">
+      <section id="toolbar-account-section">
+        <section id="toolbar-account-this-section">
+          <item>
+            <attribute name="label" translatable="yes">Open Account</attribute>
+            <attribute name="action">edit.account.open</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Edit Account</attribute>
+            <attribute name="action">edit.account.edit</attribute>
+          </item>
+        </section>
+        <item>
+          <attribute name="label" translatable="yes">New Account</attribute>
+          <attribute name="action">edit.account.new</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Delete Account</attribute>
+          <attribute name="action">edit.account.delete</attribute>
+        </item>
+      </section>
+  </menu>
+</interface>

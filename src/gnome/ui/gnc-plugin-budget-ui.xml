@@ -1,14 +1,22 @@
-<ui>
-  <menubar>
-    <menu name="Actions" action="ActionsAction">
-      <placeholder name="ActionsPlaceholder">
-        <menu name="ActionsBudget" action="ActionsBudgetAction">
-          <menuitem name="BudgetNewBudget" action="NewBudgetAction"/>
-          <menuitem name="BudgetOpenBudget" action="OpenBudgetAction"/>
-          <menuitem name="BudgetCopyBudget" action="CopyBudgetAction"/>
-        </menu>
-      </placeholder>
-    </menu>
-  </menubar>
-</ui>
-
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-actions">
+        <section id="menubar-budget-section">
+          <item>
+            <attribute name="label" translatable="yes">New Budget</attribute>
+            <attribute name="action">edit.budget.new</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Open Budget</attribute>
+            <attribute name="action">edit.budget.open</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Copy Budget</attribute>
+            <attribute name="action">edit.budget.copy</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>
