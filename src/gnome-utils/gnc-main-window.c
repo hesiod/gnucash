@@ -3488,10 +3488,10 @@ gnc_main_window_setup_window (GncMainWindow *window)
     gtk_progress_bar_set_pulse_step(GTK_PROGRESS_BAR(priv->progressbar),
                                     0.01);
 
-    window->ui_merge = gtk_builder_new ();
+    window->ui_merge = egg_menu_manager_new ();
 
     /* Create menu and toolbar information */
-    priv->action_group = G_ACTION_GROUP(g_simple_action_group_new ());
+    priv->action_group = G_ACTION_GROUP(gtk);
     gtk_builder_set_translation_domain (window->ui_merge, GETTEXT_PACKAGE);
     g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
                                      gnc_menu_actions,
@@ -3521,7 +3521,7 @@ gnc_main_window_setup_window (GncMainWindow *window)
     /* Can't do much without a ui. */
     g_assert (filename);
 
-    merge_id = gtk_builder_add_from_file (window->ui_merge,
+    merge_id = egg_menu_manager_add_filename (window->ui_merge,
                filename, &error);
     g_assert(merge_id || error);
     if (merge_id)

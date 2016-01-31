@@ -1,110 +1,306 @@
-<ui>
-  <menubar>
-    <menu name="Edit" action="EditAction">
-      <placeholder name="EditAllSelectedPlaceholder">
-        <menuitem name="EditEditAccount"        action="EditEditAccountAction"/>
-      </placeholder>
-    </menu>
-
-    <menu name="Transaction" action="TransactionAction">
-      <menuitem name="CutTransaction"     	action="CutTransactionAction"/>
-      <menuitem name="CopyTransaction"    	action="CopyTransactionAction"/>
-      <menuitem name="PasteTransaction"   	action="PasteTransactionAction"/>
-      <menuitem name="DuplicateTransaction"    	action="DuplicateTransactionAction"/>
-      <menuitem name="DeleteTransaction"       	action="DeleteTransactionAction"/>
-      <menuitem name="RemoveTransactionSplits" 	action="RemoveTransactionSplitsAction"/>
-      <separator name="TransactionSep1"/>
-      <menuitem name="RecordTransaction"        action="RecordTransactionAction"/>
-      <menuitem name="CancelTransaction"        action="CancelTransactionAction"/>
-      <separator name="TransactionSep2"/>
-      <menuitem name="VoidTransaction"    	action="VoidTransactionAction"/>
-      <menuitem name="UnvoidTransaction"  	action="UnvoidTransactionAction"/>
-      <menuitem name="ReverseTransaction" 	action="ReverseTransactionAction"/>
-      <separator name="TransactionSep3"/>
-      <menuitem name="AssociateTransactionFile" action="AssociateTransactionFileAction"/>
-      <menuitem name="AssociateTransactionLocation" action="AssociateTransactionLocationAction"/>
-      <menuitem name="ExecAssociateTransaction" action="ExecAssociatedTransactionAction"/>
-    </menu>
-
-    <menu name="View" action="ViewAction">
-      <placeholder name="ViewContentPlaceholder">
-        <menuitem name="ViewStyleBasic"        	action="ViewStyleBasicAction"/>
-        <menuitem name="ViewStyleAutoSplit"    	action="ViewStyleAutoSplitAction"/>
-        <menuitem name="ViewStyleJournal"      	action="ViewStyleJournalAction"/>
-        <separator name="ViewSep44"/>
-        <menuitem name="ViewStyleDoubleLine"   	action="ViewStyleDoubleLineAction"/>
-      </placeholder>
-    </menu>
-
-    <menu name="Actions" action="ActionsAction">
-      <placeholder name="ActionsPlaceholder">
-        <separator name="ActionsSep1"/>
-	<menuitem name="ActionsTransfer"         action="ActionsTransferAction"/>
-	<menuitem name="ActionsReconcile"        action="ActionsReconcileAction"/>
-	<menuitem name="ActionsStockSplit"       action="ActionsStockSplitAction"/>
-	<menuitem name="ActionsLots"              action="ActionsLotsAction"/>
-        <separator name="ActionsSep4"/>
-        <menuitem name="BlankTransaction"        action="BlankTransactionAction"/>
-        <menuitem name="SplitTransaction"        action="SplitTransactionAction"/>
-        <menuitem name="EditExchangeRate"        action="EditExchangeRateAction"/>
-        <menuitem name="ScheduleTransaction"     action="ScheduleTransactionAction"/>
-        <menuitem name="JumpTransaction"         action="JumpTransactionAction"/>
-	<separator name="ActionsSep5"/>
-      </placeholder>
-      <menu name="ScrubMenu" action="ScrubMenuAction">
-	<menuitem name="ScrubAll" action="ScrubAllAction"/>
-	<menuitem name="ScrubCurrent" action="ScrubCurrentAction"/>
-      </menu>
-    </menu>
-
-    <menu name="Reports" action="ReportsAction">
-      <placeholder name="AccountReports">
-        <menuitem name="ReportsAccountReport"      action="ReportsAccountReportAction"/>
-        <menuitem name="ReportsAcctTransReport"    action="ReportsAcctTransReportAction"/>
-      </placeholder>
-    </menu>
-  </menubar>
-
-  <toolbar name="DefaultToolbar">
-    <placeholder name="DefaultToolbarPlaceholder">
-      <toolitem name="ToolbarDuplicateTransaction" action="DuplicateTransactionAction"/>
-      <toolitem name="ToolbarDeleteTransaction"    action="DeleteTransactionAction"/>
-      <separator name="ToolbarSep66"/>
-      <toolitem name="ToolbarRecordTransaction"    action="RecordTransactionAction"/>
-      <toolitem name="ToolbarCancelTransaction"    action="CancelTransactionAction"/>
-      <separator name="ToolbarSep67"/>
-      <toolitem name="ToolbarBlankTransaction"     action="BlankTransactionAction"/>
-      <toolitem name="ToolbarSplitTransaction"     action="SplitTransactionAction"/>
-      <toolitem name="ToolbarJumpTransaction"      action="JumpTransactionAction"/>
-      <toolitem name="ToolbarScheduleTransaction"  action="ScheduleTransactionAction"/>
-      <separator name="ToolbarSep68"/>
-      <toolitem name="ToolbarTransfer"             action="ActionsTransferAction"/>
-      <toolitem name="ActionsReconcile"            action="ActionsReconcileAction"/>
-    </placeholder>
-  </toolbar>
-
-  <popup name="MainPopup"                    action="FakeToplevel">
-    <placeholder name="PopupPlaceholder1">
-      <menuitem name="ViewSortBy"              action="ViewSortByAction"/>
-      <menuitem name="ViewFilterBy"            action="ViewFilterByAction"/>
-    </placeholder>
-    <placeholder name="PopupPlaceholder2">
-      <menuitem name="DuplicateTransaction"    action="DuplicateTransactionAction"/>
-      <menuitem name="DeleteTransaction"       action="DeleteTransactionAction"/>
-      <menuitem name="RemoveTransactionSplits" action="RemoveTransactionSplitsAction"/>
-      <separator name="PopupSep2"/>
-      <menuitem name="RecordTransaction"       action="RecordTransactionAction"/>
-      <menuitem name="CancelTransaction"       action="CancelTransactionAction"/>
-      <separator name="PopupSep3"/>
-      <menuitem name="AssociateTransactionFile" action="AssociateTransactionFileAction"/>
-      <menuitem name="AssociateTransactionLocation" action="AssociateTransactionLocationAction"/>
-      <menuitem name="ExecAssociateTransaction" action="ExecAssociatedTransactionAction"/>
-      <separator name="PopupSep4"/>
-      <menuitem name="BlankTransaction"        action="BlankTransactionAction"/>
-      <menuitem name="SplitTransaction"        action="SplitTransactionAction"/>
-      <menuitem name="EditExchangeRate"        action="EditExchangeRateAction"/>
-      <menuitem name="ScheduleTransaction"     action="ScheduleTransactionAction"/>
-      <menuitem name="JumpTransaction"         action="JumpTransactionAction"/>
-    </placeholder>
-  </popup>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-edit">
+        <section id="menubar-edit-selection-section">
+          <item>
+            <attribute name="label" translatable="yes">Edit Account</attribute>
+            <attribute name="action">edit.account.edit</attribute>
+          </item>
+        </section>
+      <submenu id="menubar-transaction">
+        <attribute name="label" translatable="yes">File</attribute>
+        <section id="menubar-transaction-section">
+          <section id="menubar-transaction-edit-section">
+            <item>
+              <attribute name="label" translatable="yes">Cut Transaction</attribute>
+              <attribute name="action">transaction.cut</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Copy Transaction</attribute>
+              <attribute name="action">transaction.copy</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Paste Transaction</attribute>
+              <attribute name="action">transaction.paste</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Duplicate Transaction</attribute>
+              <attribute name="action">transaction.duplicate</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Delete Transaction</attribute>
+              <attribute name="action">transaction.delete</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Remove Splits</attribute>
+              <attribute name="action">transaction.remove-splits</attribute>
+            </item>
+          </section>
+          <section id="menubar-transaction-record-section">
+            <item>
+              <attribute name="label" translatable="yes">Record Transaction</attribute>
+              <attribute name="action">transaction.record.start</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Cancel Recording Transaction</attribute>
+              <attribute name="action">transaction.record.cancel</attribute>
+            </item>
+          </section>
+          <section id="menubar-transaction-undo-section">
+            <item>
+              <attribute name="label" translatable="yes">Void Transaction</attribute>
+              <attribute name="action">transaction.void</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Unvoid Transaction</attribute>
+              <attribute name="action">transaction.unvoid</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Reverse Transaction</attribute>
+              <attribute name="action">transaction.reverse</attribute>
+            </item>
+          </section>
+          <section id="menubar-transaction-associate-section">
+            <item>
+              <attribute name="label" translatable="yes">Associate File with Transaction</attribute>
+              <attribute name="action">transaction.associate.file</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Associate Location with Transaction</attribute>
+              <attribute name="action">transaction.associate.location</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Open Associated File/Location</attribute>
+              <attribute name="action">transaction.associate.exec</attribute>
+            </item>
+          </section>
+        </section>
+      </submenu>
+      <submenu id="menubar-view">
+        <section id="menubar-view-content-section">
+          <item>
+            <attribute name="label" translatable="yes">Basic Ledger</attribute>
+            <attribute name="action">window.ledger</attribute>
+            <attribute name="target">basic</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Auto-Split Ledger</attribute>
+            <attribute name="action">window.ledger</attribute>
+            <attribute name="target">auto</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Transaction Journal</attribute>
+            <attribute name="action">window.ledger</attribute>
+            <attribute name="target">journal</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Double Line</attribute>
+            <attribute name="action">window.double-line</attribute>
+          </item>
+        </section>
+      </submenu>
+      <submenu id="menubar-actions">
+        <attribute name="label" translatable="yes">Actions</attribute>
+        <section id="menubar-actions-section"></section>
+        <section id="menubar-actions-budget-section"></section>
+        <section id="menubar-actions-account-edit-section">
+          <item>
+            <attribute name="label" translatable="yes">Transfer...</attribute>
+            <attribute name="action">edit.account.transfer</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Reconcile...</attribute>
+            <attribute name="action">edit.account.reconcile</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Stock Split...</attribute>
+            <attribute name="action">edit.account.stock-split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">View Lots...</attribute>
+            <attribute name="action">edit.account.view-lots</attribute>
+          </item>
+        </section>
+        <section id="menubar-actions-transaction-section">
+          <item>
+            <attribute name="label" translatable="yes">Blank Transaction</attribute>
+            <attribute name="action">edit.transaction.blank</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Split Transaction</attribute>
+            <attribute name="action">edit.transaction.split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Edit Exchange Rate</attribute>
+            <attribute name="action">edit.transaction.edit-xchg-rate</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Schedule...</attribute>
+            <attribute name="action">edit.transaction.schedule</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Jump</attribute>
+            <attribute name="action">edit.transaction.jump</attribute>
+          </item>
+        </section>
+        <section id="menubar-actions-scrub-section">
+          <submenu id="menubar-actions-scrub-submenu">
+            <item>
+              <attribute name="label" translatable="yes">This Account</attribute>
+              <attribute name="action">edit.account.scrub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Subaccounts</attribute>
+              <attribute name="action">edit.account.scrub-sub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Everything</attribute>
+              <attribute name="action">edit.account.scrub-all</attribute>
+            </item>
+          </submenu>
+        </section>
+      </submenu>
+      <submenu id="menubar-reports">
+        <section id="menubar-reports-account-reports-section">
+          <item>
+            <attribute name="label" translatable="yes">Account Report</attribute>
+            <attribute name="action">report.account</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Account Transaction Report</attribute>
+            <attribute name="action">report.account-transaction</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+  <menu id="toolbar">
+    <section id="toolbar-section">
+      <section id="toolbar-account-section">
+        <item>
+          <attribute name="label" translatable="yes">Duplicate Transaction</attribute>
+          <attribute name="action">transaction.duplicate</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Delete Transaction</attribute>
+          <attribute name="action">transaction.delete</attribute>
+        </item>
+      </section>
+      <section id="toolbar-record-section">
+        <item>
+          <attribute name="label" translatable="yes">Record Transaction</attribute>
+          <attribute name="action">transaction.record.start</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Cancel Recording Transaction</attribute>
+          <attribute name="action">transaction.record.cancel</attribute>
+        </item>
+      </section>
+      <section id="toolbar-transaction-section">
+        <item>
+          <attribute name="label" translatable="yes">Blank Transaction</attribute>
+          <attribute name="action">edit.transaction.blank</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Split Transaction</attribute>
+          <attribute name="action">edit.transaction.split</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Schedule...</attribute>
+          <attribute name="action">edit.transaction.schedule</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Jump</attribute>
+          <attribute name="action">edit.transaction.jump</attribute>
+        </item>
+      </section>
+      <section id="toolbar-edit-section">
+        <item>
+          <attribute name="label" translatable="yes">Transfer...</attribute>
+          <attribute name="action">edit.account.transfer</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Reconcile...</attribute>
+          <attribute name="action">edit.account.reconcile</attribute>
+        </item>
+      </section>
+    </section>
+  </menu>
+  <menu id="popup">
+    <section id="popup-section">
+      <section id="popup-collate-section">
+        <item>
+          <attribute name="label" translatable="yes">Sort by...</attribute>
+          <attribute name="action">win.sort</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Filter by...</attribute>
+          <attribute name="action">win.filter</attribute>
+        </item>
+      </section>
+      <section id="popup-transaction-section">
+        <section id="popup-transaction-section">
+          <item>
+            <attribute name="label" translatable="yes">Duplicate Transaction</attribute>
+            <attribute name="action">transaction.duplicate</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Delete Transaction</attribute>
+            <attribute name="action">transaction.delete</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Remove Splits</attribute>
+            <attribute name="action">transaction.remove-splits</attribute>
+          </item>
+        </section>
+        <section id="popup-transaction-record-section">
+          <item>
+            <attribute name="label" translatable="yes">Record Transaction</attribute>
+            <attribute name="action">transaction.record.start</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Cancel Recording Transaction</attribute>
+            <attribute name="action">transaction.record.cancel</attribute>
+          </item>
+        </section>
+        <section id="popup-transaction-associate-section">
+          <item>
+            <attribute name="label" translatable="yes">Associate File with Transaction</attribute>
+            <attribute name="action">transaction.associate.file</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Associate Location with Transaction</attribute>
+            <attribute name="action">transaction.associate.location</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Open Associated File/Location</attribute>
+            <attribute name="action">transaction.associate.exec</attribute>
+          </item>
+        </section>
+        <section id="popup-actions-transaction-section">
+          <item>
+            <attribute name="label" translatable="yes">Blank Transaction</attribute>
+            <attribute name="action">edit.transaction.blank</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Split Transaction</attribute>
+            <attribute name="action">edit.transaction.split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Edit Exchange Rate</attribute>
+            <attribute name="action">edit.transaction.edit-xchg-rate</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Schedule...</attribute>
+            <attribute name="action">edit.transaction.schedule</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Jump</attribute>
+            <attribute name="action">edit.transaction.jump</attribute>
+          </item>
+        </section>
+      </section>
+    </section>
+  </menu>
+</interface>

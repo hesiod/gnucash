@@ -78,6 +78,8 @@
               <attribute name="label" translatable="yes">Everything</attribute>
               <attribute name="action">edit.account.scrub-all</attribute>
             </item>
+          </submenu>
+        </section>
       </submenu>
     </section>
   </menu>

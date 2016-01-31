@@ -112,6 +112,7 @@
       </submenu>
       <submenu id="menubar-transaction">
         <attribute name="label" translatable="yes">Transaction</attribute>
+        <section id="menubar-transaction-section"></section>
       </submenu>
       <submenu id="menubar-actions">
         <attribute name="label" translatable="yes">Actions</attribute>

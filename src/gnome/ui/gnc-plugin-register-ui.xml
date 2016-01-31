@@ -1,9 +1,15 @@
-<ui>
-  <menubar>
-    <menu name="Tools" action="ToolsAction">
-      <placeholder name="ToolsPlaceholder">
-        <menuitem name="ToolsGeneralJournal" action="ToolsGeneralJournalAction"/>
-      </placeholder>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-tools">
+        <attribute name="label" translatable="yes">File</attribute>
+        <section id="menubar-tools-section">
+          <item>
+            <attribute name="label" translatable="yes">General Ledger</attribute>
+            <attribute name="action">tool.general-ledger</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>

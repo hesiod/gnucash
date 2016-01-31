@@ -37,6 +37,7 @@
 #define __GNC_MAIN_WINDOW_H
 
 #include <gtk/gtk.h>
+#include "egg_menu_manager.h"
 #include "gnc-plugin-page.h"
 
 /* type macros */
@@ -55,7 +56,7 @@
 typedef struct GncMainWindow
 {
     GtkApplicationWindow gtk_window;	/**< The parent object for a main window. */
-    GtkBuilder *ui_merge; /**< A pointer to the UI Manager data
+    EggMenuManager *ui_merge; /**< A pointer to the UI Manager data
                                    structure for the whole window. */
 } GncMainWindow;
 
