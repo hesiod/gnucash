@@ -216,7 +216,7 @@ gncs_get_widget (GNCSearchCoreType *fe)
     g_return_val_if_fail (fi, NULL);
     g_return_val_if_fail (IS_GNCSEARCH_RECONCILED (fi), NULL);
 
-    box = gtk_hbox_new (FALSE, 3);
+    box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 3);
 
     /* Build and connect the option menu */
     menu = make_menu (fe);

@@ -341,7 +341,7 @@ gnc_search_dialog_display_results (GNCSearchWindow *sw)
         gtk_container_add(GTK_CONTAINER(frame), scroller);
 
         /* Create the button_box */
-        button_box = gtk_vbox_new (FALSE, 3);
+        button_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 
         /* ... and add all the buttons */
         if (sw->buttons)
@@ -851,7 +851,7 @@ get_element_widget (GNCSearchWindow *sw, GNCSearchCoreType *element)
     data->element = element;
     data->dialog = GTK_DIALOG (sw->dialog);
 
-    hbox = gtk_hbox_new (FALSE, 0);
+    hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     /* only set to automaticaly clean up the memory */
     g_object_set_data_full (G_OBJECT (hbox), "data", data, g_free);
 
