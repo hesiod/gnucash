@@ -334,8 +334,8 @@ gnc_plugin_update_actions (GtkActionGroup *action_group,
  *
  *  See gnc-plugin.h for documentation on the function arguments. */
 gint
-gnc_plugin_add_actions (GtkUIManager *ui_merge,
-                        GtkActionGroup *action_group,
+gnc_plugin_add_actions (EggMenuManager *ui_merge,
+                        GActionGroup *action_group,
                         const gchar *filename)
 {
     GError *error = NULL;

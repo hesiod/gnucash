@@ -78,7 +78,7 @@ SET (gnome_utils_SOURCES
   gnc-plugin-manager.c
   gnc-plugin-menu-additions.c
   gnc-plugin-page.c
-  gnc-plugin.c
+  #gnc-plugin.c
   gnc-period-select.c
   gnc-query-view.c
   gnc-splash.c

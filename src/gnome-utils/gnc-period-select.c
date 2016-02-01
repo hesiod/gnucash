@@ -526,7 +526,7 @@ gnc_period_select_get_type (void)
             NULL
         };
 
-        period_select_type = g_type_register_static(GTK_BOX,
+        period_select_type = g_type_register_static(GTK_TYPE_BOX,
                              "GncPeriodSelect",
                              &period_select_info, 0);
     }

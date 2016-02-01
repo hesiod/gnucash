@@ -32,11 +32,8 @@ typedef struct _ExtensionInfo
     GActionEntry ae;
     gchar *path;
     gchar *sort_key;
+    gchar *label;
     const gchar *typeStr;
-    union {
-      GMenuItem *item;
-      GMenu *menu;
-    };
     gboolean is_item;
     gboolean accel_assigned;
 } ExtensionInfo;

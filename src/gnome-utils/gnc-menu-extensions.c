@@ -254,7 +254,7 @@ static gboolean
 gnc_create_extension_info (SCM extension)
 {
     ExtensionInfo *ext_info;
-    gchar *typeStr, *tmp, *label;
+    gchar *typeStr, *tmp;
     gchar* name;
     gchar* guid;
 
@@ -271,13 +271,12 @@ gnc_create_extension_info (SCM extension)
     /* Get all the pieces */
     name = gnc_extension_name(extension);
     guid = gnc_extension_guid(extension);
-    label = g_strdup(gettext(name));
-    ext_info->item = g_menu_item_new (label, NULL);
+    ext_info->label = g_strdup(gettext(name));
     ext_info->ae.name = gnc_ext_gen_action_name(guid);
     g_free(name);
     g_free(guid);
 
-    tmp = g_strdup_printf("%s/%s", ext_info->path, label);
+    tmp = g_strdup_printf("%s/%s", ext_info->path, ext_info->label);
     ext_info->sort_key = g_utf8_collate_key(tmp, -1);
     g_free(tmp);
 
@@ -289,9 +288,8 @@ gnc_create_extension_info (SCM extension)
     ext_info->typeStr = typeStr;
 
     DEBUG( "extension: %s/%s [%s] type %s\n",
-           ext_info->path, label, ext_info->ae.name,
+           ext_info->path, ext_info->label, ext_info->ae.name,
            ext_info->typeStr );
-    g_free(label);
 
     scm_gc_protect_object(extension);
 

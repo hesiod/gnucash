@@ -341,7 +341,7 @@ gnc_plugin_basic_commands_add_to_window (GncPlugin *plugin,
 static void update_inactive_actions(GncPluginPage *plugin_page)
 {
     GncMainWindow  *window;
-    GtkActionGroup *action_group;
+    GActionMap *action_group;
 
     // We are readonly - so we have to switch particular actions to inactive.
     gboolean is_readwrite = !qof_book_is_readonly(gnc_get_current_book());
@@ -353,8 +353,7 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     window = GNC_MAIN_WINDOW(plugin_page->window);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
-    action_group = gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME);
-    g_return_if_fail(GTK_IS_ACTION_GROUP(action_group));
+    action_group = G_ACTION_MAP(g_application_get_default());
 
     /* Set the action's sensitivity */
     gnc_plugin_update_actions (action_group, readwrite_only_active_actions,

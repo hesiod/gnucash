@@ -497,7 +497,7 @@ EggMenuManager *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
  *  retrieved.
  *
  *  @return A pointer to the GtkActionGroup object for this page. */
-GSimpleActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
+GActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
 
 
 /** Create the GtkActionGroup object associated with this page.
@@ -511,7 +511,7 @@ GSimpleActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
  *
  *  @return A pointer to the newly created GtkActionGroup object for
  *  this page. */
-GSimpleActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
+GActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
         const gchar *group_name);
 
 /** Retrieve a GtkAction object associated with this page.

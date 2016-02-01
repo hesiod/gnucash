@@ -78,7 +78,7 @@ static QofLogModule log_module = GNC_MOD_GUI;
 static void gnc_tree_view_class_init (GncTreeViewClass *klass);
 static void gnc_tree_view_init (GncTreeView *view, GncTreeViewClass *klass);
 static void gnc_tree_view_finalize (GObject *object);
-static void gnc_tree_view_destroy (GtkObject *object);
+static void gnc_tree_view_destroy (GtkWidget *object);
 static void gnc_tree_view_set_property (GObject         *object,
                                         guint            prop_id,
                                         const GValue    *value,
@@ -184,12 +184,12 @@ static void
 gnc_tree_view_class_init (GncTreeViewClass *klass)
 {
     GObjectClass *gobject_class;
-    GtkObjectClass *gtkobject_class;
+    GtkWidgetClass *gtkobject_class;
 
     parent_class = g_type_class_peek_parent (klass);
 
     gobject_class = G_OBJECT_CLASS (klass);
-    gtkobject_class = GTK_OBJECT_CLASS (klass);
+    gtkobject_class = GTK_WIDGET_CLASS (klass);
 
     gobject_class->set_property = gnc_tree_view_set_property;
     gobject_class->get_property = gnc_tree_view_get_property;
@@ -214,7 +214,7 @@ gnc_tree_view_class_init (GncTreeViewClass *klass)
     /* GObject signals */
     gobject_class->finalize = gnc_tree_view_finalize;
 
-    /* GtkObject signals */
+    /* GtkWidget signals */
     gtkobject_class->destroy = gnc_tree_view_destroy;
 }
 
@@ -326,7 +326,7 @@ gnc_tree_view_finalize (GObject *object)
  *  @internal
  */
 static void
-gnc_tree_view_destroy (GtkObject *object)
+gnc_tree_view_destroy (GtkWidget *object)
 {
     GncTreeView *view;
     GncTreeViewPrivate *priv;
@@ -353,8 +353,8 @@ gnc_tree_view_destroy (GtkObject *object)
         priv->column_menu = NULL;
     }
 
-    if (GTK_OBJECT_CLASS (parent_class)->destroy)
-        GTK_OBJECT_CLASS (parent_class)->destroy (object);
+    if (GTK_WIDGET_CLASS (parent_class)->destroy)
+        GTK_WIDGET_CLASS (parent_class)->destroy (object);
     LEAVE(" ");
 }
 

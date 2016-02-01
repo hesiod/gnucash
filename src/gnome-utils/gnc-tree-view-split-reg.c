@@ -5787,7 +5787,7 @@ gtv_sr_editable_start_editing_cb (GtkCellRenderer *cr, GtkCellEditable *editable
 
     /* Lets change the background of the entry widgets */
     {
-        GdkColor     color;
+        GdkRGBA      color;
         const gchar *row_color;
         gboolean     is_trow1 = FALSE;
         gboolean     is_trow2 = FALSE;
@@ -5802,11 +5802,14 @@ gtv_sr_editable_start_editing_cb (GtkCellRenderer *cr, GtkCellEditable *editable
 
         row_color = gnc_tree_model_split_reg_get_row_color (model, is_trow1, is_trow2, is_split, indices[0]);
 
-        if (gdk_color_parse (row_color, &color))
+        // FIXME Migrate to style sheets
+#if 0
+        if (gdk_rgba_parse (&color, row_color))
         {
             if (entry != NULL)
                 gtk_widget_modify_base (GTK_WIDGET (entry), GTK_STATE_NORMAL, &color);
         }
+#endif
     }
 
     gtv_sr_help (view, cr, viewcol, depth);

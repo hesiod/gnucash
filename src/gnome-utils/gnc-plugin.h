@@ -307,7 +307,7 @@ void gnc_plugin_update_actions (GActionGroup *action_group,
  *  @return The merge_id number for the newly merged UI.  If an error
  *  occurred, the return value is 0.
  */
-gint gnc_plugin_add_actions (GtkBuilder *ui_merge,
+gint gnc_plugin_add_actions (EggMenuManager *ui_merge,
                              GActionGroup *action_group,
                              const gchar *filename);
 G_END_DECLS

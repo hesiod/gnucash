@@ -80,10 +80,9 @@ typedef struct _GncPluginMenuAdditionsPerWindow
     /** The menu/toolbar action information associated with a specific
         window.  This plugin must maintain its own data because of the
         way the menus are currently built. */
-    GncMainWindow  *window;
-    GtkBuilder   *ui_manager;
-    GActionGroup *group;
-    gint merge_id;
+    GncMainWindow   *window;
+    EggMenuManager  *ui_manager;
+    guint           merge_id;
 } GncPluginMenuAdditionsPerWindow;
 
 /************************************************************
@@ -203,12 +202,16 @@ gnc_main_window_to_scm (GncMainWindow *window)
  *  that had a menu selected.
  */
 static void
-gnc_plugin_menu_additions_action_cb (GAction *action,
-                                     GncMainWindowActionData *data)
+gnc_plugin_menu_additions_action_cb (GSimpleAction *action,
+                                     GVariant *parameter,
+                                     gpointer user_data)
 {
+    GncMainWindowActionData *data;
 
-    g_return_if_fail(G_IS_ACTION(action));
-    g_return_if_fail(data != NULL);
+    g_return_if_fail(G_IS_SIMPLE_ACTION(action));
+    g_return_if_fail(user_data != NULL);
+
+    data = (GncMainWindowActionData *)user_data;
 
     gnc_extension_invoke_cb(data->data, gnc_main_window_to_scm(data->window));
 }
@@ -274,16 +277,16 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
         return;
     }
 
-    if (!g_utf8_validate(info->ae.label, -1, NULL))
+    if (!g_utf8_validate(info->label, -1, NULL))
     {
-        g_warning("Extension menu label '%s' is not valid utf8.", info->ae.label);
+        g_warning("Extension menu label '%s' is not valid utf8.", info->label);
         info->accel_assigned = TRUE;
         LEAVE("Label is invalid utf8");
         return;
     }
 
     /* Was an accelerator pre-assigned in the source? */
-    ptr = g_utf8_strchr(info->ae.label, -1, '_');
+    ptr = g_utf8_strchr(info->label, -1, '_');
     if (ptr == NULL)
     {
         LEAVE("not preassigned");
@@ -326,7 +329,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     gunichar uni;
     gint len;
 
-    ENTER("Checking %s/%s [%s]", info->path, info->ae.label, info->ae.name);
+    ENTER("Checking %s/%s [%s]", info->path, info->label, info->ae.name);
     if (info->accel_assigned)
     {
         LEAVE("Already processed");
@@ -339,7 +342,7 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
         map = g_strdup("");
     DEBUG("map '%s', path %s", map, info->path);
 
-    for (ptr = info->ae.label; *ptr; ptr = g_utf8_next_char(ptr))
+    for (ptr = info->label; *ptr; ptr = g_utf8_next_char(ptr))
     {
         uni = g_utf8_get_char(ptr);
         if (!g_unichar_isalpha(uni))
@@ -361,13 +364,13 @@ gnc_menu_additions_assign_accel (ExtensionInfo *info, GHashTable *table)
     }
 
     /* Now build a new string in the form "<start>_<end>". */
-    start = g_strndup(info->ae.label, ptr - info->ae.label);
+    start = g_strndup(info->label, ptr - info->label);
     DEBUG("start %p, len %ld, text '%s'", start, g_utf8_strlen(start, -1), start);
     new_label = g_strconcat(start, "_", ptr, (gchar *)NULL);
     g_free(start);
-    DEBUG("label '%s' -> '%s'", info->ae.label, new_label);
-    g_free((gchar *)info->ae.label);
-    info->ae.label = new_label;
+    DEBUG("label '%s' -> '%s'", info->label, new_label);
+    g_free((gchar *)info->label);
+    info->label = new_label;
 
     /* Now build a new map. Old one freed automatically. */
     new_map = g_strconcat(map, buf, (gchar *)NULL);
@@ -401,15 +404,17 @@ gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
     cb_data->window = per_window->window;
     cb_data->data = ext_info->extension;
 
-    if (ext_info->type == GTK_UI_MANAGER_MENUITEM)
-        ext_info->ae.callback = (GCallback)gnc_plugin_menu_additions_action_cb;
+    if (ext_info->is_item)
+        ext_info->ae.activate = gnc_plugin_menu_additions_action_cb;
 
+    // FIXME Migrate this
+#if 0
     gtk_action_group_add_actions_full(per_window->group, &ext_info->ae, 1,
                                       cb_data, g_free);
     gtk_ui_manager_add_ui(per_window->ui_manager, per_window->merge_id,
-                          ext_info->path, ext_info->ae.label, ext_info->ae.name,
+                          ext_info->path, ext_info->label, ext_info->ae.name,
                           ext_info->type, FALSE);
-    gtk_ui_manager_ensure_update(per_window->ui_manager);
+#endif
 }
 
 
@@ -439,10 +444,6 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
 
     per_window.window = window;
     per_window.ui_manager = window->ui_merge;
-    per_window.group = gtk_action_group_new ("MenuAdditions" );
-    gnc_gtk_action_group_set_translation_domain (per_window.group, GETTEXT_PACKAGE);
-    per_window.merge_id = gtk_ui_manager_new_merge_id(window->ui_merge);
-    gtk_ui_manager_insert_action_group(window->ui_merge, per_window.group, 0);
 
     menu_list = g_slist_sort(gnc_extensions_get_menu_list(),
                              (GCompareFunc)gnc_menu_additions_sort);
@@ -459,8 +460,9 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
 
     /* Tell the window code about the actions that were just added
      * behind its back (so to speak) */
-    gnc_main_window_manual_merge_actions (window, PLUGIN_ACTIONS_NAME,
-                                          per_window.group, per_window.merge_id);
+    // FIXME Migrate this
+    //gnc_main_window_manual_merge_actions (window, PLUGIN_ACTIONS_NAME,
+    //                                      per_window.group, per_window.merge_id);
 
     g_slist_free(menu_list);
     LEAVE(" ");

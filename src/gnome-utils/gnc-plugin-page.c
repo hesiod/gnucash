@@ -89,7 +89,7 @@ static guint signals[LAST_SIGNAL] = { 0 };
 typedef struct _GncPluginPagePrivate
 {
     /** The group of all actions provided by this plugin. */
-    GtkActionGroup *action_group;
+    GActionGroup *action_group;
     EggMenuManager *ui_merge;
     guint merge_id;
     char *ui_description;
@@ -280,7 +280,7 @@ gnc_plugin_page_recreate_page(GtkWidget *window,
 /*  Add the actions for a content page to the specified window. */
 void
 gnc_plugin_page_merge_actions (GncPluginPage *page,
-                               GtkUIManager *ui_merge)
+                               EggMenuManager *ui_merge)
 {
     GncPluginPagePrivate *priv;
 
@@ -297,7 +297,7 @@ gnc_plugin_page_merge_actions (GncPluginPage *page,
 /*  Remove the actions for a content page from the specified window. */
 void
 gnc_plugin_page_unmerge_actions (GncPluginPage *page,
-                                 GtkUIManager *ui_merge)
+                                 EggMenuManager *ui_merge)
 {
     GncPluginPagePrivate *priv;
 
@@ -305,17 +305,15 @@ gnc_plugin_page_unmerge_actions (GncPluginPage *page,
 
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
     g_return_if_fail (priv->merge_id != 0);
-    g_return_if_fail (priv->action_group != NULL);
 
-    gtk_ui_manager_remove_ui(ui_merge, priv->merge_id);
-    gtk_ui_manager_remove_action_group(ui_merge, priv->action_group);
+    egg_menu_manager_remove (priv->ui_merge, priv->merge_id);
 
     priv->ui_merge = NULL;
     priv->merge_id = 0;
 }
 
 
-GtkAction *
+GAction *
 gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name)
 {
     GncPluginPagePrivate *priv;
@@ -326,7 +324,7 @@ gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name)
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
     if (!priv->action_group)
         return NULL;
-    return gtk_action_group_get_action (priv->action_group, name);
+    return g_action_map_lookup_action (G_ACTION_MAP(priv->action_group), name);
 }
 
 
@@ -469,9 +467,9 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
      PROP_UI_MERGE,
      g_param_spec_object ("ui-merge",
                           "UI Merge",
-                          "A pointer to the GtkUIManager object that "
+                          "A pointer to the EggMenuManager object that "
                           "represents this pages menu hierarchy.",
-                          GTK_TYPE_UI_MANAGER,
+                          EGG_TYPE_MENU_MANAGER,
                           G_PARAM_READABLE));
 
     g_object_class_install_property
@@ -479,10 +477,10 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
      PROP_ACTION_GROUP,
      g_param_spec_object ("action-group",
                           "Action Group",
-                          "A pointer to the GtkActionGroup object that "
+                          "A pointer to the GActionGroup object that "
                           "represents this pages available menu/toolbar "
                           "actions.",
-                          GTK_TYPE_ACTION_GROUP,
+                          G_TYPE_ACTION_GROUP,
                           G_PARAM_READABLE));
 
 
@@ -990,7 +988,7 @@ gnc_plugin_page_set_ui_description (GncPluginPage *page,
 
 
 /*  Retrieve the GtkUIManager object associated with this page. */
-GtkUIManager *
+EggMenuManager *
 gnc_plugin_page_get_ui_merge (GncPluginPage *page)
 {
     GncPluginPagePrivate *priv;
@@ -1003,7 +1001,7 @@ gnc_plugin_page_get_ui_merge (GncPluginPage *page)
 
 
 /*  Retrieve the GtkActionGroup object associated with this page. */
-GtkActionGroup *
+GActionGroup *
 gnc_plugin_page_get_action_group(GncPluginPage *page)
 {
     GncPluginPagePrivate *priv;
@@ -1015,15 +1013,14 @@ gnc_plugin_page_get_action_group(GncPluginPage *page)
 
 
 /*  Create the GtkActionGroup object associated with this page. */
-GtkActionGroup *
+GActionGroup *
 gnc_plugin_page_create_action_group (GncPluginPage *page, const gchar *group_name)
 {
     GncPluginPagePrivate *priv;
-    GtkActionGroup *group;
+    GActionGroup *group;
 
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
-    group = gtk_action_group_new(group_name);
-    gnc_gtk_action_group_set_translation_domain(group, GETTEXT_PACKAGE);
+    group = G_ACTION_GROUP(g_simple_action_group_new());
     priv->action_group = group;
     return group;
 }

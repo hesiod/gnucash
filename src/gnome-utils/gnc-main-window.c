@@ -2254,8 +2254,9 @@ main_window_update_page_color (GncPluginPage *page,
             g_object_unref (tab_widget);
             tab_widget = event_box;
         }
-        gtk_widget_override_background_color (tab_widget, GTK_STATE_NORMAL, &tab_color);
-        gtk_widget_override_background_color (tab_widget, GTK_STATE_ACTIVE, &tab_color);
+        // FIXME GTK+ 3: Migrate this to style sheets
+        //gtk_widget_override_background_color (tab_widget, GTK_STATE_NORMAL, &tab_color);
+        //gtk_widget_override_background_color (tab_widget, GTK_STATE_ACTIVE, &tab_color);
     }
     else
     {

@@ -34,7 +34,6 @@
 #include <gnc-main-window.h>
 #include <gnc-window.h>
 #include <gnc-menu-extensions.h>
-#include <gnc-plugin-file-history.h>
 #include <gnc-ui.h>
 #include <gnc-splash.h>
 #include <dialog-tax-table.h>
