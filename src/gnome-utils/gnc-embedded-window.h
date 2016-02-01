@@ -59,7 +59,7 @@ typedef struct
     GtkBox vbox;
     /** A pointer to the UI Manager data structure for the whole
      *  window. */
-    GtkBuilder *ui_merge;
+    EggMenuManager *ui_merge;
 } GncEmbeddedWindow;
 
 

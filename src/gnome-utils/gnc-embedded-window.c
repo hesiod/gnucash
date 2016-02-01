@@ -284,26 +284,6 @@ gnc_embedded_window_dispose (GObject *object)
 }
 
 
-static void
-gnc_embedded_window_add_widget (GtkBuilder *merge,
-                                GtkWidget *widget,
-                                GncEmbeddedWindow *window)
-{
-    GncEmbeddedWindowPrivate *priv;
-
-    ENTER("merge %p, new widget %p, window %p", merge, widget, window);
-    priv = GNC_EMBEDDED_WINDOW_GET_PRIVATE(window);
-    if (GTK_IS_TOOLBAR (widget))
-    {
-        priv->toolbar = widget;
-    }
-
-    gtk_box_pack_start (GTK_BOX (priv->menu_dock), widget, FALSE, FALSE, 0);
-    gtk_widget_show (widget);
-    LEAVE(" ");
-}
-
-
 /** Initialize the data structures of a gnucash embedded window.
  *
  *  @param window The object to initialize. */
@@ -326,9 +306,7 @@ gnc_embedded_window_setup_window (GncEmbeddedWindow *window)
     gtk_widget_show (priv->statusbar);
     gtk_box_pack_end (GTK_BOX (window), priv->statusbar, FALSE, TRUE, 0);
 
-    window->ui_merge = gtk_builder_new ();
-    g_signal_connect (G_OBJECT (window->ui_merge), "add_widget",
-                      G_CALLBACK (gnc_embedded_window_add_widget), window);
+    window->ui_merge = egg_menu_manager_new ();
     LEAVE(" ");
 }
 
@@ -362,9 +340,9 @@ gnc_embedded_window_new (GActionEntry *action_entries,
 
     /* Create menu and toolbar information */
     g_action_map_add_action_entries (
-                   G_ACTION_MAP(gtk_builder_get_application (window->ui_merge)),
+                   G_ACTION_MAP(g_application_get_default()),
                    action_entries, n_action_entries, user_data);
-    merge_id = gtk_builder_add_from_file (window->ui_merge, ui_fullname,
+    merge_id = egg_menu_manager_add_filename (window->ui_merge, ui_fullname,
                &error);
 
     /* Error checking */

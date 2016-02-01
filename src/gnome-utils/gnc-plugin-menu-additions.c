@@ -81,8 +81,8 @@ typedef struct _GncPluginMenuAdditionsPerWindow
         window.  This plugin must maintain its own data because of the
         way the menus are currently built. */
     GncMainWindow  *window;
-    GtkUIManager   *ui_manager;
-    GtkActionGroup *group;
+    GtkBuilder   *ui_manager;
+    GActionGroup *group;
     gint merge_id;
 } GncPluginMenuAdditionsPerWindow;
 
@@ -203,11 +203,11 @@ gnc_main_window_to_scm (GncMainWindow *window)
  *  that had a menu selected.
  */
 static void
-gnc_plugin_menu_additions_action_cb (GtkAction *action,
+gnc_plugin_menu_additions_action_cb (GAction *action,
                                      GncMainWindowActionData *data)
 {
 
-    g_return_if_fail(GTK_IS_ACTION(action));
+    g_return_if_fail(G_IS_ACTION(action));
     g_return_if_fail(data != NULL);
 
     gnc_extension_invoke_cb(data->data, gnc_main_window_to_scm(data->window));
@@ -230,9 +230,9 @@ gnc_menu_additions_sort (ExtensionInfo *a, ExtensionInfo *b)
 {
     if (a->type == b->type)
         return strcmp(a->sort_key, b->sort_key);
-    else if (a->type == GTK_UI_MANAGER_MENU)
+    else if (a->type == TYPE_MENU)
         return -1;
-    else if (b->type == GTK_UI_MANAGER_MENU)
+    else if (b->type == TYPE_MENU)
         return 1;
     else
         return 0;
@@ -267,7 +267,7 @@ gnc_menu_additions_do_preassigned_accel (ExtensionInfo *info, GHashTable *table)
     gchar *map, *new_map, *accel_key;
     const gchar *ptr;
 
-    ENTER("Checking %s/%s [%s]", info->path, info->ae.label, info->ae.name);
+    ENTER("Checking %s [%s]", info->path, info->ae.name);
     if (info->accel_assigned)
     {
         LEAVE("Already processed");
@@ -394,7 +394,7 @@ gnc_menu_additions_menu_setup_one (ExtensionInfo *ext_info,
 {
     GncMainWindowActionData *cb_data;
 
-    DEBUG( "Adding %s/%s [%s] as [%s]", ext_info->path, ext_info->ae.label,
+    DEBUG( "Adding %s [%s] as [%s]", ext_info->path,
            ext_info->ae.name, ext_info->typeStr );
 
     cb_data = g_new0 (GncMainWindowActionData, 1);
@@ -483,15 +483,7 @@ gnc_plugin_menu_additions_remove_from_window (GncPlugin *plugin,
         GncMainWindow *window,
         GQuark type)
 {
-    GtkActionGroup *group;
-
     ENTER(" ");
-
-    /* Have to remove our actions manually. Its only automatic if the
-     * actions name is installed into the plugin class. */
-    group = gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME);
-    if (group)
-        gtk_ui_manager_remove_action_group(window->ui_merge, group);
 
     /* Note: This code does not clean up the per-callback data structures
      * that are created by the gnc_menu_additions_menu_setup_one()

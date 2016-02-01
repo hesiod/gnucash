@@ -74,7 +74,7 @@ initialize_getters()
 
 
 static gboolean
-gnc_extension_type (SCM extension, GtkUIManagerItemType *type)
+gnc_extension_type (SCM extension, ExtensionItemType *type)
 {
     char *string;
 
@@ -89,15 +89,15 @@ gnc_extension_type (SCM extension, GtkUIManagerItemType *type)
 
     if (g_strcmp0(string, "menu-item") == 0)
     {
-        *type = GTK_UI_MANAGER_MENUITEM;
+        *type = TYPE_MENUITEM;
     }
     else if (g_strcmp0(string, "menu") == 0)
     {
-        *type = GTK_UI_MANAGER_MENU;
+        *type = TYPE_MENU;
     }
     else if (g_strcmp0(string, "separator") == 0)
     {
-        *type = GTK_UI_MANAGER_SEPARATOR;
+        *type = TYPE_SEPARATOR;
     }
     else
     {
@@ -257,7 +257,7 @@ static gboolean
 gnc_create_extension_info (SCM extension)
 {
     ExtensionInfo *ext_info;
-    gchar *typeStr, *tmp;
+    gchar *typeStr;
     gchar* name;
     gchar* guid;
 
@@ -274,25 +274,18 @@ gnc_create_extension_info (SCM extension)
     /* Get all the pieces */
     name = gnc_extension_name(extension);
     guid = gnc_extension_guid(extension);
-    ext_info->ae.label = g_strdup(gettext(name));
     ext_info->ae.name = gnc_ext_gen_action_name(guid);
-    ext_info->ae.tooltip = gnc_extension_documentation(extension);
-    ext_info->ae.stock_id = NULL;
-    ext_info->ae.accelerator = NULL;
-    ext_info->ae.callback = NULL;
     g_free(name);
     g_free(guid);
 
-    tmp = g_strdup_printf("%s/%s", ext_info->path, ext_info->ae.label);
-    ext_info->sort_key = g_utf8_collate_key(tmp, -1);
-    g_free(tmp);
+    ext_info->sort_key = g_utf8_collate_key(ext_info->path, -1);
 
     switch (ext_info->type)
     {
-    case GTK_UI_MANAGER_MENU:
+    case TYPE_MENU:
         typeStr = "menu";
         break;
-    case GTK_UI_MANAGER_MENUITEM:
+    case TYPE_MENUITEM:
         typeStr = "menuitem";
         break;
     default:
@@ -301,9 +294,9 @@ gnc_create_extension_info (SCM extension)
     }
     ext_info->typeStr = typeStr;
 
-    DEBUG( "extension: %s/%s [%s] tip [%s] type %s\n",
-           ext_info->path, ext_info->ae.label, ext_info->ae.name,
-           ext_info->ae.tooltip, ext_info->typeStr );
+    DEBUG( "extension: %s [%s] type %s\n",
+           ext_info->path, ext_info->ae.name,
+           ext_info->typeStr );
 
     scm_gc_protect_object(extension);
 
@@ -323,8 +316,6 @@ cleanup_extension_info(gpointer extension_info, gpointer not_used)
 
     g_free(ext_info->sort_key);
     g_free((gchar *)ext_info->ae.name);
-    g_free((gchar *)ext_info->ae.label);
-    g_free((gchar *)ext_info->ae.tooltip);
     g_free(ext_info->path);
     g_free(ext_info);
 }

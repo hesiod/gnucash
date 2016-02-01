@@ -47,6 +47,7 @@ SET (gnome_utils_SOURCES
   dialog-transfer.c
   dialog-userpass.c
   dialog-utils.c
+  egg-menu-manager.c
   gnc-account-sel.c
   gnc-amount-edit.c
   gnc-autosave.c
@@ -74,7 +75,6 @@ SET (gnome_utils_SOURCES
   gnc-keyring.c
   gnc-main-window.c
   gnc-menu-extensions.c
-  gnc-plugin-file-history.c
   gnc-plugin-manager.c
   gnc-plugin-menu-additions.c
   gnc-plugin-page.c
@@ -138,6 +138,7 @@ SET (gnome_utils_HEADERS
   dialog-totd.h
   dialog-transfer.h
   dialog-utils.h
+  egg-menu-manager.h
   gnc-account-sel.h
   gnc-amount-edit.h
   gnc-cell-renderer-date.h
@@ -162,7 +163,6 @@ SET (gnome_utils_HEADERS
   gnc-keyring.h
   gnc-main-window.h
   gnc-menu-extensions.h
-  gnc-plugin-file-history.h
   gnc-plugin-manager.h
   gnc-plugin-menu-additions.h
   gnc-plugin-page.h

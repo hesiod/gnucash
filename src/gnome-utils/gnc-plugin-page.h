@@ -39,6 +39,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 #include "qof.h"
+#include "egg-menu-manager.h"
 
 G_BEGIN_DECLS
 
@@ -61,14 +62,14 @@ typedef struct GncPluginPage
     GObject gobject;		/**< The parent object data. */
 
     GtkWidget *window;		/**< The window that contains the
-                                         *   display widget for this plugin.
-                                         *   This field is private to the
-                                         *   gnucash window management
-                                         *   code.  */
+                                 *   display widget for this plugin.
+                                 *   This field is private to the
+                                 *   gnucash window management
+                                 *   code.  */
     GtkWidget *notebook_page;	/**< The display widget for this
-                                         *   plugin.  This field is private to
-                                         *   the gnucash window management
-                                         *   code.  */
+                                 *   plugin.  This field is private to
+                                 *   the gnucash window management
+                                 *   code.  */
     GtkWidget *summarybar;		/**< The summary bar widget (if any)
                                          *   that is associated with this
                                          *   plugin.  This field is private to
@@ -170,11 +171,8 @@ typedef struct
      *  override the generic code for setting the sensitivity of
      *  items in the Edit menu.
      *
-     *  @param page The front page in a main window..
-     *
-     *  @param hide Whether the widgets should be shown or
-     *  hidden. */
-    void (* update_edit_menu_actions) (GncPluginPage *plugin_page, gboolean hide);
+     *  @param page The front page in a main window. */
+    void (* update_edit_menu_actions) (GncPluginPage *plugin_page);
 
     /** This function vector is called to finish any outstanding
      *  activities.  It will be called for such things as closing a
@@ -269,7 +267,7 @@ GncPluginPage *gnc_plugin_page_recreate_page (GtkWidget *window,
  *  @param merge A pointer to the UI manager data structure for a
  *  window. */
 void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page,
-                                    GtkBuilder *merge);
+                                    EggMenuManager *merge);
 
 
 /** Remove the actions for a content page from the specified window.
@@ -280,7 +278,7 @@ void gnc_plugin_page_merge_actions (GncPluginPage *plugin_page,
  *  @param merge A pointer to the UI manager data structure for a
  *  window. */
 void gnc_plugin_page_unmerge_actions (GncPluginPage *plugin_page,
-                                      GtkBuilder *merge);
+                                      EggMenuManager *merge);
 
 
 /** Retrieve the textual name of a plugin.
@@ -490,7 +488,7 @@ void gnc_plugin_page_set_ui_description (GncPluginPage *page,
  *  @param page The page whose UI information should be retrieved.
  *
  *  @return A pointer to the GtkUIManager object for this page. */
-GtkBuilder *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
+EggMenuManager *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
 
 
 /** Retrieve the GtkActionGroup object associated with this page.

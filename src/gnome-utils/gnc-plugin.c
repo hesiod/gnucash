@@ -177,15 +177,6 @@ gnc_plugin_add_to_window (GncPlugin *plugin,
                                        klass->actions, klass->n_actions,
                                        klass->toggle_actions, klass->n_toggle_actions,
                                        klass->ui_filename, plugin);
-
-
-        if (klass->important_actions)
-        {
-            action_group =
-                gnc_main_window_get_action_group(window, klass->actions_name);
-            gnc_plugin_set_important_actions(action_group,
-                                             klass->important_actions);
-        }
     }
 
     /*

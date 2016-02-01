@@ -41,7 +41,6 @@
 #include "gnc-gobject-utils.h"
 #include "gnc-hooks.h"
 #include "gnc-session.h"
-#include "gnc-icons.h"
 #include "gnc-ui-balances.h"
 #include "dialog-utils.h"
 #include "window-main-summarybar.h"

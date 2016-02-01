@@ -37,7 +37,7 @@
 #define __GNC_MAIN_WINDOW_H
 
 #include <gtk/gtk.h>
-#include "egg_menu_manager.h"
+#include "egg-menu-manager.h"
 #include "gnc-plugin-page.h"
 
 /* type macros */
@@ -162,7 +162,7 @@ GncPluginPage *gnc_main_window_get_current_page (GncMainWindow *window);
 
 /** Returns the pointer to the GtkBuilder which is used for the menu
  * item merging. */
-GtkBuilder *gnc_main_window_get_uimanager (GncMainWindow *window);
+EggMenuManager *gnc_main_window_get_uimanager (GncMainWindow *window);
 
 
 /** Update the name of the page in the main window.
@@ -205,7 +205,6 @@ main_window_update_page_color (GncPluginPage *page,
  */
 void gnc_main_window_manual_merge_actions (GncMainWindow *window,
         const gchar *group_name,
-        GActionGroup *group,
         guint merge_id);
 
 

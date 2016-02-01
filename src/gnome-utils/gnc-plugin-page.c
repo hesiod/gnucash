@@ -39,6 +39,7 @@
 #include "gnc-plugin.h"
 #include "gnc-plugin-page.h"
 #include "gnc-gobject-utils.h"
+#include "egg-menu-manager.h"
 
 /** The debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
@@ -89,7 +90,7 @@ typedef struct _GncPluginPagePrivate
 {
     /** The group of all actions provided by this plugin. */
     GtkActionGroup *action_group;
-    GtkUIManager *ui_merge;
+    EggMenuManager *ui_merge;
     guint merge_id;
     char *ui_description;
 

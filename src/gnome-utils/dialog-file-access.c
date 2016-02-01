@@ -33,7 +33,6 @@
 #include "dialog-utils.h"
 #include "dialog-file-access.h"
 #include "gnc-file.h"
-#include "gnc-plugin-file-history.h"
 #include "gnc-session.h"
 
 static QofLogModule log_module = GNC_MOD_GUI;
@@ -261,7 +260,6 @@ gnc_ui_file_access( int type )
     const gchar* default_db;
     const gchar *button_label = NULL;
     const gchar *settings_section = NULL;
-    gchar *last;
 
     g_return_if_fail( type == FILE_ACCESS_OPEN || type == FILE_ACCESS_SAVE_AS || type == FILE_ACCESS_EXPORT );
 
@@ -330,18 +328,7 @@ gnc_ui_file_access( int type )
     gtk_box_pack_start( GTK_BOX(file_chooser), GTK_WIDGET(fileChooser), TRUE, TRUE, 6 );
 
     /* Set the default directory */
-    if (type == FILE_ACCESS_OPEN || type == FILE_ACCESS_SAVE_AS)
-    {
-        last = gnc_history_get_last();
-        if ( last && gnc_uri_is_file_uri ( last ) )
-        {
-            gchar *filepath = gnc_uri_get_path ( last );
-            faw->starting_dir = g_path_get_dirname( filepath );
-            g_free ( filepath );
-        }
-    }
-    if (!faw->starting_dir)
-        faw->starting_dir = gnc_get_default_directory(settings_section);
+    faw->starting_dir = gnc_get_default_directory(settings_section);
     gtk_file_chooser_set_current_folder(faw->fileChooser, faw->starting_dir);
 
     g_object_connect( G_OBJECT(faw->fileChooser), "signal::file-activated",

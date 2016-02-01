@@ -33,6 +33,7 @@
 #include "gnc-engine.h"
 #include "Account.h"
 #include "gnc-file.h"
+#include "gnc-main-window.h"
 #include "gnc-features.h"
 #include "gnc-filepath-utils.h"
 #include "gnc-gui-query.h"
@@ -43,7 +44,6 @@
 #include "gnc-ui-util.h"
 #include "gnc-uri-utils.h"
 #include "gnc-window.h"
-#include "gnc-plugin-file-history.h"
 #include "qof.h"
 #include "TransLog.h"
 #include "gnc-session.h"
@@ -475,8 +475,6 @@ gnc_add_history (QofSession * session)
         file = gnc_uri_get_path ( url );
     else
         file = gnc_uri_normalize_uri ( url, FALSE ); /* Note that the password is not saved in history ! */
-
-    gnc_history_add_file (file);
 }
 
 static void
@@ -955,8 +953,6 @@ RESTART:
     /* --------------- END CORE SESSION CODE -------------- */
 
     /* clean up old stuff, and then we're outta here. */
-    gnc_add_history (new_session);
-
     g_free (newfile);
 
     qof_event_resume ();
@@ -991,24 +987,15 @@ gboolean
 gnc_file_open (void)
 {
     const gchar * newfile;
-    gchar *last = NULL;
     gchar *default_dir = NULL;
     gboolean result;
 
     if (!gnc_file_query_save (TRUE))
         return FALSE;
 
-    if ( last && gnc_uri_is_file_uri ( last ) )
-    {
-        gchar *filepath = gnc_uri_get_path ( last );
-        default_dir = g_path_get_dirname( filepath );
-        g_free ( filepath );
-    }
-    else
-        default_dir = gnc_get_default_directory(GNC_PREFS_GROUP_OPEN_SAVE);
+    default_dir = gnc_get_default_directory(GNC_PREFS_GROUP_OPEN_SAVE);
 
     newfile = gnc_file_dialog (_("Open"), NULL, default_dir, GNC_FILE_DIALOG_OPEN);
-    g_free ( last );
     g_free ( default_dir );
 
     result = gnc_post_file_open ( newfile, /*is_readonly*/ FALSE );
@@ -1042,23 +1029,13 @@ gnc_file_export (void)
 {
     const char *filename;
     char *default_dir = NULL;        /* Default to last open */
-    char *last;
 
     ENTER(" ");
 
-    last = gnc_history_get_last();
-    if ( last && gnc_uri_is_file_uri ( last ) )
-    {
-        gchar *filepath = gnc_uri_get_path ( last );
-        default_dir = g_path_get_dirname( filepath );
-        g_free ( filepath );
-    }
-    else
-        default_dir = gnc_get_default_directory(GNC_PREFS_GROUP_EXPORT);
+    default_dir = gnc_get_default_directory(GNC_PREFS_GROUP_EXPORT);
 
     filename = gnc_file_dialog (_("Save"), NULL, default_dir,
                                 GNC_FILE_DIALOG_SAVE);
-    g_free ( last );
     g_free ( default_dir );
     if (!filename) return;
 
@@ -1288,7 +1265,6 @@ gnc_file_save (void)
     }
 
     xaccReopenLog();
-    gnc_add_history (session);
     gnc_hook_run(HOOK_BOOK_SAVED, session);
     LEAVE (" ");
 }
@@ -1302,23 +1278,13 @@ gnc_file_save_as (void)
 {
     const gchar *filename;
     gchar *default_dir = NULL;        /* Default to last open */
-    gchar *last;
 
     ENTER(" ");
 
-    last = gnc_history_get_last();
-    if ( last && gnc_uri_is_file_uri ( last ) )
-    {
-        gchar *filepath = gnc_uri_get_path ( last );
-        default_dir = g_path_get_dirname( filepath );
-        g_free ( filepath );
-    }
-    else
-        default_dir = gnc_get_default_directory(GNC_PREFS_GROUP_OPEN_SAVE);
+    default_dir = gnc_get_default_directory(GNC_PREFS_GROUP_OPEN_SAVE);
 
     filename = gnc_file_dialog (_("Save"), NULL, default_dir,
                                 GNC_FILE_DIALOG_SAVE);
-    g_free ( last );
     g_free ( default_dir );
     if (!filename) return;
 
@@ -1528,7 +1494,6 @@ gnc_file_do_save_as (const char* filename)
         session = NULL;
 
         xaccReopenLog();
-        gnc_add_history (new_session);
         gnc_hook_run(HOOK_BOOK_SAVED, new_session);
     }
     /* --------------- END CORE SESSION CODE -------------- */

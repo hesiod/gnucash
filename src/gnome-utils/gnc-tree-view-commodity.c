@@ -37,7 +37,6 @@
 #include "gnc-engine.h"
 #include "gnc-glib-utils.h"
 #include "gnc-gnome-utils.h"
-#include "gnc-icons.h"
 #include "gnc-ui-util.h"
 
 
