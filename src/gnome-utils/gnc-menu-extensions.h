@@ -25,12 +25,6 @@
 
 #include <libguile.h>
 
-typedef int ExtensionItemType;
-#define TYPE_UNDEFINED	0
-#define TYPE_MENU	1
-#define TYPE_MENUITEM	2
-#define TYPE_SEPARATOR	3
-
 typedef struct _ExtensionInfo
 {
     SCM extension;
@@ -39,7 +33,11 @@ typedef struct _ExtensionInfo
     gchar *path;
     gchar *sort_key;
     const gchar *typeStr;
-    ExtensionItemType type;
+    union {
+      GMenuItem *item;
+      GMenu *menu;
+    };
+    gboolean is_item;
     gboolean accel_assigned;
 } ExtensionInfo;
 

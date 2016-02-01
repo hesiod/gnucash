@@ -228,11 +228,11 @@ gnc_plugin_menu_additions_action_cb (GAction *action,
 static gint
 gnc_menu_additions_sort (ExtensionInfo *a, ExtensionInfo *b)
 {
-    if (a->type == b->type)
+    if (a->is_item == b->is_item)
         return strcmp(a->sort_key, b->sort_key);
-    else if (a->type == TYPE_MENU)
+    else if (!a->is_item)
         return -1;
-    else if (b->type == TYPE_MENU)
+    else if (!b->is_item)
         return 1;
     else
         return 0;

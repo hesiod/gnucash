@@ -74,7 +74,7 @@ initialize_getters()
 
 
 static gboolean
-gnc_extension_type (SCM extension, ExtensionItemType *type)
+gnc_extension_type (SCM extension, gboolean *is_item)
 {
     char *string;
 
@@ -89,15 +89,13 @@ gnc_extension_type (SCM extension, ExtensionItemType *type)
 
     if (g_strcmp0(string, "menu-item") == 0)
     {
-        *type = TYPE_MENUITEM;
+        *is_item = TRUE;
+        return TRUE;
     }
     else if (g_strcmp0(string, "menu") == 0)
     {
-        *type = TYPE_MENU;
-    }
-    else if (g_strcmp0(string, "separator") == 0)
-    {
-        *type = TYPE_SEPARATOR;
+        *is_item = FALSE;
+        return TRUE;
     }
     else
     {
@@ -106,8 +104,7 @@ gnc_extension_type (SCM extension, ExtensionItemType *type)
     }
 
     free(string);
-
-    return TRUE;
+    return FALSE;
 }
 
 /* returns malloc'd name */
@@ -257,14 +254,14 @@ static gboolean
 gnc_create_extension_info (SCM extension)
 {
     ExtensionInfo *ext_info;
-    gchar *typeStr;
+    gchar *typeStr, *tmp, *label;
     gchar* name;
     gchar* guid;
 
     ext_info = g_new0(ExtensionInfo, 1);
     ext_info->extension = extension;
     gnc_extension_path(extension, &ext_info->path);
-    if (!gnc_extension_type( extension, &ext_info->type ))
+    if (!gnc_extension_type( extension, &ext_info->is_item ))
     {
         /* Can't parse the type passed to us.  Bail now. */
         g_free(ext_info);
@@ -274,29 +271,27 @@ gnc_create_extension_info (SCM extension)
     /* Get all the pieces */
     name = gnc_extension_name(extension);
     guid = gnc_extension_guid(extension);
+    label = g_strdup(gettext(name));
+    ext_info->item = g_menu_item_new (label, NULL);
     ext_info->ae.name = gnc_ext_gen_action_name(guid);
     g_free(name);
     g_free(guid);
 
-    ext_info->sort_key = g_utf8_collate_key(ext_info->path, -1);
+    tmp = g_strdup_printf("%s/%s", ext_info->path, label);
+    ext_info->sort_key = g_utf8_collate_key(tmp, -1);
+    g_free(tmp);
 
-    switch (ext_info->type)
-    {
-    case TYPE_MENU:
-        typeStr = "menu";
-        break;
-    case TYPE_MENUITEM:
+    if (ext_info->is_item) {
         typeStr = "menuitem";
-        break;
-    default:
-        typeStr = "unk";
-        break;
+    } else {
+        typeStr = "menu";
     }
     ext_info->typeStr = typeStr;
 
-    DEBUG( "extension: %s [%s] type %s\n",
-           ext_info->path, ext_info->ae.name,
+    DEBUG( "extension: %s/%s [%s] type %s\n",
+           ext_info->path, label, ext_info->ae.name,
            ext_info->typeStr );
+    g_free(label);
 
     scm_gc_protect_object(extension);
 
