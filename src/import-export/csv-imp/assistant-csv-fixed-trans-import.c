@@ -565,7 +565,7 @@ csv_fixed_trans_import_assistant_prepare (GtkAssistant *assistant, GtkWidget *pa
  * Assistant call back functions
  *******************************************************/
 static void
-csv_fixed_trans_import_assistant_destroy_cb (GtkObject *object, gpointer user_data)
+csv_fixed_trans_import_assistant_destroy_cb (GtkWidget *object, gpointer user_data)
 {
     CsvFTImportInfo *info = user_data;
     gnc_unregister_gui_component_by_data (ASSISTANT_CSV_FIXED_TRANS_IMPORT_CM_CLASS, info);
@@ -660,7 +660,7 @@ csv_fixed_trans_import_assistant_create (CsvFTImportInfo *info)
     button = gtk_button_new_from_stock (GTK_STOCK_OK);
     gtk_widget_set_size_request (button, 100, -1);
     gtk_widget_show (button);
-    h_box = gtk_hbox_new (TRUE, 0);
+    h_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_pack_start (GTK_BOX(h_box), button, FALSE, FALSE, 0);
     gtk_file_chooser_set_extra_widget (GTK_FILE_CHOOSER(info->file_chooser), h_box);
     g_signal_connect (G_OBJECT(button), "clicked",

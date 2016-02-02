@@ -26,13 +26,13 @@
  *     Dave Peticolas <dave@krondo.com>
  */
 
+#if 0
 #include "config.h"
 
 #include <string.h>
 
 #include "gnucash-sheet.h"
 #include "gnucash-sheetP.h"
-#include "gnucash-color.h"
 #include "gnucash-style.h"
 #include "gnucash-grid.h"
 #include "gnucash-cursor.h"
@@ -777,4 +777,4 @@ gnc_header_new (GnucashSheet *sheet)
     return canvas;
 }
 
-
+#endif

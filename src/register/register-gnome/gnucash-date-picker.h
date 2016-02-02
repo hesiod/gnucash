@@ -23,6 +23,7 @@
 #ifndef GNUCASH_DATE_PICKER_H
 #define GNUCASH_DATE_PICKER_H
 
+#include <gtk/gtk.h>
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -45,7 +46,7 @@ typedef struct
 
 GType gnc_date_picker_get_type (void);
 
-GtkWidget *gnc_date_picker_new ();
+GtkWidget *gnc_date_picker_new (void);
 
 /* days are 1-31, mon is 0-11, year 1900 == 1900 */
 void gnc_date_picker_set_date (GNCDatePicker *date_picker,

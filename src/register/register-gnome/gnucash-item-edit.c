@@ -27,12 +27,12 @@
  *  And then substantially rewritten by Dave Peticolas <dave@krondo.com>.
  */
 
-
+#if 0
 #include "config.h"
 
 #include <string.h>
+#include <gtk/gtk.h>
 
-#include "gnucash-color.h"
 #include "gnucash-cursor.h"
 #include "gnucash-item-edit.h"
 #include "gnucash-grid.h"
@@ -1477,3 +1477,4 @@ gnc_item_edit_get_has_selection (GncItemEdit *item_edit)
     return gtk_editable_get_selection_bounds(editable, NULL, NULL);
 }
 
+#endif

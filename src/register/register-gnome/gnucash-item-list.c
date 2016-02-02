@@ -30,7 +30,7 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
-#include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
 
 #include "gnc-engine.h"
 #include "gnucash-item-list.h"
@@ -415,7 +415,7 @@ gnc_item_list_get_type (void)
         };
 
         gnc_item_list_type =
-            g_type_register_static (gnome_canvas_widget_get_type(), "GncItemList",
+            g_type_register_static (gtk_drawing_area_get_type (), "GncItemList",
                                     &gnc_item_list_info, 0);
     }
 
@@ -445,15 +445,15 @@ tree_view_selection_changed (GtkTreeSelection *selection,
     g_free (string);
 }
 
-GnomeCanvasItem *
-gnc_item_list_new(GnomeCanvasGroup *parent, GtkListStore *list_store)
+GtkWidget *
+gnc_item_list_new(GtkListStore *list_store)
 {
     GtkWidget *frame;
     GtkWidget *tree_view;
     GtkWidget *scrollwin;
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
-    GnomeCanvasItem *item;
+    GtkWidget *item;
     GncItemList *item_list;
 
     frame = gtk_frame_new (NULL);
@@ -490,12 +490,8 @@ gnc_item_list_new(GnomeCanvasGroup *parent, GtkListStore *list_store)
     gtk_container_add (GTK_CONTAINER (scrollwin), tree_view);
     gtk_widget_show_all (frame);
 
-    item = gnome_canvas_item_new (parent, gnc_item_list_get_type(),
-                                  "widget", frame,
-                                  "size_pixels", TRUE,
-                                  "x", -10000.0,
-                                  "y", -10000.0,
-                                  NULL);
+    item = gtk_drawing_area_new ();
+    gtk_container_add (GTK_CONTAINER (scrollwin), item);
 
     item_list = GNC_ITEM_LIST (item);
 

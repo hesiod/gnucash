@@ -82,9 +82,11 @@ gnc_date_picker_button_event (GtkWidget *widget, GdkEvent *event,
 }
 
 static gboolean
-gnc_date_picker_key_event(GtkWidget *widget, GdkEvent *event, gpointer data)
+gnc_date_picker_key_event(GtkWidget *widget, GdkEvent *e, gpointer data)
 {
     GNCDatePicker *date_picker = GNC_DATE_PICKER (data);
+
+    GdkEventKey *event = (GdkEventKey*)e;
 
     switch (event->keyval)
     {

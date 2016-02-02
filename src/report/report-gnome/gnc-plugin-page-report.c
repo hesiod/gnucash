@@ -59,7 +59,6 @@
 #include "gnc-file.h"
 #include "gnc-plugin.h"
 #include "gnc-plugin-page-report.h"
-#include "gnc-plugin-file-history.h"
 #include "gnc-prefs.h"
 #include "gnc-report.h"
 #include "gnc-session.h"
@@ -70,7 +69,6 @@
 #include "window-report.h"
 #include "swig-runtime.h"
 #include "app-utils/business-options.h"
-#include "gnome-utils/gnc-icons.h"
 #include "gnome-utils/print-session.h"
 
 #define WINDOW_REPORT_CM_CLASS "window-report"

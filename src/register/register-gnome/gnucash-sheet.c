@@ -28,18 +28,16 @@
  *     Dave Peticolas <dave@krondo.com>
  */
 
+#if 0
 #include "config.h"
 #include <glib.h>
-#include <glib/gprintf.h>
-#include <gdk/gdkkeysyms.h>
-#include <libgnomecanvas/libgnomecanvas.h>
+#include <gdk/gdk.h>
 
 #include "gnucash-sheet.h"
 #include "gnucash-sheetP.h"
 
 #include "dialog-utils.h"
 #include "gnc-prefs.h"
-#include "gnucash-color.h"
 #include "gnucash-grid.h"
 #include "gnucash-cursor.h"
 #include "gnucash-style.h"
@@ -72,7 +70,7 @@ enum
 
 /* This static indicates the debugging module that this .o belongs to. */
 static QofLogModule log_module = GNC_MOD_REGISTER;
-static GnomeCanvasClass *sheet_parent_class;
+static GtkDrawingAreaClass *sheet_parent_class;
 static GtkTableClass *register_parent_class;
 static guint register_signals[LAST_SIGNAL];
 
@@ -195,7 +193,6 @@ gnucash_sheet_hide_editing_cursor (GnucashSheet *sheet)
     if (sheet->item_editor == NULL)
         return;
 
-    gnome_canvas_item_hide (GNOME_CANVAS_ITEM (sheet->item_editor));
     gnc_item_edit_hide_popup (GNC_ITEM_EDIT(sheet->item_editor));
 }
 
@@ -400,7 +397,8 @@ gnucash_sheet_compute_visible_range (GnucashSheet *sheet)
     gtk_widget_get_allocation (GTK_WIDGET(sheet), &alloc);
     height = alloc.height;
 
-    gnome_canvas_get_scroll_offsets (GNOME_CANVAS(sheet), NULL, &cy);
+    //FIXME
+    //gnome_canvas_get_scroll_offsets (GNOME_CANVAS(sheet), NULL, &cy);
 
     sheet->top_block = gnucash_sheet_y_pixel_to_block (sheet, cy);
 
@@ -3119,3 +3117,4 @@ GnucashSheet *gnucash_register_get_sheet (GnucashRegister *reg)
     return GNUCASH_SHEET(reg->sheet);
 }
 
+#endif

@@ -28,6 +28,7 @@
  *     Dave Peticolas <dave@krondo.com>
  */
 
+#if 0
 #include "config.h"
 
 #include "gnucash-cursor.h"
@@ -343,8 +344,8 @@ gnucash_cursor_realize (GtkWidget *item)
     GnucashCursor *cursor = GNUCASH_CURSOR (item);
     GdkWindow *window;
 
-    if (GNOME_CANVAS_ITEM_CLASS (gnucash_cursor_parent_class)->realize)
-        (*GNOME_CANVAS_ITEM_CLASS
+    if (GTK_WIDGET_CLASS (gnucash_cursor_parent_class)->realize)
+        (*GTK_WIDGET_CLASS
          (gnucash_cursor_parent_class)->realize)(item);
 
     window = gtk_widget_get_window (GTK_WIDGET (item->canvas));
@@ -364,8 +365,8 @@ gnucash_cursor_unrealize (GtkWidget *item)
         cursor->gc = NULL;
     }
 
-    if (GNOME_CANVAS_ITEM_CLASS (gnucash_cursor_parent_class)->unrealize)
-        (*GNOME_CANVAS_ITEM_CLASS
+    if (GTK_WIDGET_CLASS (gnucash_cursor_parent_class)->unrealize)
+        (*GTK_WIDGET_CLASS
          (gnucash_cursor_parent_class)->unrealize)(item);
 }
 
@@ -375,7 +376,7 @@ gnucash_item_cursor_class_init (GnucashItemCursorClass *klass)
 {
     GtkWidgetClass *item_class;
 
-    item_class = GNOME_CANVAS_ITEM_CLASS (klass);
+    item_class = GTK_WIDGET_CLASS (klass);
 
     gnucash_item_cursor_parent_class = g_type_class_peek_parent (klass);
 
@@ -405,7 +406,7 @@ gnucash_item_cursor_get_type (void)
         };
 
         gnucash_item_cursor_type =
-            g_type_register_static (gnome_canvas_item_get_type (),
+            g_type_register_static (gtk_drawing_area_get_type (),
                                     "GnucashItemCursor",
                                     &gnucash_item_cursor_info, 0);
     }
@@ -471,12 +472,6 @@ gnucash_cursor_get_property (GObject         *object,
 static void
 gnucash_cursor_init (GnucashCursor *cursor)
 {
-    GtkWidget *item = GNOME_CANVAS_ITEM (cursor);
-
-    item->x1 = 0;
-    item->y1 = 0;
-    item->x2 = 1;
-    item->y2 = 1;
 }
 
 
@@ -487,7 +482,7 @@ gnucash_cursor_class_init (GnucashCursorClass *klass)
     GtkWidgetClass *item_class;
 
     object_class = G_OBJECT_CLASS (klass);
-    item_class = GNOME_CANVAS_ITEM_CLASS (klass);
+    item_class = GTK_WIDGET_CLASS (klass);
 
     gnucash_cursor_parent_class = g_type_class_peek_parent (klass);
 
@@ -550,19 +545,14 @@ gnucash_cursor_get_type (void)
 
 
 GtkWidget *
-gnucash_cursor_new (GnomeCanvasGroup *parent)
+gnucash_cursor_new ()
 {
     GtkWidget *item;
     GtkWidget *cursor_item;
     GnucashCursor *cursor;
     GnucashItemCursor *item_cursor;
 
-    g_return_val_if_fail (parent != NULL, NULL);
-    g_return_val_if_fail (GNOME_IS_CANVAS_GROUP(parent), NULL);
-
-    item = gnome_canvas_item_new (parent,
-                                  gnucash_cursor_get_type(),
-                                  NULL);
+    item = gtk_drawing_area_new ();
 
     cursor = GNUCASH_CURSOR(item);
 
@@ -587,4 +577,4 @@ gnucash_cursor_new (GnomeCanvasGroup *parent)
     return item;
 }
 
-
+#endif

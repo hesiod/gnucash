@@ -23,7 +23,6 @@
  */
 
 #include "config.h"
-#include "gnucash-color.h"
 #include "gnucash-grid.h"
 #include "gnucash-item-edit.h"
 #include "gnucash-sheet.h"

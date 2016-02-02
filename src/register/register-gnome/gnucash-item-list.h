@@ -23,6 +23,7 @@
 #ifndef GNUCASH_ITEM_LIST_H
 #define GNUCASH_ITEM_LIST_H
 
+#include <gtk/gtk.h>
 /** @ingroup Register
  * @addtogroup Gnome
  * @{

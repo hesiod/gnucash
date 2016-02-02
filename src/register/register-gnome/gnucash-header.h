@@ -21,6 +21,7 @@
 #ifndef GNUCASH_HEADER_H
 #define GNUCASH_HEADER_H
 
+#include <gtk/gtk.h>
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -37,7 +38,7 @@ GType    gnc_header_get_type (void);
 
 typedef struct
 {
-    GnomeCanvasItem canvas_item;
+    GtkWidget canvas_item;
 
     GnucashSheet *sheet;
     SheetBlockStyle *style;
@@ -64,7 +65,7 @@ typedef struct
 
 typedef struct
 {
-    GnomeCanvasItemClass parent_class;
+    GtkDrawingAreaClass parent_class;
 } GncHeaderClass;
 
 

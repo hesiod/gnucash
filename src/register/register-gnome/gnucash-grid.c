@@ -27,15 +27,15 @@
  *     Heath Martin <martinh@pegasus.cc.ucf.edu>
  */
 
+#if 0
 #include "config.h"
 
 #include <string.h>
-#include <libgnomecanvas/libgnomecanvas.h>
+#include <gtk/gtk.h>
 
 #include "gnucash-sheet.h"
 #include "gnucash-sheetP.h"
 #include "gnucash-grid.h"
-#include "gnucash-color.h"
 #include "gnucash-style.h"
 
 
@@ -950,4 +950,4 @@ gnucash_grid_get_type (void)
     return gnucash_grid_type;
 }
 
-
+#endif
