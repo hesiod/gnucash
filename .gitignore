@@ -1,13 +1,9 @@
 *.in
 #*.xml
 test-*
-*.gschema.*
 *.go
 *.bak
 *.gmo
-*.gschema.xml
-*.gschema.xml.in
-*.gschema.valid
 *.la
 *.lo
 *.o
