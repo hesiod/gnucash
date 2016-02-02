@@ -31,7 +31,6 @@
 
 #include <glib/gi18n.h>
 #include <gdk/gdkkeysyms.h>
-#include <libgnomecanvas/libgnomecanvas.h>
 
 #include "gnc-engine.h"
 #include "gnucash-item-list.h"
@@ -47,7 +46,7 @@ enum
     LAST_SIGNAL
 };
 
-static GnomeCanvasWidgetClass *gnc_item_list_parent_class;
+static GtkDrawingAreaClass *gnc_item_list_parent_class;
 static guint gnc_item_list_signals[LAST_SIGNAL];
 
 gboolean _gnc_item_find_selection(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data);

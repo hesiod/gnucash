@@ -23,7 +23,6 @@
 #ifndef GNUCASH_ITEM_LIST_H
 #define GNUCASH_ITEM_LIST_H
 
-#include <libgnomecanvas/libgnomecanvas.h>
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -38,7 +37,7 @@
 
 typedef struct
 {
-    GnomeCanvasWidget canvas_widget;
+    GtkWidget canvas_widget;
 
     GtkTreeView *tree_view;
     GtkListStore *list_store; /* Contains the list items */
@@ -47,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-    GnomeCanvasWidgetClass parent_class;
+    GtkDrawingAreaClass parent_class;
 
     void (*select_item) (GncItemList *item_list,
                          char        *item_string);
@@ -66,7 +65,7 @@ typedef struct
 
 GType gnc_item_list_get_type (void);
 
-GnomeCanvasItem *gnc_item_list_new (GnomeCanvasGroup *parent, GtkListStore *shared_store);
+GtkWidget *gnc_item_list_new (GtkListStore *shared_store);
 
 gint gnc_item_list_num_entries (GncItemList *item_list);
 

@@ -631,7 +631,7 @@ gnc_date_cell_move (BasicCell *bcell)
 }
 
 static int
-get_popup_height (GnomeCanvasItem *item,
+get_popup_height (GtkWidget *item,
                   int space_available,
                   int row_height,
                   gpointer user_data)
@@ -648,7 +648,7 @@ get_popup_height (GnomeCanvasItem *item,
 }
 
 static void
-popup_set_focus (GnomeCanvasItem *item,
+popup_set_focus (GtkWidget *item,
                  gpointer user_data)
 {
     gtk_widget_grab_focus (GTK_WIDGET (GNC_DATE_PICKER (item)->calendar));
@@ -663,7 +663,7 @@ gnc_date_cell_enter (BasicCell *bcell,
     DateCell *cell = (DateCell *) bcell;
     PopBox *box = bcell->gui_private;
 
-    gnc_item_edit_set_popup (box->item_edit, GNOME_CANVAS_ITEM (box->date_picker),
+    gnc_item_edit_set_popup (box->item_edit, GTK_WIDGET (box->date_picker),
                              get_popup_height, NULL, popup_set_focus,
                              NULL, NULL, NULL);
 

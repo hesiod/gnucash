@@ -29,17 +29,15 @@
  */
 
 #include "config.h"
-#include <libgnomecanvas/libgnomecanvas.h>
 
-#include "gnucash-color.h"
 #include "gnucash-cursor.h"
 #include "gnucash-grid.h"
 #include "gnucash-sheet.h"
 #include "gnucash-sheetP.h"
 #include "gnucash-style.h"
 
-static GnomeCanvasItem *gnucash_cursor_parent_class;
-static GnomeCanvasItem *gnucash_item_cursor_parent_class;
+static GtkWidget *gnucash_cursor_parent_class;
+static GtkWidget *gnucash_item_cursor_parent_class;
 
 enum
 {
@@ -112,21 +110,6 @@ gnucash_cursor_get_pixel_coords (GnucashCursor *cursor,
 }
 
 
-static void
-gnucash_cursor_request_redraw (GnucashCursor *cursor)
-{
-    GnomeCanvas *canvas = GNOME_CANVAS_ITEM(cursor)->canvas;
-    int x, y, w, h;
-
-    x = cursor->x;
-    y = cursor->y;
-    w = cursor->w;
-    h = cursor->h;
-
-    gnome_canvas_request_redraw (canvas, x, y, x + w + 1, y + h + 1);
-}
-
-
 void
 gnucash_cursor_set_style (GnucashCursor  *cursor, SheetBlockStyle *style)
 {
@@ -158,10 +141,10 @@ gnucash_cursor_get_virt (GnucashCursor *cursor, VirtualLocation *virt_loc)
 void
 gnucash_cursor_configure (GnucashCursor *cursor)
 {
-    GnomeCanvasItem *item;
+    GtkWidget *item;
     GnucashItemCursor *block_cursor;
     GnucashItemCursor *cell_cursor;
-    GnomeCanvas *canvas;
+    GtkWidget *canvas;
     gint x, y, w, h;
     double wx, wy;
 
@@ -225,7 +208,7 @@ gnucash_cursor_configure (GnucashCursor *cursor)
 
 
 static void
-gnucash_item_cursor_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
+gnucash_item_cursor_draw (GtkWidget *item, GdkDrawable *drawable,
                           int x, int y, int width, int height)
 {
     GnucashItemCursor *item_cursor = GNUCASH_ITEM_CURSOR (item);
@@ -342,7 +325,7 @@ gnucash_cursor_set (GnucashCursor *cursor, VirtualLocation virt_loc)
 static void
 gnucash_item_cursor_init (GnucashItemCursor *cursor)
 {
-    GnomeCanvasItem *item = GNOME_CANVAS_ITEM (cursor);
+    GtkWidget *item = GNOME_CANVAS_ITEM (cursor);
 
     item->x1 = 0;
     item->y1 = 0;
@@ -355,7 +338,7 @@ gnucash_item_cursor_init (GnucashItemCursor *cursor)
 
 
 static void
-gnucash_cursor_realize (GnomeCanvasItem *item)
+gnucash_cursor_realize (GtkWidget *item)
 {
     GnucashCursor *cursor = GNUCASH_CURSOR (item);
     GdkWindow *window;
@@ -371,7 +354,7 @@ gnucash_cursor_realize (GnomeCanvasItem *item)
 
 
 static void
-gnucash_cursor_unrealize (GnomeCanvasItem *item)
+gnucash_cursor_unrealize (GtkWidget *item)
 {
     GnucashCursor *cursor = GNUCASH_CURSOR (item);
 
@@ -390,13 +373,13 @@ gnucash_cursor_unrealize (GnomeCanvasItem *item)
 static void
 gnucash_item_cursor_class_init (GnucashItemCursorClass *klass)
 {
-    GnomeCanvasItemClass *item_class;
+    GtkWidgetClass *item_class;
 
     item_class = GNOME_CANVAS_ITEM_CLASS (klass);
 
     gnucash_item_cursor_parent_class = g_type_class_peek_parent (klass);
 
-    /* GnomeCanvasItem method overrides */
+    /* GtkWidget method overrides */
     item_class->draw = gnucash_item_cursor_draw;
 }
 
@@ -488,7 +471,7 @@ gnucash_cursor_get_property (GObject         *object,
 static void
 gnucash_cursor_init (GnucashCursor *cursor)
 {
-    GnomeCanvasItem *item = GNOME_CANVAS_ITEM (cursor);
+    GtkWidget *item = GNOME_CANVAS_ITEM (cursor);
 
     item->x1 = 0;
     item->y1 = 0;
@@ -501,7 +484,7 @@ static void
 gnucash_cursor_class_init (GnucashCursorClass *klass)
 {
     GObjectClass  *object_class;
-    GnomeCanvasItemClass *item_class;
+    GtkWidgetClass *item_class;
 
     object_class = G_OBJECT_CLASS (klass);
     item_class = GNOME_CANVAS_ITEM_CLASS (klass);
@@ -512,7 +495,7 @@ gnucash_cursor_class_init (GnucashCursorClass *klass)
     object_class->set_property = gnucash_cursor_set_property;
     object_class->get_property = gnucash_cursor_get_property;
 
-    /* GnomeCanvasItem method overrides */
+    /* GtkWidget method overrides */
     item_class->realize     = gnucash_cursor_realize;
     item_class->unrealize   = gnucash_cursor_unrealize;
 
@@ -566,11 +549,11 @@ gnucash_cursor_get_type (void)
 }
 
 
-GnomeCanvasItem *
+GtkWidget *
 gnucash_cursor_new (GnomeCanvasGroup *parent)
 {
-    GnomeCanvasItem *item;
-    GnomeCanvasItem *cursor_item;
+    GtkWidget *item;
+    GtkWidget *cursor_item;
     GnucashCursor *cursor;
     GnucashItemCursor *item_cursor;
 

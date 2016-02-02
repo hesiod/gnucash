@@ -36,7 +36,7 @@
 #include "config.h"
 
 #include <string.h>
-#include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
 
 #include "QuickFill.h"
 #include "combocell.h"
@@ -782,7 +782,7 @@ gnc_combo_cell_gui_move (BasicCell *bcell)
 }
 
 static int
-get_popup_height (GnomeCanvasItem *item,
+get_popup_height (GtkWidget *item,
                   int space_available,
                   int row_height,
                   gpointer user_data)
@@ -795,7 +795,7 @@ get_popup_height (GnomeCanvasItem *item,
 }
 
 static int
-popup_autosize (GnomeCanvasItem *item,
+popup_autosize (GtkWidget *item,
                 int max_width,
                 gpointer user_data)
 {
@@ -808,14 +808,14 @@ popup_autosize (GnomeCanvasItem *item,
 }
 
 static void
-popup_set_focus (GnomeCanvasItem *item,
+popup_set_focus (GtkWidget *item,
                  gpointer user_data)
 {
     gtk_widget_grab_focus (GTK_WIDGET (GNC_ITEM_LIST (item)->tree_view));
 }
 
 static void
-popup_post_show (GnomeCanvasItem *item,
+popup_post_show (GtkWidget *item,
                  gpointer user_data)
 {
     /* What the hell is this doing here? Well, under gtk+ 1.2.9,
@@ -830,7 +830,7 @@ popup_post_show (GnomeCanvasItem *item,
 }
 
 static int
-popup_get_width (GnomeCanvasItem *item,
+popup_get_width (GtkWidget *item,
                  gpointer user_data)
 {
     GtkAllocation alloc;
@@ -856,7 +856,7 @@ gnc_combo_cell_enter (BasicCell *bcell,
         return FALSE;
 
     gnc_item_edit_set_popup (box->item_edit,
-                             GNOME_CANVAS_ITEM (box->item_list),
+                             GTK_WIDGET (box->item_list),
                              get_popup_height, popup_autosize,
                              popup_set_focus, popup_post_show,
                              popup_get_width, box);

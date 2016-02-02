@@ -25,8 +25,7 @@
  */
 
 #include "config.h"
-#include <libgnomecanvas/libgnomecanvas.h>
-#include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
 #include "gnucash-date-picker.h"
 
 
@@ -39,7 +38,7 @@ enum
     LAST_SIGNAL
 };
 
-static GnomeCanvasWidgetClass *gnc_date_picker_parent_class;
+static GtkDrawingAreaClass *gnc_date_picker_parent_class;
 static guint gnc_date_picker_signals[LAST_SIGNAL];
 
 
@@ -69,10 +68,11 @@ static void
 gnc_date_picker_init (GNCDatePicker *date_picker)
 {
     date_picker->calendar = NULL;
+    gtk_widget_add_events (GTK_WIDGET(date_picker), GDK_BUTTON_PRESS_MASK | GDK_KEY_PRESS_MASK);
 }
 
 static gboolean
-gnc_date_picker_button_event (GtkWidget *widget, GdkEventButton *event,
+gnc_date_picker_button_event (GtkWidget *widget, GdkEvent *event,
                               gpointer data)
 {
     /* So the sheet doesn't use it. */
@@ -82,7 +82,7 @@ gnc_date_picker_button_event (GtkWidget *widget, GdkEventButton *event,
 }
 
 static gboolean
-gnc_date_picker_key_event(GtkWidget *widget, GdkEventKey *event, gpointer data)
+gnc_date_picker_key_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
     GNCDatePicker *date_picker = GNC_DATE_PICKER (data);
 
@@ -180,7 +180,7 @@ gnc_date_picker_get_type (void)
         };
 
         gnc_date_picker_type =
-            g_type_register_static (gnome_canvas_widget_get_type(),
+            g_type_register_static (gtk_drawing_area_get_type(),
                                     "GNCDatePicker",
                                     &type_info, 0);
     }
@@ -202,11 +202,11 @@ day_selected_double_click (GtkCalendar *calendar, GNCDatePicker *gdp)
 }
 
 
-GnomeCanvasItem *
-gnc_date_picker_new (GnomeCanvasGroup *parent)
+GtkWidget *
+gnc_date_picker_new ()
 {
     GtkWidget *calendar;
-    GnomeCanvasItem *item;
+    GtkWidget *item;
     GNCDatePicker *date_picker;
 
     calendar = gtk_calendar_new ();
@@ -216,17 +216,13 @@ gnc_date_picker_new (GnomeCanvasGroup *parent)
         GtkAllocation allocation;
         GtkRequisition requisition;
 
-        hbox = gtk_hbox_new (FALSE, 0);
+        hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
 
         gtk_widget_set_direction (hbox, GTK_TEXT_DIR_LTR);
         gtk_box_pack_start (GTK_BOX(hbox), calendar, TRUE, TRUE, 0);
 
-        item = gnome_canvas_item_new (parent, gnc_date_picker_get_type (),
-                                      "widget", hbox,
-                                      "size_pixels", TRUE,
-                                      "x", -10000.0,
-                                      "y", -10000.0,
-                                      NULL);
+        item = gtk_drawing_area_new ();
+        gtk_box_pack_start (GTK_BOX(hbox), item, TRUE, TRUE, 0);
         gtk_widget_show_all( hbox );
 
         gtk_widget_size_request (calendar, &requisition);
@@ -243,11 +239,11 @@ gnc_date_picker_new (GnomeCanvasGroup *parent)
 
     date_picker->calendar = GTK_CALENDAR (calendar);
 
-    g_signal_connect_after (calendar, "button_press_event",
+    g_signal_connect_after (calendar, "button-press-event",
                             G_CALLBACK (gnc_date_picker_button_event),
                             date_picker);
 
-    g_signal_connect (calendar, "key_press_event",
+    g_signal_connect (calendar, "key-press-event",
                       G_CALLBACK (gnc_date_picker_key_event),
                       date_picker);
 

@@ -62,7 +62,7 @@ enum
     TARGET_COMPOUND_TEXT
 };
 
-static GnomeCanvasItemClass *gnc_item_edit_parent_class;
+static GtkWidgetClass *gnc_item_edit_parent_class;
 static GdkAtom clipboard_atom = GDK_NONE;
 
 
@@ -342,7 +342,7 @@ gnc_item_edit_free_draw_info_members(TextDrawInfo *info)
 }
 
 static void
-gnc_item_edit_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
+gnc_item_edit_draw (GtkWidget *item, GdkDrawable *drawable,
                     int x, int y, int width, int height)
 {
     GncItemEdit *item_edit = GNC_ITEM_EDIT (item);
@@ -394,8 +394,8 @@ gnc_item_edit_draw (GnomeCanvasItem *item, GdkDrawable *drawable,
 
 
 static double
-gnc_item_edit_point (GnomeCanvasItem *item, double c_x, double c_y, int cx, int cy,
-                     GnomeCanvasItem **actual_item)
+gnc_item_edit_point (GtkWidget *item, double c_x, double c_y, int cx, int cy,
+                     GtkWidget **actual_item)
 {
     int x, y, w, h;
 
@@ -419,7 +419,7 @@ gnc_item_edit_get_toggle_offset (int row_height)
 }
 
 static void
-gnc_item_edit_update (GnomeCanvasItem *item, double *affine, ArtSVP *clip_path,
+gnc_item_edit_update (GtkWidget *item, double *affine, ArtSVP *clip_path,
                       int flags)
 {
     GncItemEdit *item_edit = GNC_ITEM_EDIT (item);
@@ -457,7 +457,7 @@ gnc_item_edit_update (GnomeCanvasItem *item, double *affine, ArtSVP *clip_path,
 
 
 static void
-gnc_item_edit_realize (GnomeCanvasItem *item)
+gnc_item_edit_realize (GtkWidget *item)
 {
     GnomeCanvas *canvas = item->canvas;
     GdkWindow *window;
@@ -475,7 +475,7 @@ gnc_item_edit_realize (GnomeCanvasItem *item)
 
 
 static void
-gnc_item_edit_unrealize (GnomeCanvasItem *item)
+gnc_item_edit_unrealize (GtkWidget *item)
 {
     if (GNOME_CANVAS_ITEM_CLASS (gnc_item_edit_parent_class)->unrealize)
         (*GNOME_CANVAS_ITEM_CLASS
@@ -564,7 +564,7 @@ gnc_item_edit_reset_offset (GncItemEdit *item_edit)
 static void
 gnc_item_edit_init (GncItemEdit *item_edit)
 {
-    GnomeCanvasItem *item = GNOME_CANVAS_ITEM (item_edit);
+    GtkWidget *item = GNOME_CANVAS_ITEM (item_edit);
 
     item->x1 = 0;
     item->y1 = 0;
@@ -1116,7 +1116,7 @@ static void
 gnc_item_edit_class_init (GncItemEditClass *gnc_item_edit_class)
 {
     GObjectClass  *object_class;
-    GnomeCanvasItemClass *item_class;
+    GtkWidgetClass *item_class;
 
     gnc_item_edit_parent_class = g_type_class_peek_parent (gnc_item_edit_class);
 
@@ -1143,7 +1143,7 @@ gnc_item_edit_class_init (GncItemEditClass *gnc_item_edit_class)
                                              GTK_TYPE_ENTRY,
                                              G_PARAM_READWRITE));
 
-    /* GnomeCanvasItem method overrides */
+    /* GtkWidget method overrides */
     item_class->update      = gnc_item_edit_update;
     item_class->draw        = gnc_item_edit_draw;
     item_class->point       = gnc_item_edit_point;
@@ -1207,7 +1207,7 @@ create_popup_toggle(GnomeCanvasGroup *parent, PopupToggle *pt)
 }
 
 
-GnomeCanvasItem *
+GtkWidget *
 gnc_item_edit_new (GnomeCanvasGroup *parent, GnucashSheet *sheet, GtkWidget *entry)
 {
     static const GtkTargetEntry targets[] =
@@ -1219,7 +1219,7 @@ gnc_item_edit_new (GnomeCanvasGroup *parent, GnucashSheet *sheet, GtkWidget *ent
     };
     static const gint n_targets = sizeof(targets) / sizeof(targets[0]);
 
-    GnomeCanvasItem *item;
+    GtkWidget *item;
     GncItemEdit *item_edit;
 
     item = gnome_canvas_item_new (parent,
@@ -1420,7 +1420,7 @@ gnc_item_edit_hide_popup (GncItemEdit *item_edit)
 
 void
 gnc_item_edit_set_popup (GncItemEdit        *item_edit,
-                         GnomeCanvasItem *popup_item,
+                         GtkWidget *popup_item,
                          GetPopupHeight   get_popup_height,
                          PopupAutosize    popup_autosize,
                          PopupSetFocus    popup_set_focus,

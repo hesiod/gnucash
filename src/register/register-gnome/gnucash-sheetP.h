@@ -24,7 +24,6 @@
 
 #include "gnucash-sheet.h"
 #include "gnucash-item-edit.h"
-#include <libgnomecanvas/libgnomecanvas.h>
 
 /** @ingroup Register
  * @addtogroup Gnome
@@ -36,7 +35,7 @@
 
 struct _GnucashSheet
 {
-    GnomeCanvas canvas;
+    GtkWidget canvas;
 
     GtkWidget *window;
 
@@ -50,9 +49,9 @@ struct _GnucashSheet
     gint num_virt_rows;
     gint num_virt_cols;
 
-    GnomeCanvasItem *header_item;
-    GnomeCanvasItem *cursor;
-    GnomeCanvasItem *grid;
+    GtkWidget *header_item;
+    GtkWidget *cursor;
+    GtkWidget *grid;
 
     GHashTable *cursor_styles;
 
@@ -61,7 +60,7 @@ struct _GnucashSheet
 
     GTable *blocks;
 
-    GnomeCanvasItem *item_editor;
+    GtkWidget *item_editor;
     GtkWidget *entry;
 
     gboolean   use_theme_colors;
@@ -128,7 +127,7 @@ struct _GnucashSheet
 
 struct _GnucashSheetClass
 {
-    GnomeCanvasClass parent_class;
+    GtkDrawingAreaClass parent_class;
 };
 
 

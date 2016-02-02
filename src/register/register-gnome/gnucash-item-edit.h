@@ -38,29 +38,29 @@
 #define GNC_IS_ITEM_EDIT(o)       (G_TYPE_CHECK_INSTANCE_TYPE((o), GNC_TYPE_ITEM_EDIT))
 
 
-typedef int (*GetPopupHeight) (GnomeCanvasItem *item,
+typedef int (*GetPopupHeight) (GtkWidget *item,
                                int space_available,
                                int row_height,
                                gpointer user_data);
 
-typedef int (*PopupAutosize) (GnomeCanvasItem *item,
+typedef int (*PopupAutosize) (GtkWidget *item,
                               int max_width,
                               gpointer user_data);
 
-typedef void (*PopupSetFocus) (GnomeCanvasItem *item,
+typedef void (*PopupSetFocus) (GtkWidget *item,
                                gpointer user_data);
 
-typedef void (*PopupPostShow) (GnomeCanvasItem *item,
+typedef void (*PopupPostShow) (GtkWidget *item,
                                gpointer user_data);
 
-typedef int (*PopupGetWidth) (GnomeCanvasItem *item,
+typedef int (*PopupGetWidth) (GtkWidget *item,
                               gpointer user_data);
 
 typedef struct _PopupToggle PopupToggle;
 struct _PopupToggle
 {
     GtkToggleButton *toggle_button;
-    GnomeCanvasItem *toggle_button_item;
+    GtkWidget *toggle_button_item;
 
     gint toggle_offset;
 
@@ -72,9 +72,7 @@ struct _PopupToggle
 
 typedef struct
 {
-    GnomeCanvasItem canvas_item;
-
-    GnomeCanvasGroup *parent;
+    GtkWidget canvas_item;
 
     GnucashSheet *sheet;
 
@@ -88,7 +86,7 @@ typedef struct
 
     PopupToggle popup_toggle;
 
-    GnomeCanvasItem *popup_item;
+    GtkWidget *popup_item;
     GetPopupHeight   get_popup_height;
     PopupAutosize    popup_autosize;
     PopupSetFocus    popup_set_focus;
@@ -110,7 +108,7 @@ typedef struct
 
 typedef struct
 {
-    GnomeCanvasItemClass parent_class;
+    GtkWidgetClass parent_class;
 } GncItemEditClass;
 
 
@@ -122,14 +120,13 @@ void gnc_item_edit_get_pixel_coords (GncItemEdit *item_edit,
                                      int *x, int *y,
                                      int *w, int *h);
 
-GnomeCanvasItem *gnc_item_edit_new (GnomeCanvasGroup *parent,
-                                    GnucashSheet *sheet, GtkWidget *entry);
+GtkWidget *gnc_item_edit_new (GnucashSheet *sheet, GtkWidget *entry);
 
 GncItemList * gnc_item_edit_new_list (GncItemEdit *item_edit, GtkListStore *shared_store);
 GNCDatePicker * gnc_item_edit_new_date_picker (GncItemEdit *item_edit);
 
 void gnc_item_edit_set_popup (GncItemEdit     *item_edit,
-                              GnomeCanvasItem *popup_item,
+                              GtkWidget *popup_item,
                               GetPopupHeight   get_popup_height,
                               PopupAutosize    popup_autosize,
                               PopupSetFocus    popup_set_focus,

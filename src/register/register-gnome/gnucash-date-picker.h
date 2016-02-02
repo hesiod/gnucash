@@ -23,7 +23,6 @@
 #ifndef GNUCASH_DATE_PICKER_H
 #define GNUCASH_DATE_PICKER_H
 
-#include <libgnomecanvas/libgnomecanvas.h>
 /** @ingroup Register
  * @addtogroup Gnome
  * @{
@@ -38,7 +37,7 @@
 
 typedef struct
 {
-    GnomeCanvasWidget canvas_widget;
+    GtkWidget canvas_widget;
 
     GtkCalendar *calendar;
 } GNCDatePicker;
@@ -46,7 +45,7 @@ typedef struct
 
 GType gnc_date_picker_get_type (void);
 
-GnomeCanvasItem *gnc_date_picker_new (GnomeCanvasGroup *parent);
+GtkWidget *gnc_date_picker_new ();
 
 /* days are 1-31, mon is 0-11, year 1900 == 1900 */
 void gnc_date_picker_set_date (GNCDatePicker *date_picker,
@@ -57,7 +56,7 @@ void gnc_date_picker_get_date (GNCDatePicker *date_picker,
 
 typedef struct
 {
-    GnomeCanvasWidgetClass parent_class;
+    GtkDrawingAreaClass parent_class;
 
     void (*date_selected) (GNCDatePicker *date_picker);
 

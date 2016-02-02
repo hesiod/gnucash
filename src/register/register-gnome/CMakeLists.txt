@@ -5,7 +5,6 @@ SET (register_gnome_SOURCES
   combocell-gnome.c
   datecell-gnome.c
   formulacell-gnome.c
-  gnucash-color.c
   gnucash-cursor.c
   gnucash-date-picker.c
   gnucash-grid.c
@@ -22,7 +21,6 @@ SET (register_gnome_SOURCES
 
 SET (register_gnome_noinst_HEADERS
   formulacell-gnome.h
-  gnucash-color.h
   gnucash-cursor.h
   gnucash-date-picker.h
   gnucash-grid.h
