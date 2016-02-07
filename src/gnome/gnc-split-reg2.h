@@ -85,7 +85,27 @@ struct _GNCSplitReg2Class
 };
 
 /*FIXME Note sure about this == Coming from original gnc-split-reg.h */
-typedef GNC_SPLIT_REG_ITEM GNC_SPLIT_REG2_ITEM;
+//typedef GNC_SPLIT_REG_ITEM GNC_SPLIT_REG2_ITEM;
+typedef enum
+{
+    ENTER,
+    CANCEL,
+    DELETE,
+    REINIT,
+    DUPLICATE,
+    SCHEDULE,
+    SPLIT,
+    BLANK,
+    JUMP,
+    CUT,
+    CUT_TXN,
+    COPY,
+    COPY_TXN,
+    PASTE,
+    PASTE_TXN,
+    SORT_ORDER_SUBMENU,
+    STYLE_SUBMENU,
+} GNC_SPLIT_REG_ITEM;
 
 /**
  * GTK-related; gets an identifier for the class of GNCSplitRegs.

@@ -335,7 +335,6 @@ gnc_plugin_update_actions (GtkActionGroup *action_group,
  *  See gnc-plugin.h for documentation on the function arguments. */
 gint
 gnc_plugin_add_actions (EggMenuManager *ui_merge,
-                        GActionGroup *action_group,
                         const gchar *filename)
 {
     GError *error = NULL;
@@ -346,9 +345,8 @@ gnc_plugin_add_actions (EggMenuManager *ui_merge,
     g_return_val_if_fail (action_group, 0);
     g_return_val_if_fail (filename, 0);
 
-    ENTER("ui_merge %p, action_group %p, filename %s",
-          ui_merge, action_group, filename);
-    gtk_ui_manager_insert_action_group (ui_merge, action_group, 0);
+    ENTER("ui_merge %p, filename %s",
+          ui_merge, filename);
 
     pathname = gnc_filepath_locate_ui_file (filename);
     if (pathname == NULL)
@@ -357,16 +355,11 @@ gnc_plugin_add_actions (EggMenuManager *ui_merge,
         return 0;
     }
 
-    merge_id = gtk_ui_manager_add_ui_from_file (ui_merge, pathname, &error);
+    merge_id = egg_menu_manager_add_filename (ui_merge, pathname, &error);
     DEBUG("merge_id is %d", merge_id);
 
     g_assert(merge_id || error);
-    if (merge_id)
-    {
-        gtk_ui_manager_ensure_update (ui_merge);
-    }
-    else
-    {
+    if (!merge_id) {
         g_critical("Failed to load ui file.\n  Filename %s\n  Error %s",
                    filename, error->message);
         g_error_free(error);

@@ -30,6 +30,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <stdio.h>
@@ -2646,3 +2648,5 @@ gnc_ui_print_check_response_cb(GtkDialog *dialog,
     g_list_free(pcd->splits);
     g_free(pcd);
 }
+
+#endif

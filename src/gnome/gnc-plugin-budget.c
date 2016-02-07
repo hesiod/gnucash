@@ -46,31 +46,22 @@ static void gnc_plugin_budget_init (GncPluginBudget *plugin);
 static void gnc_plugin_budget_finalize (GObject *object);
 
 /* Command Callbacks */
-static void gnc_plugin_budget_cmd_new_budget (GtkAction *action,
-        GncMainWindowActionData *data);
-static void gnc_plugin_budget_cmd_open_budget (GtkAction *action,
-        GncMainWindowActionData *data);
-static void gnc_plugin_budget_cmd_copy_budget (GtkAction *action,
-        GncMainWindowActionData *data);
+static void gnc_plugin_budget_cmd_new_budget (GSimpleAction *action, GVariant *parameter, gpointer user_data);
+static void gnc_plugin_budget_cmd_open_budget (GSimpleAction *action, GVariant *parameter, gpointer user_data);
+static void gnc_plugin_budget_cmd_copy_budget (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "NewBudgetAction", NULL, N_("New Budget"), NULL,
-        N_("Create a new Budget"),
-        G_CALLBACK (gnc_plugin_budget_cmd_new_budget)
+        "NewBudgetAction", gnc_plugin_budget_cmd_new_budget
     },
 
     {
-        "OpenBudgetAction", NULL, N_("Open Budget"), NULL,
-        N_("Open an existing Budget"),
-        G_CALLBACK (gnc_plugin_budget_cmd_open_budget)
+        "OpenBudgetAction", gnc_plugin_budget_cmd_open_budget
     },
 
     {
-        "CopyBudgetAction", NULL, N_("Copy Budget"), NULL,
-        N_("Copy an existing Budget"),
-        G_CALLBACK (gnc_plugin_budget_cmd_copy_budget)
+        "CopyBudgetAction", gnc_plugin_budget_cmd_copy_budget
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
@@ -168,9 +159,11 @@ gnc_plugin_budget_finalize(GObject *object)
 
 /* Make a new budget; put it in a page; open the page. */
 static void
-gnc_plugin_budget_cmd_new_budget (GtkAction *action,
-                                  GncMainWindowActionData *data)
+gnc_plugin_budget_cmd_new_budget (GSimpleAction *action,
+                                  GVariant      *parameter,
+                                  gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     GncBudget *budget;
     GncPluginPage *page;
 
@@ -183,9 +176,11 @@ gnc_plugin_budget_cmd_new_budget (GtkAction *action,
 
 /* If only one budget exists, open it; otherwise user selects one to open */
 static void
-gnc_plugin_budget_cmd_open_budget (GtkAction *action,
-                                   GncMainWindowActionData *data)
+gnc_plugin_budget_cmd_open_budget (GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     guint count;
     QofBook *book;
     GncBudget *bgt = NULL;
@@ -211,15 +206,17 @@ gnc_plugin_budget_cmd_open_budget (GtkAction *action,
     }
     else     /* if no budgets exist yet, just open a new budget */
     {
-        gnc_plugin_budget_cmd_new_budget(action, data);
+        gnc_plugin_budget_cmd_new_budget(action, parameter, data);
     }
 }
 
 /* If only one budget exists, create a copy of it; otherwise user selects one to copy */
 static void
-gnc_plugin_budget_cmd_copy_budget (GtkAction *action,
-                                   GncMainWindowActionData *data)
+gnc_plugin_budget_cmd_copy_budget (GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     guint count;
     QofBook *book;
     GncBudget *bgt = NULL;
@@ -256,7 +253,7 @@ gnc_plugin_budget_cmd_copy_budget (GtkAction *action,
     }
     else     /* if no budgets exist yet, just open a new budget */
     {
-        gnc_plugin_budget_cmd_new_budget(action, data);
+        gnc_plugin_budget_cmd_new_budget(action, parameter, data);
     }
 }
 

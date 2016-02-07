@@ -161,12 +161,12 @@ static gboolean sxed_delete_event (GtkWidget *widget, GdkEvent *event, gpointer 
 static gboolean sxed_confirmed_cancel (GncSxEditorDialog2 *sxed);
 static gboolean editor_component_sx_equality (gpointer find_data, gpointer user_data);
 
-static GtkActionEntry gnc_sxed_menu_entries [] =
+static GActionEntry gnc_sxed_menu_entries [] =
 {
-    { "EditAction", NULL, N_("_Edit"), NULL, NULL, NULL },
-    { "TransactionAction", NULL, N_("_Transaction"), NULL, NULL, NULL },
-    { "ViewAction", NULL, N_("_View"), NULL, NULL, NULL },
-    { "ActionsAction", NULL, N_("_Actions"), NULL, NULL, NULL },
+    { "EditAction" },
+    { "TransactionAction" },
+    { "ViewAction" },
+    { "ActionsAction" },
 };
 static guint gnc_sxed_menu_n_entries = G_N_ELEMENTS (gnc_sxed_menu_entries);
 
@@ -1285,13 +1285,12 @@ schedXact_editor_create_ledger (GncSxEditorDialog2 *sxed)
     /* First the embedded window */
     main_vbox = GTK_WIDGET (gtk_builder_get_object (sxed->builder, "register_vbox" ));
     sxed->embed_window =
-        gnc_embedded_window_new ("SXWindowActions",
-                                gnc_sxed_menu_entries,
-                                gnc_sxed_menu_n_entries,
-                                "gnc-sxed-window-ui.xml",
-                                sxed->dialog,
-                                FALSE, /* no accelerators */
-                                sxed);
+        gnc_embedded_window_new (gnc_sxed_menu_entries,
+                                 gnc_sxed_menu_n_entries,
+                                 "gnc-sxed-window-ui.xml",
+                                 sxed->dialog,
+                                 FALSE, /* no accelerators */
+                                 sxed);
 
     gtk_box_pack_start (GTK_BOX (main_vbox), GTK_WIDGET (sxed->embed_window), TRUE, TRUE, 0);
 

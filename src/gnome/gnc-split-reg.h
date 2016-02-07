@@ -25,6 +25,7 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 
 #ifndef GNC_SPLIT_REG_H
 #define GNC_SPLIT_REG_H
@@ -256,3 +257,4 @@ void gsr_default_schedule_handler( GNCSplitReg *gsr, gpointer data );
 void gnc_split_reg_set_moved_cb( GNCSplitReg *gsr, GFunc cb, gpointer cb_data );
 
 #endif /* GNC_SPLIT_REG_H */
+#endif /* WITH_REGISTER2 */

@@ -41,7 +41,7 @@ static void gnc_plugin_register2_add_to_window (GncPlugin *plugin, GncMainWindow
 static void gnc_plugin_register2_remove_from_window (GncPlugin *plugin, GncMainWindow *window, GQuark type);
 
 /* Command callbacks */
-static void gnc_plugin_register2_cmd_general_ledger (GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_register2_cmd_general_ledger (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-register2-actions"
 
@@ -50,22 +50,18 @@ static void gnc_plugin_register2_cmd_general_ledger (GtkAction *action, GncMainW
 #else
 #define PLUGIN_UI_FILENAME  "gnc-plugin-register22-ui.xml"
 #endif
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
 #ifdef WITH_REGISTER2
     {
-        "ToolsGeneralJournal2Action", NULL, N_("_General Journal"), NULL,
-        N_("Open a general journal window"),
-        G_CALLBACK (gnc_plugin_register2_cmd_general_ledger)
+        "ToolsGeneralJournal2Action", gnc_plugin_register2_cmd_general_ledger
     },
 #endif
 
     /* Extensions Menu */
-    { "Register2TestAction", NULL, N_("_Register2"), NULL, NULL, NULL },
+    { "Register2TestAction" },
     {
-        "Register2TestGLAction", NULL, N_("Register2 Open GL Account"), NULL,
-        N_("Register2 Open GL Account"),
-        G_CALLBACK (gnc_plugin_register2_cmd_general_ledger)
+        "Register2TestGLAction", gnc_plugin_register2_cmd_general_ledger
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
@@ -252,9 +248,11 @@ gnc_plugin_register2_remove_from_window (GncPlugin *plugin,
  ************************************************************/
 
 static void
-gnc_plugin_register2_cmd_general_ledger (GtkAction *action,
-                                        GncMainWindowActionData *data)
+gnc_plugin_register2_cmd_general_ledger (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     GncPluginPage *page;
 
     g_return_if_fail (data != NULL);

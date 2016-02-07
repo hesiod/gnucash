@@ -27,7 +27,11 @@
 #include "config.h"
 
 #include <gnc-gdate-utils.h>
+#ifndef WITH_REGISTER2
 #include "dialog-sx-editor.h"
+#else
+#include "dialog-sx-editor2.h"
+#endif
 #include "dialog-sx-from-trans.h"
 #include "dialog-utils.h"
 #include "gnc-component-manager.h"
@@ -613,7 +617,11 @@ sxftd_advanced_clicked(SXFromTransInfo *sxfti)
     context = g_main_context_default();
     while (g_main_context_iteration(context, FALSE));
 
+#ifndef WITH_REGISTER2
     gnc_ui_scheduled_xaction_editor_dialog_create(sxfti->sx, TRUE /* newSX */);
+#else
+    gnc_ui_scheduled_xaction_editor_dialog_create2(sxfti->sx, TRUE /* newSX */);
+#endif
     /* close ourself, since advanced editing entails us, and there are sync
      * issues otherwise. */
     sxftd_close(sxfti, FALSE);

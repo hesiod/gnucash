@@ -27,6 +27,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <time.h>
@@ -2181,3 +2183,5 @@ gnc_split_reg_set_moved_cb( GNCSplitReg *gsr, GFunc cb, gpointer cb_data )
 {
     gnucash_register_set_moved_cb (gsr->reg, cb, cb_data);
 }
+
+#endif

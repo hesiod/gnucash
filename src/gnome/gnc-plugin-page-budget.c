@@ -49,7 +49,6 @@
 #include "dialog-utils.h"
 #include "gnc-gnome-utils.h"
 #include "gnc-gobject-utils.h"
-#include "gnc-icons.h"
 #include "gnc-plugin-page-budget.h"
 #include "gnc-plugin-budget.h"
 #include "gnc-budget-view.h"

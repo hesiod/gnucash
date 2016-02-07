@@ -20,6 +20,8 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef DIALOG_SX_EDITOR_H
 #define DIALOG_SX_EDITOR_H
 
@@ -47,4 +49,5 @@ void gnc_ui_scheduled_xaction_editor_dialog_destroy(GncSxEditorDialog *sxd);
  **/
 void gnc_ui_sx_initialize (void);
 
+#endif
 #endif

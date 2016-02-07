@@ -21,6 +21,8 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef DIALOG_PRINT_CHECK_H
 #define DIALOG_PRINT_CHECK_H
 
@@ -30,5 +32,7 @@ typedef struct _print_check_dialog PrintCheckDialog;
 
 void gnc_ui_print_check_dialog_create(GncPluginPageRegister *plugin_page,
                                       GList *splits);
+
+#endif
 
 #endif

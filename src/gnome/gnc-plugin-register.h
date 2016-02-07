@@ -22,6 +22,8 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org
  */
 
+#ifndef WITH_REGISTER2
+
 #ifndef __GNC_PLUGIN_REGISTER_H
 #define __GNC_PLUGIN_REGISTER_H
 
@@ -58,3 +60,4 @@ GncPlugin *gnc_plugin_register_new      (void);
 G_END_DECLS
 
 #endif /* __GNC_PLUGIN_REGISTER_H */
+#endif /* WITH_REGISTER2 */

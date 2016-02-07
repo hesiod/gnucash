@@ -34,6 +34,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <locale.h>
@@ -1816,3 +1818,5 @@ gnc_ui_sx_initialize (void)
                               "create_days_adj,remind_days_adj,sx_prefs",
                               _("Scheduled Transactions"));
 }
+
+#endif

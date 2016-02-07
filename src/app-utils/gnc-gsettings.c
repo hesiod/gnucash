@@ -68,12 +68,11 @@ static gboolean gnc_gsettings_is_valid_key(GSettings *settings, const gchar *key
     if (!G_IS_SETTINGS(settings))
         return FALSE;
 
-    g_value_init (&val, G_TYPE_SETTINGS_SCHEMA);
-    g_object_get_property (G_OBJECT(settings),
-                           "settings-schema",
-                           &val);
-    found = g_settings_schema_has_key (g_value_get_object(&val), key);
-    g_value_unset (&val);
+    g_object_get (settings,
+                  "settings-schema", &schema,
+                  NULL);
+
+    found = g_settings_schema_has_key (schema, key);
 
     return found;
 }

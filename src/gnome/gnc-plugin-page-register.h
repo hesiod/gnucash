@@ -32,6 +32,8 @@
     @author Copyright (C) 2003 David Hampton <hampton@employees.org>
 */
 
+#ifndef WITH_REGISTER2
+
 #ifndef __GNC_PLUGIN_PAGE_REGISTER_H
 #define __GNC_PLUGIN_PAGE_REGISTER_H
 
@@ -158,4 +160,4 @@ G_END_DECLS
 /** @} */
 
 #endif /* __GNC_PLUGIN_PAGE_REGISTER_H */
-
+#endif /* WITH_REGISTER2 */

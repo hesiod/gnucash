@@ -289,7 +289,6 @@ gnc_plugin_page_merge_actions (GncPluginPage *page,
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
     priv->ui_merge = ui_merge;
     priv->merge_id = gnc_plugin_add_actions(priv->ui_merge,
-                                            priv->action_group,
                                             priv->ui_description);
 }
 
@@ -1012,7 +1011,7 @@ gnc_plugin_page_get_action_group(GncPluginPage *page)
 }
 
 
-/*  Create the GtkActionGroup object associated with this page. */
+/*  Create the GActionGroup object associated with this page. */
 GActionGroup *
 gnc_plugin_page_create_action_group (GncPluginPage *page, const gchar *group_name)
 {

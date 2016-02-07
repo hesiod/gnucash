@@ -51,7 +51,6 @@
 #include "dialog-utils.h"
 #include "gnc-gnome-utils.h"
 #include "gnc-gobject-utils.h"
-#include "gnc-icons.h"
 
 #include "gnc-session.h"
 #include "gnc-tree-view-account.h"
@@ -313,7 +312,7 @@ gbv_create_widget(GncBudgetView *view)
     GtkTreeView *tree_view;
     GtkWidget *scrolled_window;
     GtkWidget *inner_scrolled_window;
-    GtkVBox* vbox;
+    GtkBox* vbox;
     GtkWidget* inner_vbox;
     GtkListStore* totals_tree_model;
     GtkTreeView* totals_tree_view;
@@ -324,7 +323,7 @@ gbv_create_widget(GncBudgetView *view)
     gchar guidstr[GUID_ENCODING_LENGTH+1];
 
     priv = GNC_BUDGET_VIEW_GET_PRIVATE(view);
-    vbox = GTK_VBOX(view);
+    vbox = GTK_BOX(view);
 
     gtk_widget_show(GTK_WIDGET(vbox));
     gtk_box_set_homogeneous(GTK_BOX(vbox), FALSE);
@@ -336,7 +335,7 @@ gbv_create_widget(GncBudgetView *view)
     gtk_widget_show(scrolled_window);
     gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, /*expand*/TRUE, /*fill*/TRUE, 0);
 
-    inner_vbox = gtk_vbox_new(FALSE, 0);
+    inner_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window), GTK_WIDGET(inner_vbox));
     gtk_widget_show(GTK_WIDGET(inner_vbox));
 
@@ -408,7 +407,7 @@ gbv_create_widget(GncBudgetView *view)
 
     gtk_box_pack_end(GTK_BOX(inner_vbox), GTK_WIDGET(totals_tree_view), /*expand*/FALSE, /*fill*/TRUE, 0);
 
-    h_separator = gtk_hseparator_new();
+    h_separator = gtk_separator_new(GTK_ORIENTATION_HORIZONTAL);
     gtk_widget_show(h_separator);
     gtk_box_pack_end(GTK_BOX(inner_vbox), h_separator, /*expand*/FALSE, /*fill*/TRUE, 0);
 

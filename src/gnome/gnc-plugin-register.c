@@ -24,6 +24,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <string.h>
@@ -250,3 +252,5 @@ gnc_plugin_register_cmd_general_ledger (GtkAction *action,
     page = gnc_plugin_page_register_new_gl ();
     gnc_main_window_open_page (data->window, page);
 }
+
+#endif

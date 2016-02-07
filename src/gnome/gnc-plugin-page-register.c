@@ -35,6 +35,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <libguile.h>
 #include "guile-mappings.h"
 #include <gtk/gtk.h>
@@ -4092,3 +4094,4 @@ gnc_plugin_page_register_event_handler (QofInstance *entity,
 
 /** @} */
 /** @} */
+#endif

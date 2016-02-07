@@ -45,7 +45,7 @@ static void gnc_plugin_account_tree_init (GncPluginAccountTree *plugin);
 static void gnc_plugin_account_tree_finalize (GObject *object);
 
 /* Command callbacks */
-static void gnc_plugin_account_tree_cmd_new_account_tree (GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_account_tree_cmd_new_account_tree (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-account-tree-actions"
@@ -53,12 +53,10 @@ static void gnc_plugin_account_tree_cmd_new_account_tree (GtkAction *action, Gnc
 
 /** An array of all of the actions provided by the account tree
  *  plugin. */
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "ViewAccountTreeAction", NULL, N_("New Accounts _Page"), NULL,
-        N_("Open a new Account Tree page"),
-        G_CALLBACK (gnc_plugin_account_tree_cmd_new_account_tree)
+        "ViewAccountTreeAction", gnc_plugin_account_tree_cmd_new_account_tree
     },
 };
 /** The number of actions provided by this plugin. */
@@ -187,9 +185,11 @@ gnc_plugin_account_tree_finalize (GObject *object)
  ************************************************************/
 
 static void
-gnc_plugin_account_tree_cmd_new_account_tree (GtkAction *action,
-        GncMainWindowActionData *data)
+gnc_plugin_account_tree_cmd_new_account_tree (GSimpleAction *action,
+                                              GVariant      *parameter,
+                                              gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     GncPluginPage *page;
 
     g_return_if_fail (data != NULL);
