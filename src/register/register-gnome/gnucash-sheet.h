@@ -18,6 +18,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_SHEET_H
 #define GNUCASH_SHEET_H
 
@@ -149,3 +150,4 @@ GnucashSheet *gnucash_register_get_sheet (GnucashRegister *reg);
 GdkColor *get_gtkrc_color (GnucashSheet *sheet, RegisterColor field_type);
 /** @} */
 #endif
+#endif /* WITH_REGISTER2 */

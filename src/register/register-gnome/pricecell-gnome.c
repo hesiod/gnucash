@@ -28,6 +28,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <locale.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -181,3 +183,4 @@ gnc_basic_cell_insert_decimal(BasicCell *bcell,
     g_string_free (newval_gs, TRUE);
 }
 
+#endif

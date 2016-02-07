@@ -45,14 +45,14 @@ static void gnc_plugin_register2_cmd_general_ledger (GtkAction *action, GncMainW
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-register2-actions"
 
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
 #define PLUGIN_UI_FILENAME  "gnc-plugin-register2-ui.xml"
 #else
 #define PLUGIN_UI_FILENAME  "gnc-plugin-register22-ui.xml"
 #endif
 static GtkActionEntry gnc_plugin_actions [] =
 {
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     {
         "ToolsGeneralJournal2Action", NULL, N_("_General Journal"), NULL,
         N_("Open a general journal window"),

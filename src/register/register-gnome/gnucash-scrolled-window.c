@@ -23,6 +23,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include "gnucash-scrolled-window.h"
 
 
@@ -90,3 +92,5 @@ static void
 gnc_scrolled_window_init (GncScrolledWindow *scrollwin)
 {
 }
+
+#endif /* WITH_REGISTER2 */

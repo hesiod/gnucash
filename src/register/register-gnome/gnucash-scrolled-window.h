@@ -21,6 +21,7 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNC_SCROLLED_WINDOW_H
 #define GNC_SCROLLED_WINDOW_H
 
@@ -59,3 +60,4 @@ GtkWidget *gnc_scrolled_window_new (void);
 G_END_DECLS
 /** @} */
 #endif /* GNC_SCROLLED_WINDOW_H */
+#endif /* WITH_REGISTER2 */

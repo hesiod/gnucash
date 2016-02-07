@@ -35,6 +35,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <string.h>
 #include <gdk/gdk.h>
 
@@ -961,3 +963,4 @@ gnc_combo_cell_set_autosize (ComboCell *cell, gboolean autosize)
     box->autosize = autosize;
 }
 
+#endif

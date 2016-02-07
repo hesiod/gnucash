@@ -134,7 +134,7 @@ static GtkActionEntry gnc_plugin_page_sx_list_actions [] =
         "SxListNewAction", GNC_STOCK_NEW_ACCOUNT, N_("_New"), NULL,
         N_("Create a new scheduled transaction"), G_CALLBACK(gnc_plugin_page_sx_list_cmd_new)
     },
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
 /*################## Added for Reg2 #################*/
     {
         "SxListNewAction2", GNC_STOCK_NEW_ACCOUNT, N_("_New 2"), NULL,
@@ -146,7 +146,7 @@ static GtkActionEntry gnc_plugin_page_sx_list_actions [] =
         "SxListEditAction", GNC_STOCK_EDIT_ACCOUNT, N_("_Edit"), NULL,
         N_("Edit the selected scheduled transaction"), G_CALLBACK(gnc_plugin_page_sx_list_cmd_edit)
     },
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
 /*################## Added for Reg2 #################*/
     {
         "SxListEditAction2", GNC_STOCK_EDIT_ACCOUNT, N_("_Edit 2"), NULL,
@@ -238,7 +238,7 @@ gnc_plugin_page_sx_list_init (GncPluginPageSxList *plugin_page)
 
     /* Init parent declared variables */
     parent = GNC_PLUGIN_PAGE(plugin_page);
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     g_object_set(G_OBJECT(plugin_page),
                  "page-name",      _("Scheduled Transactions"),
                  "page-uri",       "default:",

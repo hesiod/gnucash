@@ -18,6 +18,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_HEADER_H
 #define GNUCASH_HEADER_H
 
@@ -77,3 +78,4 @@ void gnc_header_set_header_rows (GncHeader *header,
                                  int num_phys_rows);
 /** @} */
 #endif /* GNUCASH_HEADER_H */
+#endif /* WITH_REGISTER2 */

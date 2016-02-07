@@ -28,8 +28,10 @@
  *     Dave Peticolas <dave@krondo.com>
  */
 
-#if 0
 #include "config.h"
+
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 #include <gdk/gdk.h>
 
@@ -3117,4 +3119,4 @@ GnucashSheet *gnucash_register_get_sheet (GnucashRegister *reg)
     return GNUCASH_SHEET(reg->sheet);
 }
 
-#endif
+#endif /* WITH_REGISTER2 */

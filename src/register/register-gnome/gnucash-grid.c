@@ -27,8 +27,9 @@
  *     Heath Martin <martinh@pegasus.cc.ucf.edu>
  */
 
-#if 0
 #include "config.h"
+
+#ifndef WITH_REGISTER2
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -950,4 +951,4 @@ gnucash_grid_get_type (void)
     return gnucash_grid_type;
 }
 
-#endif
+#endif /* WITH_REGISTER2 */

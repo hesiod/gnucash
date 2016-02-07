@@ -29,6 +29,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib/gi18n.h>
 #include <gdk/gdk.h>
 
@@ -511,4 +513,4 @@ gnc_item_list_new(GtkListStore *list_store)
     return item;
 }
 
-
+#endif /* WITH_REGISTER2 */

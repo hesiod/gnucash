@@ -28,8 +28,9 @@
  *     Dave Peticolas <dave@krondo.com>
  */
 
-#if 0
 #include "config.h"
+
+#ifndef WITH_REGISTER2
 
 #include "gnucash-cursor.h"
 #include "gnucash-grid.h"
@@ -577,4 +578,4 @@ gnucash_cursor_new ()
     return item;
 }
 
-#endif
+#endif /* !WITH_REGISTER2 */

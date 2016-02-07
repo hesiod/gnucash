@@ -39,6 +39,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -305,3 +307,4 @@ gnc_table_gnome_init (void)
     gnc_table_set_default_gui_handlers (&gui_handlers);
 }
 
+#endif

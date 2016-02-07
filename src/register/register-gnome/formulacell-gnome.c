@@ -28,6 +28,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <locale.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -122,3 +124,5 @@ gnc_formula_cell_gnome_new (void)
     cell->direct_update = gnc_formula_cell_direct_update;
     return cell;
 }
+
+#endif

@@ -25,6 +25,9 @@
  */
 
 #include "config.h"
+
+#ifndef WITH_REGISTER2
+
 #include <gdk/gdk.h>
 #include "gnucash-date-picker.h"
 
@@ -259,3 +262,5 @@ gnc_date_picker_new ()
 
     return item;
 }
+
+#endif /* WITH_REGISTER2 */

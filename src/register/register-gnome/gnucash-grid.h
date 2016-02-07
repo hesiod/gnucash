@@ -18,6 +18,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_GRID_H
 #define GNUCASH_GRID_H
 
@@ -51,3 +52,4 @@ void       gnucash_draw_hatching (cairo_t *gc,
                                   int x, int y, int width, int height);
 /** @} */
 #endif /* GNUCASH_GRID_H */
+#endif /* WITH_REGISTER2 */

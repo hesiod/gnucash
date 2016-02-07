@@ -1051,7 +1051,7 @@ gnc_ui_sx_since_last_run_dialog(GncSxInstanceModel *sx_instances, GList *auto_cr
 static void
 _show_created_transactions(GncSxSinceLastRunDialog *app_dialog, GList *created_txn_guids)
 {
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     GNCLedgerDisplay2 *ledger;
 #else
     GNCLedgerDisplay *ledger;
@@ -1068,7 +1068,7 @@ _show_created_transactions(GncSxSinceLastRunDialog *app_dialog, GList *created_t
         xaccQueryAddGUIDMatch(guid_query, (GncGUID*)guid_iter->data, GNC_ID_TRANS, QOF_QUERY_OR);
     }
     query = qof_query_merge(book_query, guid_query, QOF_QUERY_AND);
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     /*################## Added for Reg2 #################*/
     // inspired by dialog-find-transactions:do_find_cb:
     ledger = gnc_ledger_display2_query(query, SEARCH_LEDGER2, REG2_STYLE_JOURNAL);

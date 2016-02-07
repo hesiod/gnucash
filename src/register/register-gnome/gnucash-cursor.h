@@ -18,6 +18,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef GNUCASH_CURSOR_H
 #define GNUCASH_CURSOR_H
 
@@ -110,3 +112,4 @@ void gnucash_cursor_configure (GnucashCursor *cursor);
 
 /** @} */
 #endif /* GNUCASH_CURSOR_H */
+#endif /* WITH_REGISTER2 */

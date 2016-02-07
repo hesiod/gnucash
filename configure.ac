@@ -1001,9 +1001,9 @@ AM_CONDITIONAL([GOOGLE_TEST_LIBS], [test "x$ac_cv_have_gtest_libs" == "xyes"])
 AC_ARG_ENABLE( register2,
   [AS_HELP_STRING([--enable-register2],[compile with register2 enabled])],
   if test x$enableval = xyes; then
-    AC_DEFINE(REGISTER2_ENABLED,1,We are using Register2)
+    AC_DEFINE(WITH_REGISTER2,1,We are using Register2)
   else
-    AC_DEFINE(REGISTER2_ENABLED,0,We are not using Register2)
+    AC_DEFINE(WITH_REGISTER2,0,We are not using Register2)
   fi)
 
 ### --------------------------------------------------------------------------

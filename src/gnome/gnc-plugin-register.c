@@ -50,7 +50,7 @@ static void gnc_plugin_register_cmd_general_ledger (GtkAction *action, GncMainWi
 static GtkActionEntry gnc_plugin_actions [] =
 {
     {
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
         "ToolsGeneralJournalAction", NULL, N_("Old St_yle General Journal"), NULL,
         N_("Open an old style general journal window"),
         G_CALLBACK (gnc_plugin_register_cmd_general_ledger)

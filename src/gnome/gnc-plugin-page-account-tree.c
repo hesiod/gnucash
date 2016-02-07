@@ -171,7 +171,7 @@ static GtkActionEntry gnc_plugin_page_account_tree_actions [] =
         N_("Extend the current book by merging with new account type categories"),
         G_CALLBACK (gnc_plugin_page_account_tree_cmd_file_new_hierarchy)
     },
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     {
         "FileOpenAccount2Action", GNC_STOCK_OPEN_ACCOUNT, N_("Open _Account"), NULL,
         N_("Open the selected account"),
@@ -190,7 +190,7 @@ static GtkActionEntry gnc_plugin_page_account_tree_actions [] =
     },
 #endif
 
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     {
         "FileOpenSubaccounts2Action", GNC_STOCK_OPEN_ACCOUNT, N_("Open _SubAccounts"), NULL,
         N_("Open the selected account and all its subaccounts"),
@@ -307,7 +307,7 @@ static const gchar *actions_requiring_account_rw[] =
 static const gchar *actions_requiring_account_always[] =
 {
     "FileOpenAccountAction",
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     "FileOpenAccount2Action",
 #endif
     "FileOpenSubaccountsAction",
@@ -337,7 +337,7 @@ static const gchar* readonly_inactive_actions[] =
 static action_toolbar_labels toolbar_labels[] =
 {
     { "FileOpenAccountAction", 	            N_("Open") },
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     { "FileOpenAccount2Action", 	    N_("Open2") },
 #endif
     { "EditEditAccountAction", 	            N_("Edit") },
@@ -431,7 +431,7 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
 
     /* Init parent declared variables */
     parent = GNC_PLUGIN_PAGE(plugin_page);
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
     g_object_set(G_OBJECT(plugin_page),
                  "page-name",      _("Accounts"),
                  "page-uri",       "default:",
@@ -889,7 +889,7 @@ gnc_plugin_page_account_tree_double_click_cb (GtkTreeView *treeview,
         else
         {
             /* No placeholder account, so open its register */
-#ifdef REGISTER2_ENABLED
+#ifdef WITH_REGISTER2
             gppat_open2_account_common (page, account, FALSE);
 #else
             gppat_open_account_common (page, account, FALSE);

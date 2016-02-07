@@ -26,8 +26,9 @@
  *     Dave Peticolas <dave@krondo.com>
  */
 
-#if 0
 #include "config.h"
+
+#ifndef WITH_REGISTER2
 
 #include <string.h>
 
@@ -777,4 +778,4 @@ gnc_header_new (GnucashSheet *sheet)
     return canvas;
 }
 
-#endif
+#endif /* WITH_REGISTER2 */

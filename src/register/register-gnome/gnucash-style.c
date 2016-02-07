@@ -23,6 +23,9 @@
  */
 
 #include "config.h"
+
+#ifndef WITH_REGISTER2
+
 #include "gnucash-grid.h"
 #include "gnucash-item-edit.h"
 #include "gnucash-sheet.h"
@@ -963,4 +966,4 @@ gnucash_style_init (void)
     return TRUE;
 }
 
-
+#endif /* WITH_REGISTER2 */

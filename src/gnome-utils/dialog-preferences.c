@@ -1079,7 +1079,7 @@ gnc_preferences_dialog_create(void)
 
     dialog = GTK_WIDGET(gtk_builder_get_object (builder, "GnuCash Preferences"));
 
-#ifndef REGISTER2_ENABLED
+#ifndef WITH_REGISTER2
     /* Hide preferences that are related to register2 */
     box = GTK_WIDGET (gtk_builder_get_object (builder, "label14"));
     gtk_widget_hide (box);

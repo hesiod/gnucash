@@ -32,6 +32,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -756,3 +758,5 @@ gnc_date_cell_set_value_internal (BasicCell *_cell, const char *str)
                               box->date.tm_year + 1900);
     unblock_picker_signals (cell);
 }
+
+#endif

@@ -20,6 +20,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_DATE_PICKER_H
 #define GNUCASH_DATE_PICKER_H
 
@@ -70,3 +71,4 @@ typedef struct
 
 /** @} */
 #endif /* GNUCASH_DATE_PICKER_H */
+#endif /* WITH_REGISTER2 */

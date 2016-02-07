@@ -27,8 +27,9 @@
  *  And then substantially rewritten by Dave Peticolas <dave@krondo.com>.
  */
 
-#if 0
 #include "config.h"
+
+#ifndef WITH_REGISTER2
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -1477,4 +1478,4 @@ gnc_item_edit_get_has_selection (GncItemEdit *item_edit)
     return gtk_editable_get_selection_bounds(editable, NULL, NULL);
 }
 
-#endif
+#endif /* WITH_REGISTER2 */

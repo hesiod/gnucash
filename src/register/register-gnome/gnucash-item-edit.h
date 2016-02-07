@@ -18,6 +18,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_ITEM_EDIT_H
 #define GNUCASH_ITEM_EDIT_H
 
@@ -159,3 +160,4 @@ void gnc_item_edit_focus_out (GncItemEdit *item_edit);
 void gnc_item_edit_reset_offset (GncItemEdit *item_edit);
 /** @} */
 #endif /* GNUCASH_ITEM_EDIT_H */
+#endif /* WITH_REGISTER2 */

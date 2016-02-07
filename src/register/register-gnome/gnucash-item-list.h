@@ -20,6 +20,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_ITEM_LIST_H
 #define GNUCASH_ITEM_LIST_H
 
@@ -87,3 +88,4 @@ int gnc_item_list_autosize (GncItemList *item_list);
 
 /** @} */
 #endif /* GNUCASH_ITEM_LIST_H */
+#endif /* WITH_REGISTER2 */

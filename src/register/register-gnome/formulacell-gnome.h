@@ -26,9 +26,11 @@
  *  @brief Implements gnome dependent formula cell functions.
  */
 
+#ifndef WITH_REGISTER2
 #ifndef FORMULACELL_GNOME_H
 #define FORMULACELL_GNOME_H
 
 BasicCell * gnc_formula_cell_gnome_new( void );
 /** @} */
 #endif /* !FORMULACELL_GNOME_H */
+#endif /* !WITH_REGISTER2 */

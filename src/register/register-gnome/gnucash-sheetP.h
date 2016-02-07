@@ -18,6 +18,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_SHEETP_H
 #define GNUCASH_SHEETP_H
 
@@ -160,3 +161,4 @@ GncItemEdit *gnucash_sheet_get_item_edit (GnucashSheet *sheet);
 
 /** @} */
 #endif
+#endif /* WITH_REGISTER2 */

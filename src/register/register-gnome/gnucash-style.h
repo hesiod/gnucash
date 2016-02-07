@@ -18,6 +18,7 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef GNUCASH_STYLE_H
 #define GNUCASH_STYLE_H
 
@@ -131,3 +132,4 @@ void gnucash_sheet_set_header_widths (GnucashSheet *sheet,
                                       GNCHeaderWidths widths);
 /** @} */
 #endif
+#endif /* WITH_REGISTER2 */

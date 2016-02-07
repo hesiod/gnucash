@@ -29,6 +29,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <string.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -110,3 +112,4 @@ gnc_quickfill_cell_gnome_new (void)
     return cell;
 }
 
+#endif

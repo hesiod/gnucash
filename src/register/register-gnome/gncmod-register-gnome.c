@@ -27,6 +27,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <gmodule.h>
 
 #include "combocell.h"
@@ -95,3 +97,5 @@ libgncmod_register_gnome_gnc_module_init(int refcount)
 
     return TRUE;
 }
+
+#endif
