@@ -164,7 +164,7 @@ static gboolean sxed_confirmed_cancel( GncSxEditorDialog *sxed );
 static gboolean editor_component_sx_equality( gpointer find_data,
                                               gpointer user_data );
 
-static GtkActionEntry gnc_sxed_menu_entries [] =
+static GActionEntry gnc_sxed_menu_entries [] =
 {
     { "EditAction", NULL, N_("_Edit"), NULL, NULL, NULL },
     { "TransactionAction", NULL, N_("_Transaction"), NULL, NULL, NULL },

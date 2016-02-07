@@ -74,7 +74,6 @@
 #include "gnc-gnome-utils.h"
 #include "gnc-gobject-utils.h"
 #include "gnc-gui-query.h"
-#include "gnc-icons.h"
 #include "gnc-prefs.h"
 #include "gnc-split-reg2.h"
 #include "gnc-ui-util.h"
@@ -211,7 +210,7 @@ static void gnc_plugin_page_register2_event_handler (QofInstance *entity,
 #define TRANSACTION_UP_ACTION "TransactionUpAction"
 #define TRANSACTION_DOWN_ACTION "TransactionDownAction"
 
-static GtkActionEntry gnc_plugin_page_register2_actions [] =
+static GActionEntry gnc_plugin_page_register2_actions [] =
 {
     /* File menu */
 

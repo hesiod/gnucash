@@ -49,7 +49,7 @@ static void gnc_plugin_register_cmd_general_ledger (GtkAction *action, GncMainWi
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-register-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-register-ui.xml"
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     {
 #ifdef WITH_REGISTER2

@@ -171,7 +171,7 @@ static time64 gnc_reconcile_last_statement_date = 0;
  *  This includes some placeholder actions for the menus that are
  *  visible in the menu bar but have no action associated with
  *  them. */
-static GtkActionEntry recnWindow_actions [];
+static GActionEntry recnWindow_actions [];
 /** The number of actions provided by the main window. */
 static guint recnWindow_n_actions;
 
@@ -2175,7 +2175,7 @@ recnCancelCB (GtkAction *action, gpointer data)
  *  This includes some placeholder actions for the menus that are
  *  visible in the menu bar but have no action associated with
  *  them. */
-static GtkActionEntry recnWindow_actions [] =
+static GActionEntry recnWindow_actions [] =
 {
     /* Toplevel */
 

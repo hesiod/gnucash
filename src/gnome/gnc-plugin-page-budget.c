@@ -40,9 +40,16 @@
 #endif
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
+
+#include "egg-menu-manager.h"
+
 #include "gnc-date-edit.h"
 
+#ifndef WITH_REGISTER2
 #include "gnc-plugin-page-register.h"
+#else
+#include "gnc-plugin-page-register2.h"
+#endif
 #include "gnc-budget.h"
 
 #include "dialog-options.h"
@@ -101,60 +108,44 @@ static void gppb_selection_changed_cb(
 #endif
 
 static void gnc_plugin_page_budget_cmd_view_filter_by (
-    GtkAction *action, GncPluginPageBudget *page);
+    GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 /* Command Callbacks */
 static void gnc_plugin_page_budget_cmd_open_account(
-    GtkAction *action, GncPluginPageBudget *page);
+    GSimpleAction *action, GVariant *parameter, gpointer user_data);
 static void gnc_plugin_page_budget_cmd_open_subaccounts(
-    GtkAction *action, GncPluginPageBudget *page);
+    GSimpleAction *action, GVariant *parameter, gpointer user_data);
 static void gnc_plugin_page_budget_cmd_delete_budget(
-    GtkAction *action, GncPluginPageBudget *page);
+    GSimpleAction *action, GVariant *parameter, gpointer user_data);
 static void gnc_plugin_page_budget_cmd_view_options(
-    GtkAction *action, GncPluginPageBudget *page);
+    GSimpleAction *action, GVariant *parameter, gpointer user_data);
 static void gnc_plugin_page_budget_cmd_estimate_budget(
-    GtkAction *action, GncPluginPageBudget *page);
+    GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
-static GtkActionEntry gnc_plugin_page_budget_actions [] =
+static GActionEntry gnc_plugin_page_budget_actions [] =
 {
-    /* Toplevel */
-    { "FakeToplevel", "", NULL, NULL, NULL, NULL },
-
     /* File menu */
     {
-        "OpenAccountAction", GNC_STOCK_OPEN_ACCOUNT, N_("Open _Account"), NULL,
-        N_("Open the selected account"),
-        G_CALLBACK (gnc_plugin_page_budget_cmd_open_account)
+        "OpenAccountAction", gnc_plugin_page_budget_cmd_open_account
     },
     {
-        "OpenSubaccountsAction", GNC_STOCK_OPEN_ACCOUNT,
-        N_("Open _Subaccounts"), NULL,
-        N_("Open the selected account and all its subaccounts"),
-        G_CALLBACK (gnc_plugin_page_budget_cmd_open_subaccounts)
+        "OpenSubaccountsAction", gnc_plugin_page_budget_cmd_open_subaccounts
     },
 
     /* Edit menu */
     {
-        "DeleteBudgetAction", GNC_STOCK_DELETE_BUDGET, N_("_Delete Budget"),
-        NULL, N_("Delete this budget"),
-        G_CALLBACK (gnc_plugin_page_budget_cmd_delete_budget)
+        "DeleteBudgetAction", gnc_plugin_page_budget_cmd_delete_budget
     },
     {
-        "OptionsBudgetAction", GTK_STOCK_PROPERTIES, N_("Budget Options"),
-        NULL, N_("Edit this budget's options"),
-        G_CALLBACK (gnc_plugin_page_budget_cmd_view_options)
+        "OptionsBudgetAction", gnc_plugin_page_budget_cmd_view_options
     },
     {
-        "EstimateBudgetAction", GTK_STOCK_EXECUTE, N_("Estimate Budget"),
-        NULL,
-        N_("Estimate a budget value for the selected accounts from past transactions"),
-        G_CALLBACK (gnc_plugin_page_budget_cmd_estimate_budget)
+        "EstimateBudgetAction", gnc_plugin_page_budget_cmd_estimate_budget
     },
 
     /* View menu */
     {
-        "ViewFilterByAction", NULL, N_("_Filter By..."), NULL, NULL,
-        G_CALLBACK (gnc_plugin_page_budget_cmd_view_filter_by)
+        "ViewFilterByAction", gnc_plugin_page_budget_cmd_view_filter_by
     },
 
 };
@@ -172,18 +163,18 @@ static const gchar *actions_requiring_account[] =
 /** Short labels for use on the toolbar buttons. */
 static action_toolbar_labels toolbar_labels[] =
 {
-    { "OpenAccountAction", 	    N_("Open") },
-    { "DeleteBudgetAction", 	    N_("Delete") },
-    { "OptionsBudgetAction", 	    N_("Options") },
-    { "EstimateBudgetAction", 	    N_("Estimate") },
+    { "OpenAccountAction",          N_("Open") },
+    { "DeleteBudgetAction",         N_("Delete") },
+    { "OptionsBudgetAction",        N_("Options") },
+    { "EstimateBudgetAction",       N_("Estimate") },
     { NULL, NULL },
 };
 
 typedef struct GncPluginPageBudgetPrivate
 {
-    GtkActionGroup *action_group;
+    GActionGroup *action_group;
     guint merge_id;
-    GtkUIManager *ui_merge;
+    EggMenuManager *ui_merge;
 
     GncBudgetView* budget_view;
     GtkTreeView *tree_view;
@@ -286,7 +277,8 @@ gnc_plugin_page_budget_class_init (GncPluginPageBudgetClass *klass)
 
     object_class->finalize = gnc_plugin_page_budget_finalize;
 
-    gnc_plugin_class->tab_icon        = GNC_STOCK_BUDGET;
+    // FIXME Migrate this to Gtk+ 3
+    // gnc_plugin_class->tab_icon        = GNC_STOCK_BUDGET;
     gnc_plugin_class->plugin_name     = GNC_PLUGIN_PAGE_BUDGET_NAME;
     gnc_plugin_class->create_widget   = gnc_plugin_page_budget_create_widget;
     gnc_plugin_class->destroy_widget  = gnc_plugin_page_budget_destroy_widget;
@@ -300,7 +292,7 @@ gnc_plugin_page_budget_class_init (GncPluginPageBudgetClass *klass)
 static void
 gnc_plugin_page_budget_init (GncPluginPageBudget *plugin_page)
 {
-    GtkActionGroup *action_group;
+    GActionMap *action_map;
     GncPluginPageBudgetPrivate *priv;
     GncPluginPage *parent;
 
@@ -319,14 +311,12 @@ gnc_plugin_page_budget_init (GncPluginPageBudget *plugin_page)
     gnc_plugin_page_add_book(parent, gnc_get_current_book());
 
     /* Create menu and toolbar information */
-    action_group =
-        gnc_plugin_page_create_action_group(parent,
-                                            "GncPluginPageBudgetActions");
-    gtk_action_group_add_actions (action_group,
+    action_map = G_ACTION_MAP(g_application_get_default());
+    g_action_map_add_action_entries (action_map,
                                   gnc_plugin_page_budget_actions,
                                   gnc_plugin_page_budget_n_actions,
                                   plugin_page);
-    gnc_plugin_init_short_names (action_group, toolbar_labels);
+    gnc_plugin_init_short_names (G_ACTION_GROUP(action_map), toolbar_labels);
 
     /* Visible types */
     priv->fd.visible_types = -1; /* Start with all types */
@@ -336,8 +326,8 @@ gnc_plugin_page_budget_init (GncPluginPageBudget *plugin_page)
     priv->sigFigs = 1;
     recurrenceSet(&priv->r, 1, PERIOD_MONTH, NULL, WEEKEND_ADJ_NONE);
 
-    LEAVE("page %p, priv %p, action group %p",
-          plugin_page, priv, action_group);
+    LEAVE("page %p, priv %p, action map %p",
+          plugin_page, priv, action_map);
 }
 
 
@@ -625,10 +615,13 @@ gppb_account_activated_cb(GncBudgetView* view, Account* account,
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_BUDGET (page));
 
     window = GNC_PLUGIN_PAGE(page)->window;
+#ifndef WITH_REGISTER2
     new_page = gnc_plugin_page_register_new(account, FALSE);
+#else
+    new_page = gnc_plugin_page_register2_new(account, FALSE);
+#endif
     gnc_main_window_open_page(GNC_MAIN_WINDOW(window), new_page);
 }
-
 
 #if 0
 static void
@@ -669,9 +662,11 @@ gppb_selection_changed_cb(GtkTreeSelection *selection,
  * Command callbacks *
  ********************/
 static void
-gnc_plugin_page_budget_cmd_open_account (GtkAction *action,
-        GncPluginPageBudget *page)
+gnc_plugin_page_budget_cmd_open_account (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncPluginPageBudget *page = (GncPluginPageBudget *)user_data;
     GncPluginPageBudgetPrivate *priv;
     GtkWidget *window;
     GncPluginPage *new_page;
@@ -686,7 +681,11 @@ gnc_plugin_page_budget_cmd_open_account (GtkAction *action,
     for (tmp = acct_list; tmp; tmp = g_list_next(tmp))
     {
         account = tmp->data;
+#ifndef WITH_REGISTER2
         new_page = gnc_plugin_page_register_new (account, FALSE);
+#else
+        new_page = gnc_plugin_page_register2_new (account, FALSE);
+#endif
         gnc_main_window_open_page (GNC_MAIN_WINDOW(window), new_page);
     }
     g_list_free(acct_list);
@@ -694,9 +693,11 @@ gnc_plugin_page_budget_cmd_open_account (GtkAction *action,
 
 
 static void
-gnc_plugin_page_budget_cmd_open_subaccounts (GtkAction *action,
-        GncPluginPageBudget *page)
+gnc_plugin_page_budget_cmd_open_subaccounts (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncPluginPageBudget *page = (GncPluginPageBudget *)user_data;
     GncPluginPageBudgetPrivate *priv;
     GtkWidget *window;
     GncPluginPage *new_page;
@@ -711,7 +712,11 @@ gnc_plugin_page_budget_cmd_open_subaccounts (GtkAction *action,
     for (tmp = acct_list; tmp; tmp = g_list_next(tmp))
     {
         account = tmp->data;
-        new_page = gnc_plugin_page_register_new (account, TRUE);
+#ifndef WITH_REGISTER2
+        new_page = gnc_plugin_page_register_new (account, FALSE);
+#else
+        new_page = gnc_plugin_page_register2_new (account, FALSE);
+#endif
         gnc_main_window_open_page (GNC_MAIN_WINDOW(window), new_page);
     }
     g_list_free(acct_list);
@@ -719,9 +724,11 @@ gnc_plugin_page_budget_cmd_open_subaccounts (GtkAction *action,
 
 
 static void
-gnc_plugin_page_budget_cmd_delete_budget (GtkAction *action,
-        GncPluginPageBudget *page)
+gnc_plugin_page_budget_cmd_delete_budget (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncPluginPageBudget *page = (GncPluginPageBudget *)user_data;
     GncPluginPageBudgetPrivate *priv;
     GncBudget *budget;
 
@@ -738,9 +745,11 @@ gnc_plugin_page_budget_cmd_delete_budget (GtkAction *action,
 /*       Options Dialog       */
 /******************************/
 static void
-gnc_plugin_page_budget_cmd_view_options (GtkAction *action,
-        GncPluginPageBudget *page)
+gnc_plugin_page_budget_cmd_view_options (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncPluginPageBudget *page = (GncPluginPageBudget *)user_data;
     GncPluginPageBudgetPrivate *priv;
     GncRecurrence *gr;
     GtkBuilder *builder;
@@ -885,9 +894,11 @@ estimate_budget_helper(GtkTreeModel *model, GtkTreePath *path,
 /*       Estimate Dialog       */
 /*******************************/
 static void
-gnc_plugin_page_budget_cmd_estimate_budget(GtkAction *action,
-        GncPluginPageBudget *page)
+gnc_plugin_page_budget_cmd_estimate_budget(GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncPluginPageBudget *page = (GncPluginPageBudget *)user_data;
     GncPluginPageBudgetPrivate *priv;
     GtkTreeSelection *sel;
     GtkWidget *dialog, *gde, *dtr, *hb;
@@ -960,9 +971,11 @@ gnc_plugin_page_budget_cmd_estimate_budget(GtkAction *action,
 
 
 static void
-gnc_plugin_page_budget_cmd_view_filter_by (GtkAction *action,
-        GncPluginPageBudget *page)
+gnc_plugin_page_budget_cmd_view_filter_by (GSimpleAction *action,
+                                         GVariant      *parameter,
+                                         gpointer       user_data)
 {
+    GncPluginPageBudget *page = (GncPluginPageBudget *)user_data;
     GncPluginPageBudgetPrivate *priv;
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_BUDGET(page));

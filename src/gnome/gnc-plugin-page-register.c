@@ -218,7 +218,7 @@ static void gnc_plugin_page_register_event_handler (QofInstance *entity,
 #define DUPLICATE_SPLIT_TIP              N_("Make a copy of the current split")
 #define DELETE_SPLIT_TIP                 N_("Delete the current split")
 
-static GtkActionEntry gnc_plugin_page_register_actions [] =
+static GActionEntry gnc_plugin_page_register_actions [] =
 {
     /* File menu */
 
