@@ -269,7 +269,7 @@ stf_parse_options_clear_line_terminator (StfParseOptions_t *parseoptions)
 {
 	g_return_if_fail (parseoptions != NULL);
 
-	go_slist_free_custom (parseoptions->terminator, g_free);
+	g_slist_free (parseoptions->terminator);
 	parseoptions->terminator = NULL;
 	compile_terminators (parseoptions);
 }
@@ -302,7 +302,7 @@ stf_parse_options_csv_set_separators (StfParseOptions_t *parseoptions, char cons
 	g_free (parseoptions->sep.chr);
 	parseoptions->sep.chr = g_strdup (character);
 
-	go_slist_free_custom (parseoptions->sep.str, g_free);
+	g_slist_free (parseoptions->sep.str);
 	parseoptions->sep.str = go_slist_map (string, (GOMapFunc)g_strdup);
 }
 
