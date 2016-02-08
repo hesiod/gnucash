@@ -50,7 +50,6 @@
 #include "gnc-main-window.h"
 #include "gnc-splash.h"
 #include "gnc-gnome-utils.h"
-#include "gnc-plugin-file-history.h"
 #include "dialog-new-user.h"
 #include "gnc-session.h"
 #include "engine-helpers-guile.h"
@@ -551,15 +550,6 @@ fail:
     gnc_shutdown(1);
 }
 
-static char *
-get_file_to_load()
-{
-    if (file_to_load)
-        return g_strdup(file_to_load);
-    else
-        return gnc_history_get_last();
-}
-
 static void
 inner_main (void *closure, int argc, char **argv)
 {
@@ -602,8 +592,9 @@ inner_main (void *closure, int argc, char **argv)
 
     gnc_hook_run(HOOK_STARTUP, NULL);
 
-    if (!nofile && (fn = get_file_to_load()))
+    if (!nofile && file_to_load)
     {
+        fn = g_strdup(file_to_load);
         gnc_update_splash_screen(_("Loading data..."), GNC_SPLASH_PERCENTAGE_UNKNOWN);
         gnc_file_open_file(fn, /*open_readonly*/ FALSE);
         g_free(fn);
