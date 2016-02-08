@@ -20,6 +20,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef SPLIT_REGISTER_P_H
 #define SPLIT_REGISTER_P_H
 
@@ -207,4 +209,6 @@ gboolean gnc_split_register_needs_conv_rate(
     SplitRegister *reg, Transaction *txn, Account *acc);
 
 /** @} */
+#endif
+
 #endif

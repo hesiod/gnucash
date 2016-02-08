@@ -37,20 +37,17 @@ static void gnc_plugin_stylesheets_finalize (GObject *object);
 
 
 /* Command callbacks */
-static void gnc_plugin_stylesheets_cmd_edit_style_sheet (GtkAction *action,
-        GncMainWindowActionData *data);
+static void gnc_plugin_stylesheets_cmd_edit_style_sheet (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-stylesheets-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-stylesheets-ui.xml"
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     /* Menu Items */
     {
-        "EditStyleSheetsAction", NULL, N_("St_yle Sheets"), NULL,
-        N_("Edit report style sheets"),
-        G_CALLBACK (gnc_plugin_stylesheets_cmd_edit_style_sheet)
+        "EditStyleSheetsAction", gnc_plugin_stylesheets_cmd_edit_style_sheet
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
@@ -144,8 +141,9 @@ gnc_plugin_stylesheets_finalize (GObject *object)
  ************************************************************/
 
 static void
-gnc_plugin_stylesheets_cmd_edit_style_sheet (GtkAction *action,
-        GncMainWindowActionData *data)
+gnc_plugin_stylesheets_cmd_edit_style_sheet (GSimpleAction *action,
+                                             GVariant      *parameter,
+                                             gpointer       user_data)
 {
     gnc_style_sheet_dialog_open();
 }

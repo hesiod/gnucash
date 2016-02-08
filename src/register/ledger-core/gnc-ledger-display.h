@@ -22,6 +22,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef GNC_LEDGER_DISPLAY_H
 #define GNC_LEDGER_DISPLAY_H
 
@@ -127,4 +129,5 @@ void gnc_ledger_display_close (GNCLedgerDisplay * ledger_display);
  * mode by default */
 gboolean gnc_ledger_display_default_double_line (GNCLedgerDisplay *gld);
 
+#endif
 #endif

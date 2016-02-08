@@ -251,10 +251,10 @@ gnc_plugin_get_name (GncPlugin *plugin)
  *
  *  See gnc-plugin.h for documentation on the function arguments. */
 void
-gnc_plugin_init_short_names (GtkActionGroup *action_group,
+gnc_plugin_init_short_names (GActionGroup *action_group,
                              action_toolbar_labels *toolbar_labels)
 {
-    GtkAction *action;
+    GAction *action;
     GValue value = { 0, };
     gint i;
 
@@ -263,7 +263,7 @@ gnc_plugin_init_short_names (GtkActionGroup *action_group,
     for (i = 0; toolbar_labels[i].action_name; i++)
     {
         /* Add a couple of short labels for the toolbar */
-        action = gtk_action_group_get_action (action_group,
+        action = g_action_map_lookup_action (G_ACTION_MAP(action_group),
                                               toolbar_labels[i].action_name);
         g_value_set_static_string (&value, gettext(toolbar_labels[i].label));
         g_object_set_property (G_OBJECT(action), "short_label", &value);
@@ -277,21 +277,24 @@ gnc_plugin_init_short_names (GtkActionGroup *action_group,
  *
  *  See gnc-plugin.h for documentation on the function arguments. */
 void
-gnc_plugin_set_important_actions (GtkActionGroup *action_group,
+gnc_plugin_set_important_actions (GActionGroup *action_group,
                                   const gchar **name)
 {
-    GtkAction *action;
+    // FIXME Remove this for Gtk+3?
+#if 0
+    GAction *action;
     gint i;
 
     for (i = 0; name[i]; i++)
     {
-        action = gtk_action_group_get_action (action_group, name[i]);
+        action = g_action_map_lookup_action (G_ACTION_MAP(action_group), name[i]);
         g_object_set (G_OBJECT(action), "is_important", TRUE, NULL);
     }
 
     /* If this trips, you've got too many "important" actions.  That
      * can't *all* be that important, can they? */
     g_assert(i <= 3);
+#endif
 }
 
 
@@ -301,12 +304,12 @@ gnc_plugin_set_important_actions (GtkActionGroup *action_group,
  *
  *  See gnc-plugin.h for documentation on the function arguments. */
 void
-gnc_plugin_update_actions (GtkActionGroup *action_group,
+gnc_plugin_update_actions (GActionGroup *action_group,
                            const gchar **action_names,
                            const gchar *property_name,
                            gboolean value)
 {
-    GtkAction    *action;
+    GAction    *action;
     GValue        gvalue = { 0 };
     gint          i;
 
@@ -315,16 +318,15 @@ gnc_plugin_update_actions (GtkActionGroup *action_group,
 
     for (i = 0; action_names[i]; i++)
     {
-        action = gtk_action_group_get_action (action_group, action_names[i]);
+        action = g_action_map_lookup_action (G_ACTION_MAP(action_group), action_names[i]);
         if (action)
         {
             g_object_set_property (G_OBJECT(action), property_name, &gvalue);
         }
         else
         {
-            g_warning("No such action with name '%s' in action group %s (size %d)",
-                      action_names[i], gtk_action_group_get_name(action_group),
-                      g_list_length(gtk_action_group_list_actions(action_group)));
+            g_warning("No such action with name '%s' in action group",
+                      action_names[i]);
         }
     }
 }
@@ -333,16 +335,15 @@ gnc_plugin_update_actions (GtkActionGroup *action_group,
 /** Load a new set of actions into an existing UI.
  *
  *  See gnc-plugin.h for documentation on the function arguments. */
-gint
+guint
 gnc_plugin_add_actions (EggMenuManager *ui_merge,
                         const gchar *filename)
 {
     GError *error = NULL;
     gchar *pathname;
-    gint merge_id;
+    guint merge_id;
 
     g_return_val_if_fail (ui_merge, 0);
-    g_return_val_if_fail (action_group, 0);
     g_return_val_if_fail (filename, 0);
 
     ENTER("ui_merge %p, filename %s",

@@ -20,6 +20,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef SPLIT_REGISTER_CONTROL_H
 #define SPLIT_REGISTER_CONTROL_H
 
@@ -33,4 +35,6 @@
 /** Create a new TableControl specialized for the SplitRegister. */
 TableControl * gnc_split_register_control_new (void);
 /** @} */
+#endif
+
 #endif

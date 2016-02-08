@@ -20,6 +20,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef SPLIT_REGISTER_LAYOUT_H
 #define SPLIT_REGISTER_LAYOUT_H
 
@@ -48,4 +50,6 @@
 TableLayout * gnc_split_register_layout_new (SplitRegister *reg);
 
 /** @} */
+#endif
+
 #endif

@@ -45,16 +45,16 @@ static void gnc_plugin_bi_import_init               (GncPluginbi_import *plugin)
 static void gnc_plugin_bi_import_finalize           (GObject *object);
 
 /* Command callbacks */
-static void gnc_plugin_bi_import_cmd_test (GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_bi_import_cmd_test (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-bi-import-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-bi-import-ui.xml"
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     /* Menu Items */
-    { "ImportMenuAction", NULL, N_("_Import"), NULL, NULL, NULL },
-    { "bi_importAction", NULL, N_("Import Bills & Invoices..."), NULL, N_("Import bills and invoices from a CSV text file"),  G_CALLBACK(gnc_plugin_bi_import_cmd_test) },
+    { "ImportMenuAction" },
+    { "bi_importAction", gnc_plugin_bi_import_cmd_test },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS(gnc_plugin_actions);
 
@@ -104,8 +104,9 @@ gnc_plugin_bi_import_finalize (GObject *object)
  ************************************************************/
 
 static void
-gnc_plugin_bi_import_cmd_test (GtkAction *action, GncMainWindowActionData *data)
+gnc_plugin_bi_import_cmd_test (GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     ENTER ("action %p, main window data %p", action, data);
     g_message ("bi_import");
 

@@ -1585,12 +1585,12 @@ gnc_plugin_page_register2_get_tab_name (GncPluginPage *plugin_page)
     case LD2_GL:
         switch (model->type)
         {
-        case GENERAL_JOURNAL:
-        case INCOME_LEDGER:
+        case GENERAL_JOURNAL2:
+        case INCOME_LEDGER2:
             return g_strdup(_("General Journal"));
-        case PORTFOLIO_LEDGER:
+        case PORTFOLIO_LEDGER2:
             return g_strdup(_("Portfolio"));
-        case SEARCH_LEDGER:
+        case SEARCH_LEDGER2:
             return g_strdup(_("Search Results"));
         default:
             break;
@@ -2323,20 +2323,20 @@ gnc_reg_get_name (GNCLedgerDisplay2 *ledger, gboolean for_window) // this works
 
     switch (model->type)
     {
-    case GENERAL_JOURNAL:
-    case INCOME_LEDGER:
+    case GENERAL_JOURNAL2:
+    case INCOME_LEDGER2:
         if (for_window)
             reg_name = _("General Journal");
         else
             reg_name = _("General Journal Report");
         break;
-    case PORTFOLIO_LEDGER:
+    case PORTFOLIO_LEDGER2:
         if (for_window)
             reg_name = _("Portfolio");
         else
             reg_name = _("Portfolio Report");
         break;
-    case SEARCH_LEDGER:
+    case SEARCH_LEDGER2:
         if (for_window)
             reg_name = _("Search Results");
         else

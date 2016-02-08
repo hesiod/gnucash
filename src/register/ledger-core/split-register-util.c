@@ -22,6 +22,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 
 #include <gnc-gdate-utils.h>
@@ -575,3 +577,5 @@ gnc_split_register_cursor_name_to_class (const char *cursor_name)
 
     return CURSOR_CLASS_NONE;
 }
+
+#endif

@@ -62,11 +62,12 @@ static QofLogModule log_module = "gnc.app-utils.gsettings";
 static gboolean gnc_gsettings_is_valid_key(GSettings *settings, const gchar *key)
 {
     gboolean found = FALSE;
-    GValue val = G_VALUE_INIT;
+    GSettingsSchema *schema;
+
+    g_return_val_if_fail(key != NULL, found);
+    g_return_val_if_fail(G_IS_SETTINGS(settings), found);
 
     // Check if the key is valid key within settings
-    if (!G_IS_SETTINGS(settings))
-        return FALSE;
 
     g_object_get (settings,
                   "settings-schema", &schema,

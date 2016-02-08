@@ -3216,10 +3216,6 @@ gnc_main_window_edit_menu_draw_cb (GtkWidget *menu,
 }
 
 
-
-gint
-compare_name (gconstpointer item, gconstpointer name);
-
 static void
 gnc_main_window_init_menu_updaters (GncMainWindow *window)
 {
@@ -3229,7 +3225,7 @@ gnc_main_window_init_menu_updaters (GncMainWindow *window)
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     children = gtk_container_get_children(GTK_CONTAINER(priv->menu));
-    elem = g_list_find_custom(children, "menubar-edit", compare_name);
+    elem = g_list_find(children, "menubar-edit");
     edit_menu_item = GTK_WIDGET(elem->data);
     edit_menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM(edit_menu_item));
 

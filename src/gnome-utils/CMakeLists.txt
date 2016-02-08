@@ -14,15 +14,15 @@ SET (GNC_WARNINGS_H ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.h)
 
 ADD_CUSTOM_COMMAND(
   OUTPUT ${GNC_WARNINGS_C}
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA} make-gnc-warnings-c.xsl
+  DEPENDS ${WARNINGS_SCHEMA} make-gnc-warnings-c.xsl
   COMMAND
-	${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_C} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-c.xsl ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA}
+	${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_C} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-c.xsl ${WARNINGS_SCHEMA}
 )
 ADD_CUSTOM_COMMAND(
   OUTPUT ${GNC_WARNINGS_H}
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA} make-gnc-warnings-h.xsl
+  DEPENDS ${WARNINGS_SCHEMA} make-gnc-warnings-h.xsl
   COMMAND
-	${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_H} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-h.xsl ${CMAKE_CURRENT_BINARY_DIR}/${WARNINGS_SCHEMA}
+	${LIBXSLT_XSLTPROC_EXECUTABLE} -o ${GNC_WARNINGS_H} ${CMAKE_CURRENT_SOURCE_DIR}/make-gnc-warnings-h.xsl ${WARNINGS_SCHEMA}
 )
 
 SET (gnome_utils_SOURCES
@@ -75,7 +75,7 @@ SET (gnome_utils_SOURCES
   gnc-plugin-manager.c
   gnc-plugin-menu-additions.c
   gnc-plugin-page.c
-  #gnc-plugin.c
+  gnc-plugin.c
   gnc-period-select.c
   gnc-query-view.c
   gnc-splash.c

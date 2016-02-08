@@ -23,6 +23,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <time.h>
 
 #include "Account.h"
@@ -905,3 +907,5 @@ gnc_ledger_display_close (GNCLedgerDisplay *ld)
 
     gnc_close_gui_component (ld->component_id);
 }
+
+#endif

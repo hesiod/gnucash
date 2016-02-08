@@ -22,6 +22,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 #include <glib/gi18n.h>
 
@@ -2673,3 +2675,5 @@ gnc_template_register_model_new (void)
 
     return model;
 }
+
+#endif

@@ -22,6 +22,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 
 #include "Scrub.h"
@@ -920,3 +922,5 @@ gnc_split_register_save_data_destroy (SRSaveData *sd)
 {
     g_free (sd);
 }
+
+#endif

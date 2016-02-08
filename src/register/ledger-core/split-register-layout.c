@@ -23,6 +23,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 #include <glib/gi18n.h>
 
@@ -842,3 +844,5 @@ gnc_split_register_layout_new (SplitRegister *reg)
 
     return layout;
 }
+
+#endif

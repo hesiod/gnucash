@@ -21,6 +21,8 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef DIALOG_FIND_TRANSACTIONS_H
 #define DIALOG_FIND_TRANSACTIONS_H
 
@@ -29,5 +31,7 @@
 
 GNCSearchWindow *
 gnc_ui_find_transactions_dialog_create(GNCLedgerDisplay * ledger);
+
+#endif
 
 #endif

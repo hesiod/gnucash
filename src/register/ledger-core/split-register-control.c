@@ -22,6 +22,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 #include <glib/gi18n.h>
 
@@ -1853,3 +1855,5 @@ gnc_split_register_recn_cell_confirm (char old_flag, gpointer data)
     gtk_widget_destroy(dialog);
     return (response == GTK_RESPONSE_YES);
 }
+
+#endif

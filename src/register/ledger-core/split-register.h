@@ -19,6 +19,9 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
  *                                                                  *
 \********************************************************************/
+
+#ifndef WITH_REGISTER2
+
 #ifndef SPLIT_REGISTER_H
 #define SPLIT_REGISTER_H
 
@@ -26,6 +29,8 @@
 
 #include "Transaction.h"
 #include "table-allgui.h"
+
+#include "gnc-tree-model-split-reg.h"
 
 /** @addtogroup GUI
  *  @{
@@ -506,7 +511,11 @@ void gnc_split_register_load (SplitRegister *reg, GList * slist,
 gboolean gnc_split_register_save (SplitRegister *reg, gboolean do_commit);
 
 /** Causes a redraw of the register window associated with reg. */
+#ifndef WITH_REGISTER2
 void gnc_split_register_redraw (SplitRegister *reg);
+#else
+void gnc_split_register_redraw (GncTreeModelSplitReg *reg);
+#endif
 
 /** Returns TRUE if the register has changed cells. */
 gboolean gnc_split_register_changed (SplitRegister *reg);
@@ -558,5 +567,7 @@ gboolean gnc_split_register_full_refresh_ok (SplitRegister *reg);
 void gnc_copy_trans_onto_trans (Transaction *from, Transaction *to,
                                 gboolean use_cut_semantics,
                                 gboolean do_commit);
+
+#endif
 
 #endif

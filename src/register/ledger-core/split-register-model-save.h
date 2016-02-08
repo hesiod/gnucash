@@ -20,6 +20,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef SPLIT_REGISTER_MODEL_SAVE_H
 #define SPLIT_REGISTER_MODEL_SAVE_H
 
@@ -45,4 +47,6 @@ SRSaveData * gnc_split_register_save_data_new (Transaction *trans,
 void gnc_split_register_save_data_destroy (SRSaveData *sd);
 
 /** @} */
+#endif
+
 #endif

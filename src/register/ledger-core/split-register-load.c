@@ -24,6 +24,8 @@
 
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib/gi18n.h>
 
 #include "account-quickfill.h"
@@ -815,3 +817,5 @@ gnc_split_register_load_xfer_cells (SplitRegister *reg, Account *base_account)
 }
 
 /* ====================== END OF FILE ================================== */
+
+#endif

@@ -20,6 +20,8 @@
  *                                                                  *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
+
 #ifndef SPLIT_REGISTER_MODEL_H
 #define SPLIT_REGISTER_MODEL_H
 
@@ -33,4 +35,6 @@
 TableModel * gnc_split_register_model_new (void);
 TableModel * gnc_template_register_model_new (void);
 /* @} */
+#endif
+
 #endif

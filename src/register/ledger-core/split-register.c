@@ -24,6 +24,8 @@
  */
 #include "config.h"
 
+#ifndef WITH_REGISTER2
+
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <libguile.h>
@@ -35,6 +37,7 @@
 #include "gnc-component-manager.h"
 #include "split-register-p.h"
 #include "gnc-ledger-display.h"
+#include "gnc-ledger-display2.h"
 #include "gnc-prefs.h"
 #include "gnc-ui.h"
 #include "gnome-utils/gnc-warnings.h"
@@ -1026,6 +1029,7 @@ gnc_split_register_paste_current (SplitRegister *reg)
     LEAVE(" ");
 }
 
+#ifndef WITH_REGISTER2
 void
 gnc_split_register_delete_current_split (SplitRegister *reg)
 {
@@ -1350,12 +1354,346 @@ gnc_split_register_cancel_cursor_trans_changes (SplitRegister *reg)
     gnc_resume_gui_refresh ();
     gnc_split_register_redraw(reg);
 }
+#else
+void
+gnc_split_register_delete_current_split (GncTreeModelSplitReg *reg)
+{
+    SRInfo *info = gnc_split_register_get_info (reg);
+    Transaction *pending_trans;
+    Transaction *trans;
+    Split *blank_split;
+    Split *split;
 
+    if (!reg) return;
+
+    blank_split = xaccSplitLookup (&info->blank_split_guid,
+                                   gnc_get_current_book ());
+
+    pending_trans = xaccTransLookup (&info->pending_trans_guid,
+                                     gnc_get_current_book ());
+
+    /* get the current split based on cursor position */
+    split = gnc_split_register_get_current_split (reg);
+    if (split == NULL)
+        return;
+
+    /* If we are deleting the blank split, just cancel. The user is
+     * allowed to delete the blank split as a method for discarding
+     * any edits they may have made to it. */
+    if (split == blank_split)
+    {
+        gnc_split_register_cancel_cursor_split_changes (reg);
+        return;
+    }
+
+    gnc_suspend_gui_refresh ();
+
+    trans = xaccSplitGetParent(split);
+
+    /* Check pending transaction */
+    if (trans == pending_trans)
+    {
+        g_assert(xaccTransIsOpen(trans));
+    }
+    else
+    {
+        g_assert(!pending_trans);
+        if (gnc_split_register_begin_edit_or_warn(info, trans))
+        {
+            gnc_resume_gui_refresh ();
+            return;
+        }
+    }
+    xaccSplitDestroy (split);
+
+    gnc_resume_gui_refresh ();
+    gnc_split_register_redraw(reg);
+}
+
+void
+gnc_split_register_delete_current_trans (SplitRegister *reg)
+{
+    SRInfo *info = gnc_split_register_get_info (reg);
+    Transaction *pending_trans;
+    Transaction *trans;
+    Split *blank_split;
+    Split *split;
+    gboolean was_open;
+
+    ENTER("reg=%p", reg);
+    if (!reg)
+    {
+        LEAVE("no register");
+        return;
+    }
+
+    blank_split = xaccSplitLookup (&info->blank_split_guid,
+                                   gnc_get_current_book ());
+    pending_trans = xaccTransLookup (&info->pending_trans_guid,
+                                     gnc_get_current_book ());
+
+    /* get the current split based on cursor position */
+    split = gnc_split_register_get_current_split (reg);
+    if (split == NULL)
+    {
+        LEAVE("no split");
+        return;
+    }
+
+    gnc_suspend_gui_refresh ();
+    trans = xaccSplitGetParent(split);
+
+    /* If we just deleted the blank split, clean up. The user is
+     * allowed to delete the blank split as a method for discarding
+     * any edits they may have made to it. */
+    if (split == blank_split)
+    {
+        DEBUG("deleting blank split");
+        info->blank_split_guid = *guid_null();
+        info->auto_complete = FALSE;
+    }
+    else
+    {
+        info->trans_expanded = FALSE;
+    }
+
+    /* Check pending transaction */
+    if (trans == pending_trans)
+    {
+        DEBUG("clearing pending trans");
+        info->pending_trans_guid = *guid_null();
+        pending_trans = NULL;
+    }
+
+    was_open = xaccTransIsOpen(trans);
+    xaccTransDestroy(trans);
+    if (was_open)
+    {
+        DEBUG("committing");
+        xaccTransCommitEdit(trans);
+    }
+    gnc_resume_gui_refresh ();
+    LEAVE(" ");
+}
+
+void
+gnc_split_register_void_current_trans (SplitRegister *reg, const char *reason)
+{
+    SRInfo *info = gnc_split_register_get_info (reg);
+    Transaction *pending_trans;
+    Transaction *trans;
+    Split *blank_split;
+    Split *split;
+
+    if (!reg) return;
+
+    blank_split = xaccSplitLookup (&info->blank_split_guid,
+                                   gnc_get_current_book ());
+    pending_trans = xaccTransLookup (&info->pending_trans_guid,
+                                     gnc_get_current_book ());
+
+    /* get the current split based on cursor position */
+    split = gnc_split_register_get_current_split (reg);
+    if (split == NULL)
+        return;
+
+    /* Bail if trying to void the blank split. */
+    if (split == blank_split)
+        return;
+
+    /* already voided. */
+    if (xaccSplitGetReconcile (split) == VREC)
+        return;
+
+    info->trans_expanded = FALSE;
+
+    gnc_suspend_gui_refresh ();
+
+    trans = xaccSplitGetParent(split);
+    xaccTransVoid(trans, reason);
+
+    /* Check pending transaction */
+    if (trans == pending_trans)
+    {
+        info->pending_trans_guid = *guid_null();
+        pending_trans = NULL;
+    }
+    if (xaccTransIsOpen(trans))
+    {
+        PERR("We should not be voiding an open transaction.");
+        xaccTransCommitEdit(trans);
+    }
+    gnc_resume_gui_refresh ();
+}
+
+void
+gnc_split_register_unvoid_current_trans (SplitRegister *reg)
+{
+    SRInfo *info = gnc_split_register_get_info (reg);
+    Transaction *pending_trans;
+    Transaction *trans;
+    Split *blank_split;
+    Split *split;
+
+    if (!reg) return;
+
+    blank_split = xaccSplitLookup (&info->blank_split_guid,
+                                   gnc_get_current_book ());
+    pending_trans = xaccTransLookup (&info->pending_trans_guid,
+                                     gnc_get_current_book ());
+
+    /* get the current split based on cursor position */
+    split = gnc_split_register_get_current_split (reg);
+    if (split == NULL)
+        return;
+
+    /* Bail if trying to unvoid the blank split. */
+    if (split == blank_split)
+        return;
+
+    /* not voided. */
+    if (xaccSplitGetReconcile (split) != VREC)
+        return;
+
+    info->trans_expanded = FALSE;
+
+    gnc_suspend_gui_refresh ();
+
+    trans = xaccSplitGetParent(split);
+
+    xaccTransUnvoid(trans);
+
+    /* Check pending transaction */
+    if (trans == pending_trans)
+    {
+        info->pending_trans_guid = *guid_null();
+        pending_trans = NULL;
+    }
+
+    gnc_resume_gui_refresh ();
+}
+
+void
+gnc_split_register_empty_current_trans_except_split (SplitRegister *reg,
+        Split *split)
+{
+    SRInfo *info;
+    Transaction *trans;
+    Transaction *pending;
+    int i = 0;
+    Split *s;
+
+    if ((reg == NULL)  || (split == NULL))
+        return;
+
+    gnc_suspend_gui_refresh ();
+    info = gnc_split_register_get_info(reg);
+    pending = xaccTransLookup(&info->pending_trans_guid, gnc_get_current_book());
+
+    trans = xaccSplitGetParent(split);
+    if (!pending)
+    {
+        if (gnc_split_register_begin_edit_or_warn(info, trans))
+        {
+            gnc_resume_gui_refresh ();
+            return;
+        }
+    }
+    else if (pending == trans)
+    {
+        g_assert(xaccTransIsOpen(trans));
+    }
+    else g_assert_not_reached();
+
+    while ((s = xaccTransGetSplit(trans, i)) != NULL)
+    {
+        if (s != split)
+            xaccSplitDestroy(s);
+        else i++;
+    }
+
+    gnc_resume_gui_refresh ();
+    gnc_split_register_redraw(reg);
+}
+
+void
+gnc_split_register_empty_current_trans (SplitRegister *reg)
+{
+    Split *split;
+
+    /* get the current split based on cursor position */
+    split = gnc_split_register_get_current_split (reg);
+    gnc_split_register_empty_current_trans_except_split (reg, split);
+}
+
+void
+gnc_split_register_cancel_cursor_split_changes (SplitRegister *reg)
+{
+    VirtualLocation virt_loc;
+
+    if (reg == NULL)
+        return;
+
+    virt_loc = reg->table->current_cursor_loc;
+
+    if (!gnc_table_current_cursor_changed (reg->table, FALSE))
+        return;
+
+    /* We're just cancelling the current split here, not the transaction.
+     * When cancelling edits, reload the cursor from the transaction. */
+    gnc_table_clear_current_cursor_changes (reg->table);
+
+    if (gnc_table_find_close_valid_cell (reg->table, &virt_loc, FALSE))
+        gnc_table_move_cursor_gui (reg->table, virt_loc);
+
+    gnc_table_refresh_gui (reg->table, TRUE);
+}
+
+void
+gnc_split_register_cancel_cursor_trans_changes (SplitRegister *reg)
+{
+    SRInfo *info = gnc_split_register_get_info (reg);
+    Transaction *pending_trans;
+
+    pending_trans = xaccTransLookup (&info->pending_trans_guid,
+                                     gnc_get_current_book ());
+
+    /* Get the currently open transaction, rollback the edits on it, and
+     * then repaint everything. To repaint everything, make a note of
+     * all of the accounts that will be affected by this rollback. */
+    if (!xaccTransIsOpen (pending_trans))
+    {
+        gnc_split_register_cancel_cursor_split_changes (reg);
+        return;
+    }
+
+    if (!pending_trans)
+        return;
+
+    gnc_suspend_gui_refresh ();
+
+    xaccTransRollbackEdit (pending_trans);
+
+    info->pending_trans_guid = *guid_null ();
+
+    gnc_resume_gui_refresh ();
+    gnc_split_register_redraw(reg);
+}
+#endif
+
+#ifndef WITH_REGISTER2
 void
 gnc_split_register_redraw (SplitRegister *reg)
 {
     gnc_ledger_display_refresh_by_split_register (reg);
 }
+#else
+void
+gnc_split_register_redraw (GncTreeModelSplitReg *reg)
+{
+    gnc_ledger_display2_refresh_by_split_register (reg);
+}
+#endif
 
 /* Copy from the register object to scheme. This needs to be
  * in sync with gnc_split_register_save and xaccSRSaveChangedCells. */
@@ -2988,3 +3326,5 @@ gnc_split_register_set_read_only (SplitRegister *reg, gboolean read_only)
 {
     gnc_table_model_set_read_only (reg->table->model, read_only);
 }
+
+#endif
