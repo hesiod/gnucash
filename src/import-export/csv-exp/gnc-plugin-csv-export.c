@@ -41,29 +41,23 @@ static void gnc_plugin_csv_export_init (GncPluginCsvExport *plugin);
 static void gnc_plugin_csv_export_finalize (GObject *object);
 
 /* Command callbacks */
-static void gnc_plugin_csv_export_tree_cmd (GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_csv_export_trans_cmd (GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_csv_export_register_cmd (GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_csv_export_tree_cmd (GSimpleAction *action, GVariant *parameter, gpointer user_data);
+static void gnc_plugin_csv_export_trans_cmd (GSimpleAction *action, GVariant *parameter, gpointer user_data);
+static void gnc_plugin_csv_export_register_cmd (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-csv-export-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-csv-export-ui.xml"
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "CsvExportTreeAction", GTK_STOCK_CONVERT, N_("Export Account T_ree to CSV..."), NULL,
-        N_("Export the Account Tree to a CSV file"),
-        G_CALLBACK (gnc_plugin_csv_export_tree_cmd)
+        "CsvExportTreeAction", gnc_plugin_csv_export_tree_cmd
     },
     {
-        "CsvExportTransAction", GTK_STOCK_CONVERT, N_("Export _Transactions to CSV..."), NULL,
-        N_("Export the Transactions to a CSV file"),
-        G_CALLBACK (gnc_plugin_csv_export_trans_cmd)
+        "CsvExportTransAction", gnc_plugin_csv_export_trans_cmd
     },
     {
-        "CsvExportRegisterAction", GTK_STOCK_CONVERT, N_("Export _Active Register to CSV..."), NULL,
-        N_("Export the Active Register to a CSV file"),
-        G_CALLBACK (gnc_plugin_csv_export_register_cmd)
+        "CsvExportRegisterAction", gnc_plugin_csv_export_register_cmd
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
@@ -155,36 +149,42 @@ gnc_plugin_csv_export_finalize (GObject *object)
  *                    Command Callbacks                     *
  ************************************************************/
 static void
-gnc_plugin_csv_export_tree_cmd (GtkAction *action,
-                                GncMainWindowActionData *data)
+gnc_plugin_csv_export_tree_cmd (GSimpleAction *action,
+                                GVariant      *parameter,
+                                gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     gnc_file_csv_export(XML_EXPORT_TREE);
 }
 
 static void
-gnc_plugin_csv_export_trans_cmd (GtkAction *action,
-                                 GncMainWindowActionData *data)
+gnc_plugin_csv_export_trans_cmd (GSimpleAction *action,
+                                 GVariant      *parameter,
+                                 gpointer       user_data)
 {
     gnc_file_csv_export(XML_EXPORT_TRANS);
 }
 
 static void
-gnc_plugin_csv_export_register_cmd (GtkAction *action,
-                                 GncMainWindowActionData *data)
+gnc_plugin_csv_export_register_cmd (GSimpleAction *action,
+                                    GVariant      *parameter,
+                                    gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Query   *query;
     GList   *splits;
     Account *acc;
 
     GncPluginPage *page = gnc_main_window_get_current_page (data->window);
 
+#ifndef WITH_REGISTER2
     if (GNC_IS_PLUGIN_PAGE_REGISTER(page))
     {
         query = gnc_plugin_page_register_get_query (page);
         acc = gnc_plugin_page_register_get_account (GNC_PLUGIN_PAGE_REGISTER(page));
         gnc_file_csv_export_register (XML_EXPORT_REGISTER, query, acc);
     }
-
+#else
 /*################## Added for Reg2 #################*/
     if (GNC_IS_PLUGIN_PAGE_REGISTER2(page))
     {
@@ -193,6 +193,7 @@ gnc_plugin_csv_export_register_cmd (GtkAction *action,
         gnc_file_csv_export_register (XML_EXPORT_REGISTER, query, acc);
     }
 /*################## Added for Reg2 #################*/
+#endif
 }
 
 /************************************************************

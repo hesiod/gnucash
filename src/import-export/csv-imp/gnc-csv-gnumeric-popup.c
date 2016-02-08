@@ -195,9 +195,12 @@ gnumeric_popup_menu (GtkMenu *menu, GdkEventButton *event)
 
     g_object_ref_sink (menu);
 
+    // FIXME Is this relevant for Gtk+ 3?
+#if 0
     if (event)
         gtk_menu_set_screen (menu,
                              gdk_drawable_get_screen (event->window));
+#endif
 
     g_signal_connect (G_OBJECT (menu),
                       "hide",

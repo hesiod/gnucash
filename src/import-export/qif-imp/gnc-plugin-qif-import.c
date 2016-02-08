@@ -36,17 +36,15 @@ static void gnc_plugin_qif_import_init (GncPluginQifImport *plugin);
 static void gnc_plugin_qif_import_finalize (GObject *object);
 
 /* Command callbacks */
-static void gnc_plugin_qif_import_cmd_new_qif_import (GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_qif_import_cmd_new_qif_import (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-qif-import-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-qif-import-ui.xml"
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "QIFImportAction", GTK_STOCK_CONVERT, N_("Import _QIF..."), NULL,
-        N_("Import a Quicken QIF file"),
-        G_CALLBACK (gnc_plugin_qif_import_cmd_new_qif_import)
+        "QIFImportAction", gnc_plugin_qif_import_cmd_new_qif_import
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
@@ -139,8 +137,9 @@ gnc_plugin_qif_import_finalize (GObject *object)
  ************************************************************/
 
 static void
-gnc_plugin_qif_import_cmd_new_qif_import (GtkAction *action,
-        GncMainWindowActionData *data)
+gnc_plugin_qif_import_cmd_new_qif_import (GSimpleAction *action,
+                                          GVariant      *parameter,
+                                          gpointer       user_data)
 {
     gnc_file_qif_import();
 }

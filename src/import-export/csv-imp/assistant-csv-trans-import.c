@@ -1317,7 +1317,7 @@ select_column (CsvImportTrans* info, int col)
         return;
 
     column = gtk_tree_view_get_column (info->treeview, col);
-    gtk_widget_grab_focus (column->button);
+    gtk_widget_grab_focus (gtk_tree_view_column_get_button (column));
 }
 
 static gboolean
@@ -1930,6 +1930,7 @@ static void gnc_csv_preview_update_assist (CsvImportTrans* info)
     for (i = 0; i < ncols ; i++)
     {
         GtkTreeViewColumn* col; /* The column we add to info->treeview. */
+        GtkWidget* button;
         /* Create renderers for the data treeview (renderer) and the
          * column type treeview (crenderer). */
         GtkCellRenderer* renderer = gtk_cell_renderer_text_new(),
@@ -1962,9 +1963,10 @@ static void gnc_csv_preview_update_assist (CsvImportTrans* info)
         /* We need to allow clicking on the column headers for fixed-width
          * column splitting and merging. */
         g_object_set (G_OBJECT(col), "clickable", TRUE, NULL);
-        g_signal_connect (G_OBJECT(col->button), "button_press_event",
+        button = gtk_tree_view_column_get_button (col);
+        g_signal_connect (G_OBJECT(button), "button_press_event",
                          G_CALLBACK(header_button_press_handler), (gpointer)info);
-        info->treeview_buttons[i] = col->button;
+        info->treeview_buttons[i] = button;
     }
 
     /* Set the treeviews to use the models. */

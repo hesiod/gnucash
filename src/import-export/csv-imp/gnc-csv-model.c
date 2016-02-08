@@ -505,10 +505,11 @@ int gnc_csv_load_file (GncCsvParseData* parse_data, const char* filename,
     parse_data->raw_str.end = parse_data->raw_str.begin + g_mapped_file_get_length (parse_data->raw_mapping);
 
     /* Make a guess at the encoding of the data. */
+    // FIXME Is this call right for libgoffice-0.10?
     if (!g_mapped_file_get_length (parse_data->raw_mapping) == 0)
         guess_enc = go_guess_encoding ((const char*)(parse_data->raw_str.begin),
                                       (size_t)(parse_data->raw_str.end - parse_data->raw_str.begin),
-                                      "UTF-8", NULL);
+                                      "UTF-8", NULL, NULL);
     if (guess_enc == NULL)
     {
         g_set_error (error, GNC_CSV_IMP_ERROR, GNC_CSV_IMP_ERROR_ENCODING, "%s", _("Unknown encoding."));

@@ -69,19 +69,19 @@ static void gnc_plugin_ab_account_selected(GncPluginPage *plugin_page, Account *
 static Account *main_window_to_account(GncMainWindow *window);
 
 /* Command callbacks */
-static void gnc_plugin_ab_cmd_setup(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_get_balance(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_get_transactions(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_issue_transaction(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_issue_sepatransaction(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_issue_inttransaction(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_issue_direct_debit(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_issue_sepa_direct_debit(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_view_logwindow(GtkToggleAction *action, GncMainWindow *window);
-static void gnc_plugin_ab_cmd_mt940_import(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_mt942_import(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_dtaus_import(GtkAction *action, GncMainWindowActionData *data);
-static void gnc_plugin_ab_cmd_dtaus_importsend(GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_ab_cmd_setup(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_get_balance(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_get_transactions(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_issue_transaction(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_issue_sepatransaction(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_issue_inttransaction(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_issue_direct_debit(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_issue_sepa_direct_debit(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_view_logwindow(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_mt940_import(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_mt942_import(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_dtaus_import(GSimpleAction *action, GVariant *parameter, gpointer data);
+static void gnc_plugin_ab_cmd_dtaus_importsend(GSimpleAction *action, GVariant *parameter, gpointer data);
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-aqbanking-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-aqbanking-ui.xml"
@@ -457,8 +457,11 @@ gnc_plugin_aqbanking_set_logwindow_visible(gboolean logwindow_visible)
  ************************************************************/
 
 static void
-gnc_plugin_ab_cmd_setup(GtkAction *action, GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_setup(GSimpleAction *action,
+                        GVariant      *parameter,
+                        gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     ENTER("action %p, main window data %p", action, data);
     gnc_main_window = data->window;
     gnc_ab_initial_assistant();
@@ -466,8 +469,11 @@ gnc_plugin_ab_cmd_setup(GtkAction *action, GncMainWindowActionData *data)
 }
 
 static void
-gnc_plugin_ab_cmd_get_balance(GtkAction *action, GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_get_balance(GSimpleAction *action,
+                              GVariant      *parameter,
+                              gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -486,9 +492,11 @@ gnc_plugin_ab_cmd_get_balance(GtkAction *action, GncMainWindowActionData *data)
 }
 
 static void
-gnc_plugin_ab_cmd_get_transactions(GtkAction *action,
-                                   GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_get_transactions(GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -507,9 +515,11 @@ gnc_plugin_ab_cmd_get_transactions(GtkAction *action,
 }
 
 static void
-gnc_plugin_ab_cmd_issue_transaction(GtkAction *action,
-                                    GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_issue_transaction(GSimpleAction *action,
+                                    GVariant      *parameter,
+                                    gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -528,9 +538,11 @@ gnc_plugin_ab_cmd_issue_transaction(GtkAction *action,
 }
 
 static void
-gnc_plugin_ab_cmd_issue_sepatransaction(GtkAction *action,
-                                    GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_issue_sepatransaction(GSimpleAction *action,
+                                        GVariant      *parameter,
+                                        gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -549,9 +561,11 @@ gnc_plugin_ab_cmd_issue_sepatransaction(GtkAction *action,
 }
 
 static void
-gnc_plugin_ab_cmd_issue_inttransaction(GtkAction *action,
-                                       GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_issue_inttransaction(GSimpleAction *action,
+                                       GVariant      *parameter,
+                                       gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -571,9 +585,11 @@ gnc_plugin_ab_cmd_issue_inttransaction(GtkAction *action,
 }
 
 static void
-gnc_plugin_ab_cmd_issue_direct_debit(GtkAction *action,
-                                     GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_issue_direct_debit(GSimpleAction *action,
+                                     GVariant      *parameter,
+                                     gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -592,9 +608,11 @@ gnc_plugin_ab_cmd_issue_direct_debit(GtkAction *action,
 }
 
 static void
-gnc_plugin_ab_cmd_issue_sepa_direct_debit(GtkAction *action,
-                                          GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_issue_sepa_direct_debit(GSimpleAction *action,
+                                          GVariant      *parameter,
+                                          gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     Account *account;
 
     ENTER("action %p, main window data %p", action, data);
@@ -613,14 +631,16 @@ gnc_plugin_ab_cmd_issue_sepa_direct_debit(GtkAction *action,
 }
 
 static void
-gnc_plugin_ab_cmd_view_logwindow(GtkToggleAction *action, GncMainWindow *window)
+gnc_plugin_ab_cmd_view_logwindow(GSimpleAction *action,
+                                 GVariant      *parameter,
+                                 gpointer       user_data)
 {
-    if (gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action)))
+    if (g_action_get_enabled(G_ACTION(action)))
     {
         if (!gnc_GWEN_Gui_show_dialog())
         {
             /* Log window could not be made visible */
-            gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(action), FALSE);
+            g_simple_action_set_enabled(action, FALSE);
         }
     }
     else
@@ -631,8 +651,11 @@ gnc_plugin_ab_cmd_view_logwindow(GtkToggleAction *action, GncMainWindow *window)
 
 
 static void
-gnc_plugin_ab_cmd_mt940_import(GtkAction *action, GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_mt940_import(GSimpleAction *action,
+                               GVariant      *parameter,
+                               gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     gchar *format = gnc_prefs_get_string(GNC_PREFS_GROUP_AQBANKING,
                                          GNC_PREF_FORMAT_SWIFT940);
     gnc_main_window = data->window;
@@ -641,8 +664,11 @@ gnc_plugin_ab_cmd_mt940_import(GtkAction *action, GncMainWindowActionData *data)
 }
 
 static void
-gnc_plugin_ab_cmd_mt942_import(GtkAction *action, GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_mt942_import(GSimpleAction *action,
+                               GVariant      *parameter,
+                               gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     gchar *format = gnc_prefs_get_string(GNC_PREFS_GROUP_AQBANKING,
                                          GNC_PREF_FORMAT_SWIFT942);
     gnc_main_window = data->window;
@@ -651,8 +677,11 @@ gnc_plugin_ab_cmd_mt942_import(GtkAction *action, GncMainWindowActionData *data)
 }
 
 static void
-gnc_plugin_ab_cmd_dtaus_import(GtkAction *action, GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_dtaus_import(GSimpleAction *action,
+                               GVariant      *parameter,
+                               gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     gchar *format = gnc_prefs_get_string(GNC_PREFS_GROUP_AQBANKING,
                                          GNC_PREF_FORMAT_DTAUS);
     gnc_main_window = data->window;
@@ -661,9 +690,11 @@ gnc_plugin_ab_cmd_dtaus_import(GtkAction *action, GncMainWindowActionData *data)
 }
 
 static void
-gnc_plugin_ab_cmd_dtaus_importsend(GtkAction *action,
-                                   GncMainWindowActionData *data)
+gnc_plugin_ab_cmd_dtaus_importsend(GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       user_data)
 {
+    GncMainWindowActionData *data = (GncMainWindowActionData *)user_data;
     gchar *format = gnc_prefs_get_string(GNC_PREFS_GROUP_AQBANKING,
                                          GNC_PREF_FORMAT_DTAUS);
     gnc_main_window = data->window;

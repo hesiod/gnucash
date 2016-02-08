@@ -36,18 +36,16 @@ static void gnc_plugin_log_replay_init (GncPluginLogreplay *plugin);
 static void gnc_plugin_log_replay_finalize (GObject *object);
 
 /* Command callbacks */
-static void gnc_plugin_log_replay_cmd_new_log_replay (GtkAction *action, GncMainWindowActionData *data);
+static void gnc_plugin_log_replay_cmd_new_log_replay (GSimpleAction *action, GVariant *parameter, gpointer user_data);
 
 
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-log-replay-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-log-replay-ui.xml"
 
-static GtkActionEntry gnc_plugin_actions [] =
+static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "LogReplayAction", GTK_STOCK_CONVERT, N_("_Replay GnuCash .log file..."), NULL,
-        N_("Replay a GnuCash log file after a crash. This cannot be undone."),
-        G_CALLBACK (gnc_plugin_log_replay_cmd_new_log_replay)
+        "LogReplayAction", gnc_plugin_log_replay_cmd_new_log_replay
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
@@ -140,8 +138,9 @@ gnc_plugin_log_replay_finalize (GObject *object)
  ************************************************************/
 
 static void
-gnc_plugin_log_replay_cmd_new_log_replay (GtkAction *action,
-        GncMainWindowActionData *data)
+gnc_plugin_log_replay_cmd_new_log_replay (GSimpleAction *action,
+                                          GVariant      *parameter,
+                                          gpointer       user_data)
 {
     gnc_suspend_gui_refresh();
     gnc_file_log_replay ();
