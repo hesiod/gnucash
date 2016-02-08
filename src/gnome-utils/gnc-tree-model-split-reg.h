@@ -85,12 +85,10 @@ typedef enum
 
 
 /** Register styles */
-typedef enum
-{
-    REG2_STYLE_LEDGER,      //0
-    REG2_STYLE_AUTO_LEDGER, //1
-    REG2_STYLE_JOURNAL      //2
-} SplitRegisterStyle2;
+typedef const char* SplitRegisterStyle2;
+#define REG2_STYLE_LEDGER       ((const char*)"basic")
+#define REG2_STYLE_AUTO_LEDGER  ((const char*)"auto")
+#define REG2_STYLE_JOURNAL      ((const char*)"journal")
 
 
 typedef enum

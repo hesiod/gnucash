@@ -21,6 +21,7 @@
  * Boston, MA  02110-1301,  USA       gnu@gnu.org                   *
 \********************************************************************/
 
+#ifndef WITH_REGISTER2
 #ifndef WINDOW_RECONCILE_H
 #define WINDOW_RECONCILE_H
 
@@ -66,3 +67,4 @@ RecnWindow *recnWindowWithBalance (GtkWidget *parent,
 void gnc_ui_reconcile_window_raise(RecnWindow * recnData);
 
 #endif /* WINDOW_RECONCILE_H */
+#endif /* WITH_REGISTER2 */

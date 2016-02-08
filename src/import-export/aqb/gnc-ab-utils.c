@@ -34,6 +34,7 @@
 #include <aqbanking/banking.h>
 
 #include "window-reconcile.h"
+#include "window-reconcile2.h"
 #include "Transaction.h"
 #include "dialog-ab-trans.h"
 #include "gnc-ab-kvp.h"
@@ -1000,7 +1001,11 @@ bal_accountinfo_cb(AB_IMEXPORTER_ACCOUNTINFO *element, gpointer user_data)
 
     /* Show reconciliation window */
     if (show_recn_window)
+#ifndef WITH_REGISTER2
         recnWindowWithBalance(data->parent, gnc_acc, value, booked_tt);
+#else
+        recnWindow2WithBalance(data->parent, gnc_acc, value, booked_tt);
+#endif
 
     return NULL;
 }

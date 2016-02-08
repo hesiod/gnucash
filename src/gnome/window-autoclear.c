@@ -26,6 +26,7 @@
 #include <glib/gi18n.h>
 
 #include "Scrub.h"
+#include "Split.h"
 #include "dialog-account.h"
 #include "dialog-transfer.h"
 #include "dialog-utils.h"

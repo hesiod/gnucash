@@ -64,6 +64,7 @@
 #include "gnc-ui-util.h"
 #include "dialog-lot-viewer.h"
 #include "window-reconcile.h"
+#include "window-reconcile2.h"
 #include "window-autoclear.h"
 #include "window-main-summarybar.h"
 #include "dialog-object-references.h"
@@ -1470,14 +1471,23 @@ gnc_plugin_page_account_tree_cmd_reconcile (GSimpleAction *action,
     GncPluginPageAccountTree *page = (GncPluginPageAccountTree *)user_data;
     GtkWidget *window;
     Account *account;
+#ifndef WITH_REGISTER2
     RecnWindow *recnData;
+#else
+    RecnWindow2 *recnData;
+#endif
 
     account = gnc_plugin_page_account_tree_get_current_account (page);
     g_return_if_fail (account != NULL);
 
     window = GNC_PLUGIN_PAGE (page)->window;
+#ifndef WITH_REGISTER2
     recnData = recnWindow (window, account);
     gnc_ui_reconcile_window_raise (recnData);
+#else
+    recnData = recnWindow2 (window, account);
+    gnc_ui_reconcile_window2_raise (recnData);
+#endif
 }
 
 static void

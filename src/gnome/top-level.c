@@ -33,7 +33,6 @@
 #include "dialog-account.h"
 #include "dialog-commodity.h"
 #include "dialog-options.h"
-#include "dialog-sx-editor.h"
 #include "dialog-transfer.h"
 #include "dialog-totd.h"
 #include "assistant-hierarchy.h"
@@ -48,12 +47,16 @@
 #include "gnc-plugin-menu-additions.h" /* FIXME Remove this line*/
 #include "gnc-plugin-account-tree.h" /* FIXME Remove this line*/
 #include "gnc-plugin-basic-commands.h" /* FIXME Remove this line*/
-#include "gnc-plugin-file-history.h" /* FIXME Remove this line*/
+#ifndef WITH_REGISTER2
 #include "gnc-plugin-register.h" /* FIXME Remove this line*/
-#include "gnc-plugin-register2.h" /* FIXME Remove this line*/
-#include "gnc-plugin-budget.h"
 #include "gnc-plugin-page-register.h"
+#include "dialog-sx-editor.h"
+#else
+#include "gnc-plugin-register2.h" /* FIXME Remove this line*/
 #include "gnc-plugin-page-register2.h"
+#include "dialog-sx-editor2.h"
+#endif
+#include "gnc-plugin-budget.h"
 #include "gnc-plugin-manager.h" /* FIXME Remove this line*/
 #include "gnc-html.h"
 #include "gnc-gnome-utils.h"
@@ -62,7 +65,6 @@
 #include "gnc-state.h"
 #include "gnc-ui.h"
 #include "gnc-ui-util.h"
-#include "gnucash-color.h"
 #include "gnucash-sheet.h"
 #include "gnucash-style.h"
 #include "guile-util.h"
@@ -109,7 +111,11 @@ gnc_html_register_url_cb (const char *location, const char *label,
                           gboolean new_window, GNCURLResult *result)
 {
     GncPluginPage *page = NULL;
+#ifndef WITH_REGISTER2
     GNCSplitReg * gsr   = NULL;
+#else
+    GNCSplitReg2 * gsr  = NULL;
+#endif
     Split       * split = NULL;
     Account     * account = NULL;
     Transaction * trans;
@@ -175,12 +181,21 @@ gnc_html_register_url_cb (const char *location, const char *label,
         return FALSE;
     }
 
+#ifndef WITH_REGISTER2
     page = gnc_plugin_page_register_new (account, FALSE);
+#else
+    page = gnc_plugin_page_register2_new (account, FALSE);
+#endif
     gnc_main_window_open_page (NULL, page);
     if (split)
     {
+#ifndef WITH_REGISTER2
         gsr = gnc_plugin_page_register_get_gsr(page);
         gnc_split_reg_jump_to_split( gsr, split );
+#else
+        gsr = gnc_plugin_page_register2_get_gsr(page);
+        gnc_split_reg2_jump_to_split( gsr, split );
+#endif
     }
 
     return TRUE;
@@ -362,9 +377,10 @@ gnc_main_gui_init (void)
 {
     ENTER(" ");
 
+#ifndef WITH_REGISTER2
     if (!gnucash_style_init())
         gnc_shutdown(1);
-    gnucash_color_init();
+#endif
 
     gnc_html_register_url_handler (URL_TYPE_REGISTER,
                                    gnc_html_register_url_cb);
@@ -372,7 +388,11 @@ gnc_main_gui_init (void)
     gnc_html_register_url_handler (URL_TYPE_PRICE,
                                    gnc_html_price_url_cb);
 
+#ifndef WITH_REGISTER2
     gnc_ui_sx_initialize();
+#else
+    gnc_ui_sx_initialize2();
+#endif
 
     /* FIXME Remove this test code */
     gnc_plugin_manager_add_plugin (
@@ -380,13 +400,14 @@ gnc_main_gui_init (void)
     gnc_plugin_manager_add_plugin (
         gnc_plugin_manager_get (), gnc_plugin_basic_commands_new ());
     gnc_plugin_manager_add_plugin (
-        gnc_plugin_manager_get (), gnc_plugin_file_history_new ());
-    gnc_plugin_manager_add_plugin (
         gnc_plugin_manager_get (), gnc_plugin_menu_additions_new ());
+#ifndef WITH_REGISTER2
     gnc_plugin_manager_add_plugin (
         gnc_plugin_manager_get (), gnc_plugin_register_new ());
+#else
     gnc_plugin_manager_add_plugin (
         gnc_plugin_manager_get (), gnc_plugin_register2_new ());
+#endif
     /* I'm not sure why the FIXME note says to remove this.  Maybe
        each module should be adding its own plugin to the manager?
        Anyway... Oh, maybe... nah */
