@@ -82,7 +82,7 @@ ADD_LIBRARY	(gncmod-app-utils
 )
 
 TARGET_LINK_LIBRARIES(gncmod-app-utils gncmod-engine gnc-module 
-  ${GTK2_LDFLAGS} ${LIBXML2_LDFLAGS} ${LIBXSLT_LDFLAGS}
+  ${GTK3_LDFLAGS} ${LIBXML2_LDFLAGS} ${LIBXSLT_LDFLAGS}
 )
 
 IF (WIN32) 
