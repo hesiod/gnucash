@@ -313,6 +313,9 @@ gnc_plugin_update_actions (GActionGroup *action_group,
     GValue        gvalue = { 0 };
     gint          i;
 
+    g_return_if_fail (action_group != NULL);
+    g_return_if_fail (G_IS_ACTION_GROUP(action_group));
+
     g_value_init (&gvalue, G_TYPE_BOOLEAN);
     g_value_set_boolean (&gvalue, value);
 

@@ -1710,6 +1710,8 @@ gnc_main_window_update_one_menu_action (GncMainWindow *window,
     ENTER("window %p, action %s, label %s, visible %d", window,
           data->action_name, data->label, data->visible);
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
+    g_return_if_fail(priv->action_group != NULL);
+    g_return_if_fail(data->action_name != NULL);
     action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group), data->action_name);
     if (action)
         g_object_set(G_OBJECT(action),
@@ -1751,7 +1753,8 @@ gnc_main_window_update_radio_button (GncMainWindow *window)
     }
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    action_name = g_strdup_printf("Window%dAction", index);
+    action_name = g_strdup_printf("window.open.%d", index);
+    g_return_if_fail(priv->action_group != NULL);
     action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group), action_name);
 
     // FIXME Why do we need this?
@@ -3117,8 +3120,13 @@ gnc_main_window_unmerge_actions (GncMainWindow *window,
 GAction *
 gnc_main_window_find_action (GncMainWindow *window, const gchar *name)
 {
-    return g_action_map_lookup_action (
-           G_ACTION_MAP(g_application_get_default()), name);
+    GActionMap *action_map;
+
+    g_return_val_if_fail (name != NULL, NULL);
+    action_map = G_ACTION_MAP(g_application_get_default());
+    g_return_val_if_fail (action_map != NULL, NULL);
+
+    return g_action_map_lookup_action (action_map, name);
 }
 
 static void
@@ -3225,9 +3233,17 @@ gnc_main_window_init_menu_updaters (GncMainWindow *window)
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     children = gtk_container_get_children(GTK_CONTAINER(priv->menu));
+    g_return_if_fail(children != NULL);
+
     elem = g_list_find(children, "menubar-edit");
+    g_return_if_fail(elem != NULL);
+
     edit_menu_item = GTK_WIDGET(elem->data);
+    g_return_if_fail(GTK_IS_WIDGET(edit_menu_item));
+
     edit_menu = gtk_menu_item_get_submenu (GTK_MENU_ITEM(edit_menu_item));
+    g_return_if_fail(edit_menu != NULL);
+    g_return_if_fail(GTK_IS_MENU(edit_menu));
 
     g_signal_connect (edit_menu, "draw",
                       G_CALLBACK(gnc_main_window_edit_menu_draw_cb), window);
@@ -3241,7 +3257,7 @@ gnc_main_window_init_menu_updaters (GncMainWindow *window)
 typedef struct _ActionStatus ActionStatus;
 struct _ActionStatus
 {
-    GAction *action;
+    GSimpleAction *action;
     GtkWidget *statusbar;
 };
 
@@ -3250,8 +3266,8 @@ action_status_destroy (gpointer data)
 {
     ActionStatus *action_status = data;
 
-    g_object_unref (action_status->action);
-    g_object_unref (action_status->statusbar);
+    g_object_unref (G_OBJECT(action_status->action));
+    g_object_unref (G_OBJECT(action_status->statusbar));
 
     g_free (action_status);
 }
@@ -3288,7 +3304,7 @@ unset_tip (GtkWidget *widget)
 
 static void
 connect_proxy (GtkBuilder *merge,
-               GAction    *action,
+               GSimpleAction    *action,
                GtkWidget    *proxy,
                GtkWidget    *statusbar)
 {
@@ -3299,18 +3315,18 @@ connect_proxy (GtkBuilder *merge,
         data = g_object_get_data (G_OBJECT (proxy), "action-status");
         if (data)
         {
-            g_object_unref (data->action);
-            g_object_unref (data->statusbar);
+            g_object_unref (G_OBJECT(data->action));
+            g_object_unref (G_OBJECT(data->statusbar));
 
-            data->action = g_object_ref (action);
-            data->statusbar = g_object_ref (statusbar);
+            data->action = g_object_ref (G_OBJECT(action));
+            data->statusbar = g_object_ref (G_OBJECT(statusbar));
         }
         else
         {
             data = g_new0 (ActionStatus, 1);
 
-            data->action = g_object_ref (action);
-            data->statusbar = g_object_ref (statusbar);
+            data->action = g_object_ref (G_OBJECT(action));
+            data->statusbar = g_object_ref (G_OBJECT(statusbar));
 
             g_object_set_data_full (G_OBJECT (proxy), "action-status",
                                     data, action_status_destroy);
@@ -3331,16 +3347,17 @@ gnc_main_window_window_menu (GncMainWindow *window)
     gchar *filename = gnc_filepath_locate_ui_file("gnc-windows-menu-ui.xml");
     GncMainWindowPrivate *priv;
     GError *error = NULL;
+
     g_assert(filename);
     merge_id = egg_menu_manager_add_filename (window->ui_merge,
                                               filename, &error);
     g_free(filename);
-    g_assert(merge_id);
+    g_assert(merge_id != 0);
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
-                                        gnc_menu_actions, gnc_menu_n_actions,
-                                        window);
+                                     gnc_menu_actions, gnc_menu_n_actions,
+                                     window);
 
 };
 
@@ -3403,7 +3420,7 @@ gnc_main_window_setup_window (GncMainWindow *window)
 
     /* Create menu and toolbar information */
     priv->action_group = G_ACTION_GROUP(g_application_get_default ());
-    g_action_map_add_action_entries (G_ACTION_MAP(g_application_get_default ()),
+    g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
                                      gnc_menu_actions,
                                      gnc_menu_n_actions, window);
     gnc_plugin_update_actions(priv->action_group,
@@ -3439,6 +3456,8 @@ gnc_main_window_setup_window (GncMainWindow *window)
     // FIXME GTK+3 migration
     //gtk_window_add_accel_group (GTK_WINDOW (window),
     //                            gtk_builder_get_accel_group(window->ui_merge));
+
+    // gtk_application_prefers_app_menu ()
 
     menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(window->ui_merge, "menubar"));
     priv->menu = gtk_menu_new_from_model (menu_model);
@@ -4300,7 +4319,7 @@ gnc_main_window_get_progressbar (GncWindow *window_in)
 static void
 gnc_main_window_all_ui_set_sensitive (GncWindow *unused, gboolean sensitive)
 {
-     abort();
+    // FIXME Migrate this to Gtk+ 3
 #if 0
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
