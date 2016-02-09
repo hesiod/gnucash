@@ -224,7 +224,7 @@ gnc_plugin_aqbanking_add_to_window(GncPlugin *plugin, GncMainWindow *window,
 
     action = G_SIMPLE_ACTION(gnc_main_window_find_action(window,
                                 MENU_TOGGLE_ACTION_AB_VIEW_LOGWINDOW));
-
+    g_return_if_fail(action != NULL);
     g_simple_action_set_enabled (action, FALSE);
 }
 
