@@ -27,7 +27,6 @@
             <attribute name="label" translatable="yes">Export</attribute>
             <section id="menubar-file-export-section"></section>
           </submenu>
-          </item>
         </section>
         <section id="menubar-file-properties-section">
           <item>
@@ -120,7 +119,7 @@
         <section id="menubar-budget-section"></section>
         <section id="menubar-actions-scrub-section">
           <submenu id="menubar-actions-scrub-submenu">
-            <attribute name="label" translatable="yes">Check & Repair</attribute>
+            <attribute name="label" translatable="yes">Check &amp; Repair</attribute>
           </submenu>
         </section>
         <section id="menubar-actions-tail-section">
@@ -151,6 +150,7 @@
       </submenu>
       <submenu id="menubar-windows">
         <attribute name="label" translatable="yes">Windows</attribute>
+        <section id="menubar-windows-header-section"></section>
         <section id="menubar-windows-section"></section>
       </submenu>
       <submenu id="menubar-help">
