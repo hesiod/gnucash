@@ -87,10 +87,6 @@ _br_find_exe (Gnc_GbrInitError *error)
                                (char*)NULL);
     g_free (prefix);
     return result;
-#elif defined MAC_INTEGRATION
-    gchar *path = gtkosx_application_get_executable_path();
-    g_print ("Application Path %s\n", path);
-    return path;
 #else
     char *path, *path2, *line, *result;
     size_t buf_size;
