@@ -1053,7 +1053,7 @@ static void gnc_plugin_business_add_to_window (GncPlugin *plugin,
 {
     bind_toolbuttons_visibility (mainwindow);
 
-    g_signal_connect(mainwindow, "page_changed",
+    g_signal_connect(mainwindow, "page-changed",
                      G_CALLBACK(gnc_plugin_business_main_window_page_changed),
                      plugin);
 }

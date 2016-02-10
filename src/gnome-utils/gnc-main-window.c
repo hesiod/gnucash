@@ -2422,18 +2422,18 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
     g_type_class_add_private(klass, sizeof(GncMainWindowPrivate));
 
     /**
-     * GncMainWindow::page_added:
+     * GncMainWindow::page-added:
      * @param window: the #GncMainWindow
      * @param page: the #GncPluginPage
      *
-     * The "page_added" signal is emitted when a new page is added
+     * The "page-added" signal is emitted when a new page is added
      * to the notebook of a GncMainWindow.  This can be used to
      * attach a signal from the page so that menu actions can be
      * adjusted based upon events that occur within the page
      * (e.g. an account is selected.)
      */
     main_window_signals[PAGE_ADDED] =
-        g_signal_new ("page_added",
+        g_signal_new ("page-added",
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
                       G_STRUCT_OFFSET (GncMainWindowClass, page_added),
@@ -2443,17 +2443,17 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
                       G_TYPE_OBJECT);
 
     /**
-     * GncMainWindow::page_changed:
+     * GncMainWindow::page-changed:
      * @param window: the #GncMainWindow
      * @param page: the #GncPluginPage
      *
-     * The "page_changed" signal is emitted when a new page is
+     * The "page-changed" signal is emitted when a new page is
      * selected in the notebook of a GncMainWindow.  This can be
      * used to to adjust menu actions based upon which page is
      * currently displayed in a window.
      */
     main_window_signals[PAGE_CHANGED] =
-        g_signal_new ("page_changed",
+        g_signal_new ("page-changed",
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
                       G_STRUCT_OFFSET (GncMainWindowClass, page_changed),

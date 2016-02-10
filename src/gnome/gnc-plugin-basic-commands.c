@@ -288,7 +288,7 @@ gnc_plugin_basic_commands_add_to_window (GncPlugin *plugin,
         GncMainWindow *window,
         GQuark type)
 {
-    g_signal_connect(window, "page_changed",
+    g_signal_connect(window, "page-changed",
                      G_CALLBACK(gnc_plugin_basic_commands_main_window_page_changed),
                      plugin);
 }

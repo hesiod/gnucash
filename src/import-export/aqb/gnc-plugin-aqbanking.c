@@ -215,10 +215,10 @@ gnc_plugin_aqbanking_add_to_window(GncPlugin *plugin, GncMainWindow *window,
 
     gnc_main_window = window;
 
-    g_signal_connect(window, "page_added",
+    g_signal_connect(window, "page-added",
                      G_CALLBACK(gnc_plugin_ab_main_window_page_added),
                      plugin);
-    g_signal_connect(window, "page_changed",
+    g_signal_connect(window, "page-changed",
                      G_CALLBACK(gnc_plugin_ab_main_window_page_changed),
                      plugin);
 
