@@ -4084,7 +4084,6 @@ gnc_main_window_cmd_help_about (GSimpleAction *action,
 	gchar **documenters = get_file_strsplit("DOCUMENTERS");
 	gchar *license = get_file("LICENSE");
 	gchar *message;
-	GdkPixbuf *logo = gnc_gnome_get_gdkpixbuf ("gnucash-icon-48x48.png");
 
 #ifdef GNUCASH_SCM
     /* Development version */
@@ -4110,7 +4109,6 @@ gnc_main_window_cmd_help_about (GSimpleAction *action,
               "comments", message,
               "copyright", copyright,
               "license", license,
-              "logo", logo,
               "name", "GnuCash",
      /* Translators: the following string will be shown in Help->About->Credits
       * Enter your name or that of your team and an email contact for feedback.
@@ -4125,7 +4123,6 @@ gnc_main_window_cmd_help_about (GSimpleAction *action,
     if (license)     g_free(license);
     if (documenters) g_strfreev(documenters);
     if (authors)     g_strfreev(authors);
-    g_object_unref (logo);
     g_signal_connect (priv->about_dialog, "activate-link",
               G_CALLBACK(url_signal_cb), NULL);
     g_signal_connect (priv->about_dialog, "response",

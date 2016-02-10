@@ -286,70 +286,6 @@ gnc_launch_assoc (const char *uri)
 }
 #endif
 
-/********************************************************************\
- * gnc_gnome_get_pixmap                                             *
- *   returns a GtkWidget given a pixmap filename                    *
- *                                                                  *
- * Args: none                                                       *
- * Returns: GtkWidget or NULL if there was a problem                *
- \*******************************************************************/
-GtkWidget *
-gnc_gnome_get_pixmap (const char *name)
-{
-    GtkWidget *pixmap;
-    char *fullname;
-
-    g_return_val_if_fail (name != NULL, NULL);
-
-    fullname = gnc_filepath_locate_pixmap (name);
-    if (fullname == NULL)
-        return NULL;
-
-    DEBUG ("Loading pixmap file %s", fullname);
-
-    pixmap = gtk_image_new_from_file (fullname);
-    if (pixmap == NULL)
-    {
-        PERR ("Could not load pixmap");
-    }
-    g_free (fullname);
-
-    return pixmap;
-}
-
-/********************************************************************\
- * gnc_gnome_get_gdkpixbuf                                          *
- *   returns a GdkImlibImage object given a pixmap filename         *
- *                                                                  *
- * Args: none                                                       *
- * Returns: GdkPixbuf or NULL if there was a problem                *
- \*******************************************************************/
-GdkPixbuf *
-gnc_gnome_get_gdkpixbuf (const char *name)
-{
-    GdkPixbuf *pixbuf;
-    GError *error = NULL;
-    char *fullname;
-
-    g_return_val_if_fail (name != NULL, NULL);
-
-    fullname = gnc_filepath_locate_pixmap (name);
-    if (fullname == NULL)
-        return NULL;
-
-    DEBUG ("Loading pixbuf file %s", fullname);
-    pixbuf = gdk_pixbuf_new_from_file (fullname, &error);
-    if (error != NULL)
-    {
-        g_assert (pixbuf == NULL);
-        PERR ("Could not load pixbuf: %s", error->message);
-        g_error_free (error);
-    }
-    g_free (fullname);
-
-    return pixbuf;
-}
-
 static gboolean
 gnc_ui_check_events (gpointer not_used)
 {
@@ -435,46 +371,11 @@ gnc_gui_init(void)
     static GncMainWindow *main_window;
     gchar *map;
 
-    int idx;
-    char *icon_filenames[] = {"gnucash-icon-16x16.png",
-                              "gnucash-icon-32x32.png",
-                              "gnucash-icon-48x48.png",
-                              NULL
-                             };
-    GList *icons = NULL;
-    char *fullname;
-
     ENTER ("");
 
     if (gnome_is_initialized)
         return main_window;
 
-    /* use custom icon */
-    for (idx = 0; icon_filenames[idx] != NULL; idx++)
-    {
-        GdkPixbuf *buf = NULL;
-
-        fullname = gnc_filepath_locate_pixmap(icon_filenames[idx]);
-        if (fullname == NULL)
-        {
-            g_warning("couldn't find icon file [%s]", icon_filenames[idx]);
-            continue;
-        }
-
-        buf = gnc_gnome_get_gdkpixbuf(fullname);
-        if (buf == NULL)
-        {
-            g_warning("error loading image from [%s]", fullname);
-            g_free(fullname);
-            continue;
-        }
-        g_free(fullname);
-        icons = g_list_append(icons, buf);
-    }
-
-    gtk_window_set_default_icon_list(icons);
-    g_list_foreach(icons, (GFunc)g_object_unref, NULL);
-    g_list_free(icons);
 
     g_set_application_name(PACKAGE_NAME);
 

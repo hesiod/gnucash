@@ -53,7 +53,7 @@ button_press_cb(GtkWidget *widget, GdkEventButton *event, gpointer unused)
 void
 gnc_show_splash_screen (void)
 {
-    GtkWidget *pixmap;
+    GtkWidget *pixmap = NULL;
     GtkWidget *frame;
     GtkWidget *vbox;
     GtkWidget *hbox;
@@ -75,7 +75,7 @@ gnc_show_splash_screen (void)
     gtk_window_set_position (GTK_WINDOW (splash), GTK_WIN_POS_CENTER);
     gtk_window_set_type_hint (GTK_WINDOW (splash), GDK_WINDOW_TYPE_HINT_DIALOG);
 
-    pixmap = gnc_gnome_get_pixmap ("gnucash_splash.png");
+    //pixmap = gnc_gnome_get_pixmap ("gnucash_splash.png");
 
     if (!pixmap)
     {

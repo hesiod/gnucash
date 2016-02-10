@@ -65,30 +65,6 @@ void gnc_options_dialog_set_book_options_help_cb (GNCOptionWin *win);
  */
 void gnc_options_dialog_set_new_book_option_values (GNCOptionDB *odb);
 
-/** Given a file name, find and load the requested pixmap.  This
- *  routine will display an error message if it can't find the file or
- *  load the pixmap.
- *
- *  @param name The name of the pixmap file to load.
- *
- *  @return A pointer to the pixmap, or NULL of the file couldn't
- *  be found or loaded..
- */
-GtkWidget * gnc_gnome_get_pixmap (const char *name);
-
-
-/** Given a file name, find and load the requested pixbuf.  This
- *  routine will display an error message if it can't find the file or
- *  load the pixbuf.
- *
- *  @param name The name of the pixbuf file to load.
- *
- *  @return A pointer to the pixbuf, or NULL of the file couldn't
- *  be found or loaded..
- */
-GdkPixbuf * gnc_gnome_get_gdkpixbuf (const char *name);
-
-
 /** Shutdown gnucash.  This function will initiate an orderly
  *  shutdown, and when that has finished it will exit the program.
  *
