@@ -122,7 +122,6 @@ static guint secs_to_save = 0;
 
 /* Declarations *********************************************************/
 static void gnc_main_window_class_init (GncMainWindowClass *klass);
-static void gnc_main_window_init (GncMainWindow *window, GncMainWindowClass *klass);
 static void gnc_main_window_finalize (GObject *object);
 static void gnc_main_window_destroy (GtkWidget *object);
 
@@ -168,7 +167,9 @@ static gboolean gnc_main_window_popup_menu_cb (GtkWidget *widget, GncPluginPage 
 static GtkWidget *gnc_main_window_get_statusbar (GncWindow *window_in);
 static void statusbar_notification_lastmodified(void);
 
-
+struct _GncMainWindow {
+    GtkWidget * gtk_window;
+};
 
 /** The instance private data structure for an embedded window
  *  object. */
@@ -228,6 +229,9 @@ typedef struct GncMainWindowPrivate
 
 #define GNC_MAIN_WINDOW_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), GNC_TYPE_MAIN_WINDOW, GncMainWindowPrivate))
+
+G_DEFINE_TYPE_WITH_PRIVATE(GncMainWindow, gnc_main_window, GTK_TYPE_APPLICATION_WINDOW)
+
 
 /** This data structure maintains information about one action groups
  *  that has been installed in this window. */
@@ -2359,47 +2363,6 @@ gnc_main_window_tab_entry_key_press_event (GtkWidget *entry,
  *                   Widget Implementation                  *
  ************************************************************/
 
-/*  Get the type of a gnc main window.
- */
-GType
-gnc_main_window_get_type (void)
-{
-    static GType gnc_main_window_type = 0;
-
-    if (gnc_main_window_type == 0)
-    {
-        static const GTypeInfo our_info =
-        {
-            sizeof (GncMainWindowClass),
-            NULL,
-            NULL,
-            (GClassInitFunc) gnc_main_window_class_init,
-            NULL,
-            NULL,
-            sizeof (GncMainWindow),
-            0,
-            (GInstanceInitFunc) gnc_main_window_init
-        };
-
-        static const GInterfaceInfo plugin_info =
-        {
-            (GInterfaceInitFunc) gnc_window_main_window_init,
-            NULL,
-            NULL
-        };
-
-        gnc_main_window_type = g_type_register_static (GTK_TYPE_WINDOW,
-                               GNC_MAIN_WINDOW_NAME,
-                               &our_info, 0);
-        g_type_add_interface_static (gnc_main_window_type,
-                                     GNC_TYPE_WINDOW,
-                                     &plugin_info);
-    }
-
-    return gnc_main_window_type;
-}
-
-
 /** Initialize the class for a new gnucash main window.  This will set
  *  up any function pointers that override functions in the parent
  *  class, and also initialize the signals that this class of widget
@@ -2439,7 +2402,7 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
         g_signal_new ("page-added",
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
-                      G_STRUCT_OFFSET (GncMainWindowClass, page_added),
+                      G_STRUCT_OFFSET (struct _GncMainWindowClass, page_added),
                       NULL, NULL,
                       g_cclosure_marshal_VOID__OBJECT,
                       G_TYPE_NONE, 1,
@@ -2459,7 +2422,7 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
         g_signal_new ("page-changed",
                       G_OBJECT_CLASS_TYPE (object_class),
                       G_SIGNAL_RUN_FIRST,
-                      G_STRUCT_OFFSET (GncMainWindowClass, page_changed),
+                      G_STRUCT_OFFSET (struct _GncMainWindowClass, page_changed),
                       NULL, NULL,
                       g_cclosure_marshal_VOID__OBJECT,
                       G_TYPE_NONE, 1,
@@ -2491,8 +2454,7 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
  *  @param klass A pointer to the class data structure for this
  *  object. */
 static void
-gnc_main_window_init (GncMainWindow *window,
-                      GncMainWindowClass *klass)
+gnc_main_window_init (GncMainWindow *window)
 {
     GncMainWindowPrivate *priv;
 
@@ -2513,8 +2475,6 @@ gnc_main_window_init (GncMainWindow *window,
                            window);
 
     gnc_main_window_setup_window (window);
-    gnc_gobject_tracking_remember(G_OBJECT(window),
-                                  G_OBJECT_CLASS(klass));
 }
 
 

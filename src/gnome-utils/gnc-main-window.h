@@ -37,41 +37,27 @@
 #define __GNC_MAIN_WINDOW_H
 
 #include <gtk/gtk.h>
-#include "egg-menu-manager.h"
 #include "gnc-plugin-page.h"
-
-/* type macros */
-#define GNC_TYPE_MAIN_WINDOW            (gnc_main_window_get_type ())
-#define GNC_MAIN_WINDOW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GNC_TYPE_MAIN_WINDOW, GncMainWindow))
-#define GNC_MAIN_WINDOW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GNC_TYPE_MAIN_WINDOW, GncMainWindowClass))
-#define GNC_IS_MAIN_WINDOW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GNC_TYPE_MAIN_WINDOW))
-#define GNC_IS_MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GNC_TYPE_MAIN_WINDOW))
-#define GNC_MAIN_WINDOW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GNC_TYPE_MAIN_WINDOW, GncMainWindowClass))
 
 #define PLUGIN_PAGE_IMMUTABLE    "page-immutable"
 
-/* typedefs & structures */
+G_BEGIN_DECLS
 
-/** The instance data structure for a main window object. */
-typedef struct GncMainWindow
-{
-    GtkApplicationWindow gtk_window;	/**< The parent object for a main window. */
-    EggMenuManager *ui_merge; /**< A pointer to the UI Manager data
-                                   structure for the whole window. */
-} GncMainWindow;
+#define GNC_TYPE_MAIN_WINDOW gnc_main_window_get_type ()
+G_DECLARE_FINAL_TYPE (GncMainWindow, gnc_main_window, GNC, MAIN_WINDOW, GtkApplicationWindow)
 
-/** The class data structure for a main window object. */
-typedef struct
+struct _GncMainWindowClass
 {
-    GtkApplicationWindowClass gtk_window;	/**< The parent class for a
-                                           main window. */
+    GtkApplicationWindowClass parent_class;
 
     /* callbacks */
     void (*page_added)   (GncMainWindow *window,
                           GncPluginPage *page);
     void (*page_changed) (GncMainWindow *window,
                           GncPluginPage *page);
-} GncMainWindowClass;
+};
+
+/* typedefs & structures */
 
 typedef struct
 {
@@ -409,6 +395,8 @@ GtkWidget *gnc_book_options_dialog_cb (gboolean modal, gchar *title);
  *
  **/
 void gnc_book_options_dialog_apply_helper(GNCOptionDB * options);
+
+G_END_DECLS
 
 #endif /* __GNC_MAIN_WINDOW_H */
 
