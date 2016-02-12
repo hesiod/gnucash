@@ -28,7 +28,7 @@
 (use-modules (gnucash report report-system collectors))
 (use-modules (srfi srfi-1))
 (use-modules (gnucash main)) ;; FIXME: delete after we finish modularizing.
-(use-modules (ice-9 regex))
+(use-modules (ice-9 regex)) ;; Bug#726449: for regexp-substitute/global, used by jpqplot
 (use-modules (gnucash gnc-module))
 (use-modules (gnucash gettext))
 
@@ -36,8 +36,6 @@
 
 (gnc:module-load "gnucash/report/report-system" 0)
 
-;; included since Bug726449
-(use-modules (ice-9 regex)) ;; for regexp-substitute/global, used by jpqplot
 (load-from-path "html-jqplot") ;; for jqplot-escape-string
 
 ;; The option names are defined here to 1. save typing and 2. avoid
