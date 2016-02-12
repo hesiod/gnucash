@@ -735,11 +735,6 @@ RESTART:
         else
             displayname = g_strdup (newfile);
 
-        // Bug#467521: on Mac (and maybe Win?), the dialog will appear below the
-        // splash, but is modal, so we can't get rid of the splash...  So, get
-        // rid of it now.
-        gnc_destroy_splash_screen();
-
         dialog = gtk_message_dialog_new(NULL,
                                         0,
                                         GTK_MESSAGE_WARNING,
