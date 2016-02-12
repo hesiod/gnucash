@@ -451,7 +451,8 @@ ADD_SUBDIRECTORY(cmake)
 
 IF (GNC_BUILD_AS_INSTALL)
   SET_TARGET_PROPERTIES(gnc-qof gnc-core-utils gnc-module gnc-backend-sql gnc-backend-xml-utils
-	gnc-business-ledger gnc-gnome PROPERTIES
+	#gnc-business-ledger
+	gnc-gnome PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/lib
 	IF (XCODE_VERSION)
 	  LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${CMAKE_BINARY_DIR}/lib

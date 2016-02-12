@@ -14,8 +14,8 @@ IF (GNC_BUILD_AS_INSTALL)
   SET(CMAKE_COMMAND_TMP "")
   IF (${CMAKE_VERSION} VERSION_GREATER 3.1)
     SET(CMAKE_COMMAND_TMP ${CMAKE_COMMAND} -E env)
-  ENDIF()
-  SET(schema-targets aqb-gschema business-gnome-gschema csv-exp-gschema csv-imp-gschema
+  ENDIF() #business-gnome-gschema
+  SET(schema-targets aqb-gschema csv-exp-gschema csv-imp-gschema
       generic-import-gschema gnome-gschema gnome-utils-gschema ofx-gschema qif-imp-gschema)
 
   SET(SCHEMA_DIRECTORY ${DATADIR_BUILD}/glib-2.0/schemas)
