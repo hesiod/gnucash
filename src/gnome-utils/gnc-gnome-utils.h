@@ -68,6 +68,16 @@ void gnc_options_dialog_set_new_book_option_values (GNCOptionDB *odb);
 /** Initialize the gnucash gui */
 void gnc_gui_init(GncMainWindow *main_window);
 
+void load_system_config(void);
+
+void load_user_config(void);
+
+void gnc_log_init(const gchar *log_to_filename, const gchar **log_flags);
+
+void gnc_setup_locale(void);
+
+void load_gnucash_modules(void);
+
 void gnc_shutdown(int);
 
 #endif

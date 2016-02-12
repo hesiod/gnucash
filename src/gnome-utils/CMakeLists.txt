@@ -200,7 +200,7 @@ ADD_LIBRARY (gncmod-gnome-utils
   ${gnome_utils_noinst_HEADERS}
 )
 
-TARGET_LINK_LIBRARIES(gncmod-gnome-utils gncmod-app-utils gncmod-engine gnc-backend-xml-utils
+TARGET_LINK_LIBRARIES(gncmod-gnome-utils gncmod-app-utils gncmod-engine gnc-backend-xml-utils gncmod-report-system
 	 ${GTK3_LDFLAGS} ${GTK_MAC_LDFLAGS})
 
 TARGET_COMPILE_DEFINITIONS(gncmod-gnome-utils PUBLIC ${GTK_MAC_CFLAGS_OTHER}

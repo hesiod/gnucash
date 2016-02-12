@@ -24,20 +24,24 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
+
 #include <libxml/xmlIO.h>
+#include "gfec.h"
 
 #include "gnc-component-manager.h"
 #include "gnc-prefs-utils.h"
 #include "gnc-prefs.h"
 #include "gnc-gnome-utils.h"
-//#include "gnc-html.h"
 #include "gnc-engine.h"
+#include "gnc-environment.h"
 #include "gnc-path.h"
 #include "gnc-ui.h"
 #include "gnc-file.h"
 #include "gnc-hooks.h"
 #include "gnc-filepath-utils.h"
 #include "gnc-menu-extensions.h"
+#include "gnc-module.h"
+#include "gnc-report.h"
 #include "gnc-splash.h"
 #include "gnc-window.h"
 #include "dialog-options.h"
@@ -281,6 +285,234 @@ gnc_launch_assoc (const char *uri)
     g_error_free(error);
 }
 #endif
+
+static void
+update_message(const gchar *msg)
+{
+    gnc_update_splash_screen(msg, GNC_SPLASH_PERCENTAGE_UNKNOWN);
+    g_message("%s", msg);
+}
+
+void
+gnc_log_init(const gchar *log_to_filename, const gchar **log_flags)
+{
+    if (log_to_filename != NULL)
+    {
+        qof_log_init_filename_special(log_to_filename);
+    }
+    else
+    {
+        /* initialize logging to our file. */
+        gchar *tracefilename;
+        tracefilename = g_build_filename(g_get_tmp_dir(), "gnucash.trace",
+                                         (gchar *)NULL);
+        qof_log_init_filename(tracefilename);
+        g_free(tracefilename);
+    }
+
+    // set a reasonable default.
+    qof_log_set_default(QOF_LOG_WARNING);
+
+    gnc_log_default();
+
+    if (gnc_prefs_is_debugging_enabled())
+    {
+        qof_log_set_level("", QOF_LOG_INFO);
+        qof_log_set_level("qof", QOF_LOG_INFO);
+        qof_log_set_level("gnc", QOF_LOG_INFO);
+    }
+
+#if 0
+    {
+        gchar *log_config_filename;
+        log_config_filename = gnc_build_dotgnucash_path("log.conf");
+        if (g_file_test(log_config_filename, G_FILE_TEST_EXISTS))
+            qof_log_parse_log_config(log_config_filename);
+        g_free(log_config_filename);
+    }
+#endif
+
+    if (log_flags != NULL)
+    {
+        int i = 0;
+        for (; log_flags[i] != NULL; i++)
+        {
+            QofLogLevel level;
+            gchar **parts = NULL;
+
+            const gchar *log_opt = log_flags[i];
+            parts = g_strsplit(log_opt, "=", 2);
+            if (parts == NULL || parts[0] == NULL || parts[1] == NULL)
+            {
+                g_warning("string [%s] not parseable", log_opt);
+                continue;
+            }
+
+            level = qof_log_level_from_string(parts[1]);
+            qof_log_set_level(parts[0], level);
+            g_strfreev(parts);
+        }
+    }
+}
+
+static gboolean
+try_load_config_array(const gchar *fns[])
+{
+    gchar *filename;
+    int i;
+
+    for (i = 0; fns[i]; i++)
+    {
+        filename = gnc_build_dotgnucash_path(fns[i]);
+        if (gfec_try_load(filename))
+        {
+            g_free(filename);
+            return TRUE;
+        }
+        g_free(filename);
+    }
+    return FALSE;
+}
+
+void
+load_system_config(void)
+{
+    static int is_system_config_loaded = FALSE;
+    gchar *system_config_dir;
+    gchar *system_config;
+
+    if (is_system_config_loaded) return;
+
+    update_message("loading system configuration");
+    system_config_dir = gnc_path_get_pkgsysconfdir();
+    system_config = g_build_filename(system_config_dir, "config", NULL);
+    is_system_config_loaded = gfec_try_load(system_config);
+    g_free(system_config_dir);
+    g_free(system_config);
+}
+
+void
+load_user_config(void)
+{
+    /* Don't continue adding to this list. When 2.0 rolls around bump
+       the 1.4 (unnumbered) files off the list. */
+    static const gchar *user_config_files[] =
+    {
+        "config-2.0.user", "config-1.8.user", "config-1.6.user",
+        "config.user", NULL
+    };
+    static const gchar *auto_config_files[] =
+    {
+        "config-2.0.auto", "config-1.8.auto", "config-1.6.auto",
+        "config.auto", NULL
+    };
+    static const gchar *saved_report_files[] =
+    {
+        SAVED_REPORTS_FILE, SAVED_REPORTS_FILE_OLD_REV, NULL
+    };
+    static const gchar *stylesheet_files[] = { "stylesheets-2.0", NULL};
+    static int is_user_config_loaded = FALSE;
+
+    if (is_user_config_loaded)
+        return;
+    else is_user_config_loaded = TRUE;
+
+    update_message("loading user configuration");
+    try_load_config_array(user_config_files);
+    update_message("loading auto configuration");
+    try_load_config_array(auto_config_files);
+    update_message("loading saved reports");
+    try_load_config_array(saved_report_files);
+    update_message("loading stylesheets");
+    try_load_config_array(stylesheet_files);
+}
+
+void
+gnc_setup_locale (void)
+{
+    gchar *sys_locale = NULL;
+    gnc_environment_setup();
+    sys_locale = g_strdup (setlocale (LC_ALL, ""));
+    if (!sys_locale)
+    {
+        g_print ("The locale defined in the environment isn't supported. "
+                 "Falling back to the 'C' (US English) locale\n");
+        g_setenv ("LC_ALL", "C", TRUE);
+        setlocale (LC_ALL, "C");
+    }
+#ifdef HAVE_GETTEXT
+    {
+        gchar *localedir = gnc_path_get_localedir();
+        bindtextdomain(GETTEXT_PACKAGE, localedir);
+        textdomain(GETTEXT_PACKAGE);
+        bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+        g_free(localedir);
+    }
+#endif
+
+    /* Write some locale details to the log to simplify debugging */
+    PINFO ("System locale returned %s", sys_locale ? sys_locale : "(null)");
+    PINFO ("Effective locale set to %s.", setlocale (LC_ALL, ""));
+    g_free (sys_locale);
+}
+
+void
+load_gnucash_modules(void)
+{
+    int i, len;
+    struct
+    {
+        gchar * name;
+        int version;
+        gboolean optional;
+    } modules[] =
+    {
+        { "gnucash/app-utils", 0, FALSE },
+        { "gnucash/engine", 0, FALSE },
+        { "gnucash/register/ledger-core", 0, FALSE },
+        { "gnucash/register/register-core", 0, FALSE },
+        { "gnucash/register/register-gnome", 0, FALSE },
+        { "gnucash/import-export/qif-import", 0, FALSE },
+        { "gnucash/import-export/ofx", 0, TRUE },
+        { "gnucash/import-export/csv-import", 0, TRUE },
+        { "gnucash/import-export/csv-export", 0, TRUE },
+        { "gnucash/import-export/log-replay", 0, TRUE },
+        { "gnucash/import-export/aqbanking", 0, TRUE },
+        { "gnucash/report/report-system", 0, FALSE },
+        { "gnucash/report/stylesheets", 0, FALSE },
+        { "gnucash/report/standard-reports", 0, FALSE },
+        { "gnucash/report/utility-reports", 0, FALSE },
+        { "gnucash/report/locale-specific/us", 0, FALSE },
+        { "gnucash/report/report-gnome", 0, FALSE },
+        { "gnucash/business-gnome", 0, TRUE },
+        { "gnucash/gtkmm", 0, TRUE },
+        { "gnucash/python", 0, TRUE },
+        { "gnucash/plugins/bi_import", 0, TRUE},
+        { "gnucash/plugins/customer_import", 0, TRUE},
+    };
+
+    /* module initializations go here */
+    len = sizeof(modules) / sizeof(*modules);
+    for (i = 0; i < len; i++)
+    {
+        DEBUG("Loading module %s started", modules[i].name);
+        gnc_update_splash_screen(modules[i].name, GNC_SPLASH_PERCENTAGE_UNKNOWN);
+        if (modules[i].optional)
+            gnc_module_load_optional(modules[i].name, modules[i].version);
+        else
+            gnc_module_load(modules[i].name, modules[i].version);
+        DEBUG("Loading module %s finished", modules[i].name);
+    }
+    if (!gnc_engine_is_initialized())
+    {
+        /* On Windows this check used to fail anyway, see
+         * https://lists.gnucash.org/pipermail/gnucash-devel/2006-September/018529.html
+         * but more recently it seems to work as expected
+         * again. 2006-12-20, cstim. */
+        g_warning("GnuCash engine failed to initialize.  Exiting.\n");
+        exit(1);
+    }
+}
 
 void
 gnc_gui_init(GncMainWindow *main_window)
