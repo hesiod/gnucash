@@ -70,7 +70,6 @@ static QofLogModule log_module = GNC_MOD_GUI;
 static int is_development_version = TRUE;
 #else
 static int is_development_version = FALSE;
-#define GNUCASH_SCM ""
 #endif
 
 struct _GncApplication {
@@ -309,31 +308,27 @@ gnc_application_handle_local_options (GApplication *app,
     if (gnucash_show_version)
     {
         gchar *fixed_message;
+        gchar *rev;
 
         if (is_development_version)
         {
             fixed_message = g_strdup_printf(_("GnuCash %s development version"), VERSION);
-
-            /* Translators: 1st %s is a fixed message, which is translated independently;
-                            2nd %s is the scm type (svn/svk/git/bzr);
-                            3rd %s is the scm revision number;
-                            4th %s is the build date */
-            g_print ( _("%s\nThis copy was built from %s rev %s on %s."),
-                      fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
-                      GNUCASH_BUILD_DATE );
+            rev = g_strdup_printf("%s ", GNUCASH_SCM);
         }
         else
         {
             fixed_message = g_strdup_printf(_("GnuCash %s"), VERSION);
-
-            /* Translators: 1st %s is a fixed message, which is translated independently;
-                            2nd %s is the scm (svn/svk/git/bzr) revision number;
-                            3rd %s is the build date */
-            g_print ( _("%s\nThis copy was built from rev %s on %s."),
-                      fixed_message, GNUCASH_SCM_REV, GNUCASH_BUILD_DATE );
+            rev = g_strdup("");
         }
-        g_print("\n");
+        /* Translators: 1st %s is a fixed message, which is translated independently;
+                        2nd %s is the scm type (svn/svk/git/bzr) or nothing if not a development version;
+                        3rd %s is the scm revision number;
+                        4th %s is the build date */
+        g_print ( _("%s\nThis copy was built from %srev %s on %s.\n"),
+                  fixed_message, rev, GNUCASH_SCM_REV,
+                  GNUCASH_BUILD_DATE );
         g_free (fixed_message);
+        g_free (rev);
         return 0; // Exit, Success
     }
 
