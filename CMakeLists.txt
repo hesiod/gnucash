@@ -520,16 +520,14 @@ INSTALL(CODE
 #For windows, copy in some DLLs from Mingw
 
 IF (WIN32)
-  SET(MINGW_DLLS ${CMAKE_PREFIX_PATH}/mingw/bin/libstdc++-6.dll ${CMAKE_PREFIX_PATH}/mingw/bin/libgcc_s_dw2-1.dll)
-  INSTALL(PROGRAMS ${MINGW_DLLS} DESTINATION bin)
-  IF (GNC_BUILD_AS_INSTALL)
-	FILE(COPY ${MINGW_DLLS} DESTINATION ${BINDIR_BUILD}
-	  # Do permissions matter for windows?
-	  FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-	)
-  ENDIF()
-
-
+    SET(MINGW_DLLS ${CMAKE_PREFIX_PATH}/mingw/bin/libstdc++-6.dll ${CMAKE_PREFIX_PATH}/mingw/bin/libgcc_s_dw2-1.dll)
+    INSTALL(PROGRAMS ${MINGW_DLLS} DESTINATION bin)
+    IF (GNC_BUILD_AS_INSTALL)
+        FILE(COPY ${MINGW_DLLS} DESTINATION ${BINDIR_BUILD}
+            # Do permissions matter for windows?
+            FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+        )
+    ENDIF()
 ENDIF()
 # ############################################################
 # Package creation rules
