@@ -65,18 +65,10 @@ void gnc_options_dialog_set_book_options_help_cb (GNCOptionWin *win);
  */
 void gnc_options_dialog_set_new_book_option_values (GNCOptionDB *odb);
 
-/** Shutdown gnucash.  This function will initiate an orderly
- *  shutdown, and when that has finished it will exit the program.
- *
- *  @param exit_status The exit status for the program.
- */
-void gnc_shutdown (int exit_status);
-
-
 /** Initialize the gnucash gui */
-GncMainWindow *gnc_gui_init (void);
-int gnc_ui_start_event_loop (void);
-gboolean gnucash_ui_is_running (void);
+void gnc_gui_init(GncMainWindow *main_window);
+
+void gnc_shutdown(int);
 
 #endif
 /** @} */

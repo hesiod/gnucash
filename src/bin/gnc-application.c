@@ -1,5 +1,5 @@
 /*
- * gnucash-bin.c -- The program entry point for GnuCash
+ * gnc-application.c -- The program entry point for GnuCash
  *
  * Copyright (C) 2006 Chris Shoemaker <c.shoemaker@cox.net>
  *
@@ -22,46 +22,58 @@
  */
 #include "config.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <libguile.h>
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
-#include "glib.h"
-#include "gnc-module.h"
-#include "gnc-path.h"
-#include "binreloc.h"
-#include "gnc-locale-utils.h"
+
+#if !defined(G_THREADS_ENABLED) || defined(G_THREADS_IMPL_NONE)
+#    error "No GLib thread implementation available!"
+#endif
+
+#include <libguile.h>
+
 #include "core-utils/gnc-version.h"
+#include "binreloc.h"
+#include "gfec.h"
+
+#include "gnc-main-window.h"
+
+#include "gnc-application.h"
+#include "gnc-commodity.h"
+#include "gnc-component-manager.h"
 #include "gnc-engine.h"
 #include "gnc-environment.h"
-#include "gnc-filepath-utils.h"
-#include "gnc-ui-util.h"
 #include "gnc-file.h"
+#include "gnc-filepath-utils.h"
+#include "gnc-gnome-utils.h"
+#include "gnc-gsettings.h"
 #include "gnc-hooks.h"
-#include "top-level.h"
-#include "gfec.h"
-#include "gnc-commodity.h"
+#include "gnc-locale-utils.h"
+#include "gnc-module.h"
+#include "gnc-menu-extensions.h"
+#include "gnc-path.h"
 #include "gnc-prefs.h"
 #include "gnc-prefs-utils.h"
-#include "gnc-gsettings.h"
 #include "gnc-report.h"
-#include "gnc-main-window.h"
-#include "gnc-splash.h"
-#include "gnc-gnome-utils.h"
-#include "dialog-new-user.h"
 #include "gnc-session.h"
+#include "gnc-splash.h"
+#include "gnc-ui-util.h"
+
+#include "top-level.h"
+#include "dialog-new-user.h"
 #include "engine-helpers-guile.h"
 #include "swig-runtime.h"
 
+/*
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "glib.h"
+*/
+
+#define ACCEL_MAP_NAME "accelerator-map"
+
 /* This static indicates the debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
-
-#ifdef HAVE_GETTEXT
-#  include <libintl.h>
-#  include <locale.h>
-#endif
 
 /* GNUCASH_SCM is defined whenever we're building from an svn/svk/git/bzr tree */
 #ifdef GNUCASH_SCM
@@ -70,6 +82,14 @@ static int is_development_version = TRUE;
 static int is_development_version = FALSE;
 #define GNUCASH_SCM ""
 #endif
+
+struct _GncApplication {
+    GtkApplication parent_instance;
+};
+
+G_DEFINE_TYPE(GncApplication, gnc_application, GTK_TYPE_APPLICATION);
+
+static guint id;
 
 /* Command-line option variables */
 static int          gnucash_show_version = 0;
@@ -125,13 +145,6 @@ static GOptionEntry options[] =
         N_("GSETTINGSPREFIX")
     },
     {
-        "add-price-quotes", '\0', 0, G_OPTION_ARG_STRING, &add_quotes_file,
-        N_("Add price quotes to given GnuCash datafile"),
-        /* Translators: Argument description for autohelp; see
-           http://developer.gnome.org/doc/API/2.0/glib/glib-Commandline-option-parser.html */
-        N_("FILE")
-    },
-    {
         "namespace", '\0', 0, G_OPTION_ARG_STRING, &namespace_regexp,
         N_("Regular expression determining which namespace commodities will be retrieved"),
         /* Translators: Argument description for autohelp; see
@@ -143,6 +156,7 @@ static GOptionEntry options[] =
     { NULL }
 };
 
+
 static void
 gnc_print_unstable_message(void)
 {
@@ -153,6 +167,69 @@ gnc_print_unstable_message(void)
             _("Report bugs and other problems to gnucash-devel@gnucash.org"),
             _("You can also lookup and file bug reports at http://bugzilla.gnome.org"),
             _("To find the last stable version, please refer to http://www.gnucash.org"));
+}
+
+
+static void
+gnc_log_init()
+{
+    if (log_to_filename != NULL)
+    {
+        qof_log_init_filename_special(log_to_filename);
+    }
+    else
+    {
+        /* initialize logging to our file. */
+        gchar *tracefilename;
+        tracefilename = g_build_filename(g_get_tmp_dir(), "gnucash.trace",
+                                         (gchar *)NULL);
+        qof_log_init_filename(tracefilename);
+        g_free(tracefilename);
+    }
+
+    // set a reasonable default.
+    qof_log_set_default(QOF_LOG_WARNING);
+
+    gnc_log_default();
+
+    if (gnc_prefs_is_debugging_enabled())
+    {
+        qof_log_set_level("", QOF_LOG_INFO);
+        qof_log_set_level("qof", QOF_LOG_INFO);
+        qof_log_set_level("gnc", QOF_LOG_INFO);
+    }
+
+#if 0
+    {
+        gchar *log_config_filename;
+        log_config_filename = gnc_build_dotgnucash_path("log.conf");
+        if (g_file_test(log_config_filename, G_FILE_TEST_EXISTS))
+            qof_log_parse_log_config(log_config_filename);
+        g_free(log_config_filename);
+    }
+#endif
+
+    if (log_flags != NULL)
+    {
+        int i = 0;
+        for (; log_flags[i] != NULL; i++)
+        {
+            QofLogLevel level;
+            gchar **parts = NULL;
+
+            gchar *log_opt = log_flags[i];
+            parts = g_strsplit(log_opt, "=", 2);
+            if (parts == NULL || parts[0] == NULL || parts[1] == NULL)
+            {
+                g_warning("string [%s] not parseable", log_opt);
+                continue;
+            }
+
+            level = qof_log_level_from_string(parts[1]);
+            qof_log_set_level(parts[0], level);
+            g_strfreev(parts);
+        }
+    }
 }
 
 static gboolean
@@ -234,70 +311,33 @@ load_user_config(void)
     try_load_config_array(stylesheet_files);
 }
 
-/* Parse command line options, using GOption interface.
- * We can't let gtk_init_with_args do it because it fails
- * before parsing any arguments if the GUI can't be initialized.
- */
 static void
-gnc_parse_command_line(int *argc, char ***argv)
+gnc_setup_locale (void)
 {
-
-    GError *error = NULL;
-    GOptionContext *context = g_option_context_new (_("- GnuCash personal and small business finance management"));
-
-    g_option_context_add_main_entries (context, options, GETTEXT_PACKAGE);
-    g_option_context_add_group (context, gtk_get_option_group(FALSE));
-    if (!g_option_context_parse (context, argc, argv, &error))
+    gchar *sys_locale = NULL;
+    gnc_environment_setup();
+    sys_locale = g_strdup (setlocale (LC_ALL, ""));
+    if (!sys_locale)
     {
-        g_printerr (_("%s\nRun '%s --help' to see a full list of available command line options.\n"),
-                    error->message, *argv[0]);
-        g_error_free (error);
-        exit (1);
+        g_print ("The locale defined in the environment isn't supported. "
+                 "Falling back to the 'C' (US English) locale\n");
+        g_setenv ("LC_ALL", "C", TRUE);
+        setlocale (LC_ALL, "C");
     }
-    g_option_context_free (context);
-
-    if (gnucash_show_version)
+#ifdef HAVE_GETTEXT
     {
-        gchar *fixed_message;
-
-        if (is_development_version)
-        {
-            fixed_message = g_strdup_printf(_("GnuCash %s development version"), VERSION);
-
-            /* Translators: 1st %s is a fixed message, which is translated independently;
-                            2nd %s is the scm type (svn/svk/git/bzr);
-                            3rd %s is the scm revision number;
-                            4th %s is the build date */
-            g_print ( _("%s\nThis copy was built from %s rev %s on %s."),
-                      fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
-                      GNUCASH_BUILD_DATE );
-        }
-        else
-        {
-            fixed_message = g_strdup_printf(_("GnuCash %s"), VERSION);
-
-            /* Translators: 1st %s is a fixed message, which is translated independently;
-                            2nd %s is the scm (svn/svk/git/bzr) revision number;
-                            3rd %s is the build date */
-            g_print ( _("%s\nThis copy was built from rev %s on %s."),
-                      fixed_message, GNUCASH_SCM_REV, GNUCASH_BUILD_DATE );
-        }
-        g_print("\n");
-        g_free (fixed_message);
-        exit(0);
+        gchar *localedir = gnc_path_get_localedir();
+        bindtextdomain(GETTEXT_PACKAGE, localedir);
+        textdomain(GETTEXT_PACKAGE);
+        bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+        g_free(localedir);
     }
+#endif
 
-    gnc_prefs_set_debugging(debugging);
-    gnc_prefs_set_extra(extra);
-
-    if (gsettings_prefix)
-        gnc_gsettings_set_prefix(g_strdup(gsettings_prefix));
-
-    if (namespace_regexp)
-        gnc_prefs_set_namespace_regexp(namespace_regexp);
-
-    if (args_remaining)
-        file_to_load = args_remaining[0];
+    /* Write some locale details to the log to simplify debugging */
+    PINFO ("System locale returned %s", sys_locale ? sys_locale : "(null)");
+    PINFO ("Effective locale set to %s.", setlocale (LC_ALL, ""));
+    g_free (sys_locale);
 }
 
 static void
@@ -358,77 +398,48 @@ load_gnucash_modules()
     }
 }
 
-static void
-inner_main_add_price_quotes(void *closure, int argc, char **argv)
+static gboolean
+gnc_ui_check_events (gpointer not_used)
 {
-    SCM mod, add_quotes, scm_book, scm_result = SCM_BOOL_F;
-    QofSession *session = NULL;
+    QofSession *session;
+    gboolean force;
 
-    scm_c_eval_string("(debug-set! stack 200000)");
+    if (gtk_main_level() != 1)
+        return TRUE;
 
-    mod = scm_c_resolve_module("gnucash price-quotes");
-    scm_set_current_module(mod);
+    if (!gnc_current_session_exist())
+        return TRUE;
+    session = gnc_get_current_session ();
 
-    /* Don't load the modules since the stylesheet module crashes if the
-       GUI is not initialized */
-#ifdef PRICE_QUOTES_NEED_MODULES
-    load_gnucash_modules();
-#endif
-    gnc_prefs_init ();
-    qof_event_suspend();
-    scm_c_eval_string("(gnc:price-quotes-install-sources)");
+    if (gnc_gui_refresh_suspended ())
+        return TRUE;
 
-    if (!gnc_quote_source_fq_installed())
-    {
-        g_print("%s", _("No quotes retrieved. Finance::Quote isn't "
-                        "installed properly.\n"));
-        goto fail;
-    }
+    if (!qof_session_events_pending (session))
+        return TRUE;
 
-    add_quotes = scm_c_eval_string("gnc:book-add-quotes");
-    session = gnc_get_current_session();
-    if (!session) goto fail;
+    gnc_suspend_gui_refresh ();
 
-    qof_session_begin(session, add_quotes_file, FALSE, FALSE, FALSE);
-    if (qof_session_get_error(session) != ERR_BACKEND_NO_ERR) goto fail;
+    force = qof_session_process_events (session);
 
-    qof_session_load(session, NULL);
-    if (qof_session_get_error(session) != ERR_BACKEND_NO_ERR) goto fail;
+    gnc_resume_gui_refresh ();
 
-    scm_book = gnc_book_to_scm(qof_session_get_book(session));
-    scm_result = scm_call_2(add_quotes, SCM_BOOL_F, scm_book);
+    if (force)
+        gnc_gui_refresh_all ();
 
-    qof_session_save(session, NULL);
-    if (qof_session_get_error(session) != ERR_BACKEND_NO_ERR) goto fail;
-
-    qof_session_destroy(session);
-    if (!scm_is_true(scm_result))
-    {
-        g_warning("Failed to add quotes to %s.", add_quotes_file);
-        goto fail;
-    }
-
-    qof_event_resume();
-    gnc_shutdown(0);
-    return;
-fail:
-    if (session && qof_session_get_error(session) != ERR_BACKEND_NO_ERR)
-        g_warning("Session Error: %s", qof_session_get_error_message(session));
-    qof_event_resume();
-    gnc_shutdown(1);
+    return TRUE;
 }
 
 static void
 inner_main (void *closure, int argc, char **argv)
 {
-    SCM main_mod;
-    char* fn;
-    GError *error = NULL;
-
     scm_c_eval_string("(debug-set! stack 200000)");
 
-    main_mod = scm_c_resolve_module("gnucash main");
-    scm_set_current_module(main_mod);
+    {
+        SCM main_mod;
+
+        main_mod = scm_c_resolve_module("gnucash main");
+        scm_set_current_module(main_mod);
+    }
 
     /* GnuCash switched to gsettings to store its preferences in version 2.5.6
      * Migrate the user's preferences from gconf if needed */
@@ -462,7 +473,7 @@ inner_main (void *closure, int argc, char **argv)
 
     if (!nofile && file_to_load)
     {
-        fn = g_strdup(file_to_load);
+        char* fn = g_strdup(file_to_load);
         gnc_update_splash_screen(_("Loading data..."), GNC_SPLASH_PERCENTAGE_UNKNOWN);
         gnc_file_open_file(fn, /*open_readonly*/ FALSE);
         g_free(fn);
@@ -479,83 +490,111 @@ inner_main (void *closure, int argc, char **argv)
     gnc_main_window_show_all_windows();
 
     gnc_hook_run(HOOK_UI_POST_STARTUP, NULL);
-    gnc_ui_start_event_loop();
-    gnc_hook_remove_dangler(HOOK_UI_SHUTDOWN, (GFunc)gnc_file_quit);
-
-    gnc_shutdown(0);
-    return;
 }
 
 static void
-gnc_log_init()
+gnc_application_shutdown (GApplication *app)
 {
-    if (log_to_filename != NULL)
+    if (gnc_file_query_save(FALSE))
     {
-        qof_log_init_filename_special(log_to_filename);
-    }
-    else
-    {
-        /* initialize logging to our file. */
-        gchar *tracefilename;
-        tracefilename = g_build_filename(g_get_tmp_dir(), "gnucash.trace",
-                                         (gchar *)NULL);
-        qof_log_init_filename(tracefilename);
-        g_free(tracefilename);
+        gchar *map;
+
+        map = gnc_build_dotgnucash_path(ACCEL_MAP_NAME);
+        gtk_accel_map_save(map);
+        g_free(map);
     }
 
-    // set a reasonable default.
-    qof_log_set_default(QOF_LOG_WARNING);
+    g_source_remove (id);
 
-    gnc_log_default();
+    gnc_hook_run(HOOK_UI_SHUTDOWN, NULL);
+    gnc_hook_remove_dangler(HOOK_UI_SHUTDOWN, (GFunc)gnc_file_quit);
 
-    if (gnc_prefs_is_debugging_enabled())
-    {
-        qof_log_set_level("", QOF_LOG_INFO);
-        qof_log_set_level("qof", QOF_LOG_INFO);
-        qof_log_set_level("gnc", QOF_LOG_INFO);
-    }
+    gnc_extensions_shutdown ();
 
-    {
-        gchar *log_config_filename;
-        log_config_filename = gnc_build_dotgnucash_path("log.conf");
-        if (g_file_test(log_config_filename, G_FILE_TEST_EXISTS))
-            qof_log_parse_log_config(log_config_filename);
-        g_free(log_config_filename);
-    }
+    gnc_hook_run(HOOK_SHUTDOWN, NULL);
+    //gnc_engine_shutdown();
 
-    if (log_flags != NULL)
-    {
-        int i = 0;
-        for (; log_flags[i] != NULL; i++)
-        {
-            QofLogLevel level;
-            gchar **parts = NULL;
-
-            gchar *log_opt = log_flags[i];
-            parts = g_strsplit(log_opt, "=", 2);
-            if (parts == NULL || parts[0] == NULL || parts[1] == NULL)
-            {
-                g_warning("string [%s] not parseable", log_opt);
-                continue;
-            }
-
-            level = qof_log_level_from_string(parts[1]);
-            qof_log_set_level(parts[0], level);
-            g_strfreev(parts);
-        }
-    }
+    G_APPLICATION_CLASS (gnc_application_parent_class)->shutdown(app);
 }
 
-int
-main(int argc, char ** argv)
+static void
+gnc_application_init (GncApplication *app)
 {
-    gchar *sys_locale = NULL;
-#if !defined(G_THREADS_ENABLED) || defined(G_THREADS_IMPL_NONE)
-#    error "No GLib thread implementation available!"
-#endif
-#ifndef HAVE_GLIB_2_32 /* Automatic after GLib 2-32 */
-    g_thread_init(NULL);
-#endif
+    g_application_add_main_option_entries (G_APPLICATION (app), options);
+}
+
+static gint
+gnc_application_command_line (GApplication            *application,
+                              GApplicationCommandLine *command_line)
+{
+    gnc_prefs_set_debugging(debugging);
+    gnc_prefs_set_extra(extra);
+
+    if (gsettings_prefix)
+        gnc_gsettings_set_prefix(g_strdup(gsettings_prefix));
+
+    if (namespace_regexp)
+        gnc_prefs_set_namespace_regexp(namespace_regexp);
+
+    if (args_remaining)
+        file_to_load = args_remaining[0];
+
+    return 0;
+}
+
+static gint
+gnc_application_handle_local_options (GApplication *app,
+                                      GVariantDict *dict)
+{
+    if (gnucash_show_version)
+    {
+        gchar *fixed_message;
+
+        if (is_development_version)
+        {
+            fixed_message = g_strdup_printf(_("GnuCash %s development version"), VERSION);
+
+            /* Translators: 1st %s is a fixed message, which is translated independently;
+                            2nd %s is the scm type (svn/svk/git/bzr);
+                            3rd %s is the scm revision number;
+                            4th %s is the build date */
+            g_print ( _("%s\nThis copy was built from %s rev %s on %s."),
+                      fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
+                      GNUCASH_BUILD_DATE );
+        }
+        else
+        {
+            fixed_message = g_strdup_printf(_("GnuCash %s"), VERSION);
+
+            /* Translators: 1st %s is a fixed message, which is translated independently;
+                            2nd %s is the scm (svn/svk/git/bzr) revision number;
+                            3rd %s is the build date */
+            g_print ( _("%s\nThis copy was built from rev %s on %s."),
+                      fixed_message, GNUCASH_SCM_REV, GNUCASH_BUILD_DATE );
+        }
+        g_print("\n");
+        g_free (fixed_message);
+        return 0; // Exit, Success
+    }
+
+    return -1; // Continue
+}
+
+static void
+gnc_application_activate (GApplication *app)
+{
+    GncMainWindow *win;
+
+    win = gnc_main_window_new ();
+    gnc_gui_init(win);
+    gtk_window_present (GTK_WINDOW (win));
+}
+
+static void
+gnc_application_startup (GApplication *app)
+{
+    G_APPLICATION_CLASS (gnc_application_parent_class)->startup(app);
+
 #ifdef ENABLE_BINRELOC
     {
         GError *binreloc_error = NULL;
@@ -567,60 +606,65 @@ main(int argc, char ** argv)
     }
 #endif
 
-    gnc_environment_setup();
-    /* setlocale already done */
-    sys_locale = g_strdup (setlocale (LC_ALL, ""));
-    if (!sys_locale)
-      {
-        g_print ("The locale defined in the environment isn't supported. "
-                 "Falling back to the 'C' (US English) locale\n");
-        g_setenv ("LC_ALL", "C", TRUE);
-        setlocale (LC_ALL, "C");
-      }
-#ifdef HAVE_GETTEXT
-    {
-        gchar *localedir = gnc_path_get_localedir();
-        bindtextdomain(GETTEXT_PACKAGE, localedir);
-        textdomain(GETTEXT_PACKAGE);
-        bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-        g_free(localedir);
-    }
-#endif
-    
-    gnc_parse_command_line(&argc, &argv);
+    gnc_setup_locale();
+
     gnc_print_unstable_message();
 
     gnc_log_init();
-
-    /* Write some locale details to the log to simplify debugging */
-    PINFO ("System locale returned %s", sys_locale ? sys_locale : "(null)");
-    PINFO ("Effective locale set to %s.", setlocale (LC_ALL, ""));
-    g_free (sys_locale);
-
-    /* If asked via a command line parameter, fetch quotes only */
-    if (add_quotes_file)
-    {
-        /* First initialize the module system, even though gtk hasn't been initialized. */
-        gnc_module_system_init();
-        scm_boot_guile(argc, argv, inner_main_add_price_quotes, 0);
-        exit(0);  /* never reached */
-    }
-
-    /* We need to initialize gtk before looking up all modules */
-    if(!gtk_init_check (&argc, &argv))
-    {
-        g_printerr(_("%s\nRun '%s --help' to see a full list of available command line options.\n"),
-                   _("Error: could not initialize graphical user interface and option add-price-quotes was not set.\n"
-                     "       Perhaps you need to set the $DISPLAY environment variable ?"),
-                   argv[0]);
-        return 1;
-    }
 
     /* Now the module files are looked up, which might cause some library
     initialization to be run, hence gtk must be initialized beforehand. */
     gnc_module_system_init();
 
-    gnc_gui_init();
-    scm_boot_guile(argc, argv, inner_main, 0);
-    exit(0); /* never reached */
+    //gnc_file_set_shutdown_callback (gnc_shutdown);
+    id = g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE, 10000, /* 10 secs */
+                             gnc_ui_check_events, NULL, NULL);
+
+    //scm_boot_guile(argc, argv, inner_main, 0);
+}
+
+static void
+gnc_application_open (GApplication  *app,
+                      GFile        **files,
+                      gint           n_files,
+                      const gchar   *hint)
+{
+    GList *windows;
+    GncMainWindow *win;
+    int i;
+
+    windows = gtk_application_get_windows (GTK_APPLICATION (app));
+    if (windows)
+        win = GNC_MAIN_WINDOW (windows->data);
+    else
+        win = gnc_main_window_new ();
+
+#if 0
+    for (i = 0; i < n_files; i++)
+        gnc_main_window_open (win, files[i]);
+#endif
+
+    gnc_gui_init(win);
+    gtk_window_present (GTK_WINDOW (win));
+}
+
+static void
+gnc_application_class_init (GncApplicationClass *class)
+{
+    G_APPLICATION_CLASS (class)->activate = gnc_application_activate;
+    G_APPLICATION_CLASS (class)->open = gnc_application_open;
+    G_APPLICATION_CLASS (class)->command_line = gnc_application_command_line;
+    G_APPLICATION_CLASS (class)->handle_local_options = gnc_application_handle_local_options;
+    G_APPLICATION_CLASS (class)->startup = gnc_application_startup;
+    G_APPLICATION_CLASS (class)->shutdown = gnc_application_shutdown;
+}
+
+GncApplication *
+gnc_application_new (void)
+{
+     return g_object_new (GNC_TYPE_APPLICATION,
+                          "application-id", "org.gnucash",
+                          "flags", G_APPLICATION_HANDLES_OPEN
+                                   | G_APPLICATION_HANDLES_COMMAND_LINE,
+                          NULL);
 }

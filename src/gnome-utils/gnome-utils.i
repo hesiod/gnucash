@@ -75,6 +75,4 @@ void gnc_set_busy_cursor (GtkWidget *w, gboolean update_now);
 void gnc_unset_busy_cursor (GtkWidget *w);
 void gnc_window_show_progress (const char *message, double percentage);
 
-gboolean gnucash_ui_is_running(void);
-
 TaxTableWindow * gnc_ui_tax_table_window_new (QofBook *book);

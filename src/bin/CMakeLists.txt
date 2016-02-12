@@ -12,7 +12,8 @@ ELSE (WIN32)
 ENDIF (WIN32)
 
 SET (gnucash_SOURCES
-  gnucash-bin.c
+  gnc-binary.c
+  gnc-application.c
   ${GNUCASH_RESOURCE_FILE}  
 )
 

@@ -24,11 +24,9 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
-#ifdef HAVE_X11_XLIB_H
-# include <X11/Xlib.h>
-#endif
 #include <libxml/xmlIO.h>
 
+#include "gnc-component-manager.h"
 #include "gnc-prefs-utils.h"
 #include "gnc-prefs.h"
 #include "gnc-gnome-utils.h"
@@ -40,7 +38,6 @@
 #include "gnc-hooks.h"
 #include "gnc-filepath-utils.h"
 #include "gnc-menu-extensions.h"
-#include "gnc-component-manager.h"
 #include "gnc-splash.h"
 #include "gnc-window.h"
 #include "dialog-options.h"
@@ -58,7 +55,6 @@ static QofLogModule log_module = GNC_MOD_GUI;
 static int gnome_is_running = FALSE;
 static int gnome_is_terminating = FALSE;
 static int gnome_is_initialized = FALSE;
-
 
 #define ACCEL_MAP_NAME "accelerator-map"
 
@@ -286,98 +282,12 @@ gnc_launch_assoc (const char *uri)
 }
 #endif
 
-static gboolean
-gnc_ui_check_events (gpointer not_used)
+void
+gnc_gui_init(GncMainWindow *main_window)
 {
-    QofSession *session;
-    gboolean force;
-
-    if (gtk_main_level() != 1)
-        return TRUE;
-
-    if (!gnc_current_session_exist())
-        return TRUE;
-    session = gnc_get_current_session ();
-
-    if (gnc_gui_refresh_suspended ())
-        return TRUE;
-
-    if (!qof_session_events_pending (session))
-        return TRUE;
-
-    gnc_suspend_gui_refresh ();
-
-    force = qof_session_process_events (session);
-
-    gnc_resume_gui_refresh ();
-
-    if (force)
-        gnc_gui_refresh_all ();
-
-    return TRUE;
-}
-
-#ifdef HAVE_X11_XLIB_H
-static int
-gnc_x_error (Display *display, XErrorEvent *error)
-{
-    if (error->error_code)
-    {
-        char buf[64];
-
-        XGetErrorText (display, error->error_code, buf, 63);
-
-        g_warning ("X-ERROR **: %s\n  serial %ld error_code %d "
-                   "request_code %d minor_code %d\n",
-                   buf,
-                   error->serial,
-                   error->error_code,
-                   error->request_code,
-                   error->minor_code);
-    }
-
-    return 0;
-}
-#endif
-
-int
-gnc_ui_start_event_loop (void)
-{
-    guint id;
-
-    gnome_is_running = TRUE;
-
-    id = g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE, 10000, /* 10 secs */
-                             gnc_ui_check_events, NULL, NULL);
-
-#ifdef HAVE_X11_XLIB_H
-    XSetErrorHandler (gnc_x_error);
-#endif
-
-    /* Enter gnome event loop */
-    gtk_main ();
-
-    g_source_remove (id);
-
-    gnome_is_running = FALSE;
-    gnome_is_terminating = FALSE;
-
-    return 0;
-}
-
-GncMainWindow *
-gnc_gui_init(void)
-{
-    static GncMainWindow *main_window;
     gchar *map;
 
     ENTER ("");
-
-    if (gnome_is_initialized)
-        return main_window;
-
-
-    g_set_application_name(PACKAGE_NAME);
 
     gnc_prefs_init();
     gnc_show_splash_screen();
@@ -409,13 +319,10 @@ gnc_gui_init(void)
                                 NULL);
 
     gnc_ui_commodity_set_help_callback (gnc_commodity_help_cb);
-    gnc_file_set_shutdown_callback (gnc_shutdown);
 
     gnc_options_dialog_set_global_help_cb (gnc_global_options_help_cb, NULL);
 
-    main_window = gnc_main_window_new ();
     // Bug#350993:
-    // gtk_widget_show (GTK_WIDGET (main_window));
     gnc_window_set_progressbar_window (GNC_WINDOW(main_window));
 
     map = gnc_build_dotgnucash_path(ACCEL_MAP_NAME);
@@ -425,62 +332,11 @@ gnc_gui_init(void)
     gnc_totd_dialog(GTK_WINDOW(main_window), TRUE);
 
     LEAVE ("");
-    return main_window;
 }
 
-gboolean
-gnucash_ui_is_running(void)
-{
-    return gnome_is_running;
-}
-
-static void
-gnc_gui_destroy (void)
-{
-    if (!gnome_is_initialized)
-        return;
-
-    gnc_extensions_shutdown ();
-}
-
-static void
-gnc_gui_shutdown (void)
-{
-    gchar *map;
-
-    if (gnome_is_running && !gnome_is_terminating)
-    {
-        gnome_is_terminating = TRUE;
-        map = gnc_build_dotgnucash_path(ACCEL_MAP_NAME);
-        gtk_accel_map_save(map);
-        g_free(map);
-        gtk_main_quit();
-    }
-}
-
-/*  shutdown gnucash.  This function will initiate an orderly
- *  shutdown, and when that has finished it will exit the program.
- */
 void
-gnc_shutdown (int exit_status)
+gnc_shutdown(int i)
 {
-    if (gnucash_ui_is_running())
-    {
-        if (!gnome_is_terminating)
-        {
-            if (gnc_file_query_save(FALSE))
-            {
-                gnc_hook_run(HOOK_UI_SHUTDOWN, NULL);
-                gnc_gui_shutdown();
-            }
-        }
-    }
-    else
-    {
-        gnc_gui_destroy();
-        gnc_hook_run(HOOK_SHUTDOWN, NULL);
-        gnc_engine_shutdown();
-        exit(exit_status);
-    }
+    g_application_quit(g_application_get_default());
 }
 
