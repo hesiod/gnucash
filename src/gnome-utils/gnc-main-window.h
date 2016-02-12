@@ -241,8 +241,6 @@ void gnc_main_window_merge_actions (GncMainWindow *window,
                                     const gchar *group_name,
                                     GActionEntry *entries,
                                     guint n_entries,
-                                    GActionEntry *toggle_entries,
-                                    guint n_toggle_entries,
                                     const gchar *filename,
                                     gpointer user_data);
 

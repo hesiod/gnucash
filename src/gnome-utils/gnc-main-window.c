@@ -3040,8 +3040,6 @@ gnc_main_window_merge_actions (GncMainWindow *window,
                                const gchar *group_name,
                                GActionEntry *actions,
                                guint n_actions,
-                               GActionEntry *toggle_actions,
-                               guint n_toggle_actions,
                                const gchar *filename,
                                gpointer user_data)
 {
@@ -3069,12 +3067,6 @@ gnc_main_window_merge_actions (GncMainWindow *window,
     entry = g_new0 (MergedActionEntry, 1);
     g_action_map_add_action_entries (G_ACTION_MAP(g_application_get_default()),
                                      actions, n_actions, data);
-    if (toggle_actions != NULL && n_toggle_actions > 0)
-    {
-        g_action_map_add_action_entries (G_ACTION_MAP(g_application_get_default()),
-                                             toggle_actions, n_toggle_actions,
-                                             data);
-    }
     entry->merge_id = egg_menu_manager_add_filename (priv->ui_merge, pathname, &error);
     g_assert(entry->merge_id || error);
     if (entry->merge_id)
