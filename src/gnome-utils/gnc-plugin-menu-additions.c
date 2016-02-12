@@ -443,7 +443,7 @@ gnc_plugin_menu_additions_add_to_window (GncPlugin *plugin,
     ENTER(" ");
 
     per_window.window = window;
-    per_window.ui_manager = window->ui_merge;
+    per_window.ui_manager = gnc_main_window_get_uimanager(window);
 
     menu_list = g_slist_sort(gnc_extensions_get_menu_list(),
                              (GCompareFunc)gnc_menu_additions_sort);
