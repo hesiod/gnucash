@@ -1,23 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ui>
-  <menubar>
-
-    <menu name="Windows" action="WindowsAction">
-      <menuitem name="WindowNew"      action="WindowNewAction"/>
-      <menuitem name="WindowMovePage" action="WindowMovePageAction"/>
-      <separator name="ViewSep4"/>
-      <menuitem name="Window0"        action="Window0Action"/>
-      <menuitem name="Window1"        action="Window1Action"/>
-      <menuitem name="Window2"        action="Window2Action"/>
-      <menuitem name="Window3"        action="Window3Action"/>
-      <menuitem name="Window4"        action="Window4Action"/>
-      <menuitem name="Window5"        action="Window5Action"/>
-      <menuitem name="Window6"        action="Window6Action"/>
-      <menuitem name="Window7"        action="Window7Action"/>
-      <menuitem name="Window8"        action="Window8Action"/>
-      <menuitem name="Window9"        action="Window9Action"/>
-      <placeholder name="WindowsPlaceholder"/>
-    </menu>
-
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-windows">
+        <section id="menubar-windows-header-section">
+          <item>
+            <attribute name="label" translatable="yes">New Window</attribute>
+            <attribute name="action">win.window.new</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Move Window</attribute>
+            <attribute name="action">win.window.move</attribute>
+          </item>
+        </section>
+        <section id="menubar-windows-section">
+          <item>
+            <attribute name="label" translatable="yes">Window 1</attribute>
+            <attribute name="action">win.window.open.0</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 2</attribute>
+            <attribute name="action">win.window.open.1</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 3</attribute>
+            <attribute name="action">win.window.open.2</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 4</attribute>
+            <attribute name="action">win.window.open.3</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 5</attribute>
+            <attribute name="action">win.window.open.4</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 6</attribute>
+            <attribute name="action">win.window.open.5</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 7</attribute>
+            <attribute name="action">win.window.open.6</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 8</attribute>
+            <attribute name="action">win.window.open.7</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 9</attribute>
+            <attribute name="action">win.window.open.8</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Window 10</attribute>
+            <attribute name="action">win.window.open.9</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>
