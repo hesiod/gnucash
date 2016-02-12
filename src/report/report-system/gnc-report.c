@@ -199,26 +199,38 @@ gnc_report_name( SCM report )
     return gnc_scm_call_1_to_string(get_name, report);
 }
 
+#define FALLBACK_FONT "Arial"
 gchar*
 gnc_get_default_report_font_family(void)
 {
-    GList*          top_list;
-    GtkWidget*      top_widget;
-    GtkStyle*       top_widget_style;
-    const gchar*    default_font_family;
+    GList*                top_list;
+    GtkWidget*            top_widget;
+    GtkStyleContext*      top_widget_style;
+    const gchar*          default_font_family;
+    PangoFontDescription* font_desc = NULL;
 
     top_list = gtk_window_list_toplevels();
-    g_return_val_if_fail (top_list != NULL, NULL);
+    if (top_list == NULL)
+        goto fallback;
+
     top_widget = GTK_WIDGET(top_list->data);
     g_list_free(top_list);
-    top_widget_style = gtk_rc_get_style(top_widget);
-    default_font_family =
-        pango_font_description_get_family(top_widget_style->font_desc);
 
-    if (default_font_family == NULL)
-        return g_strdup("Arial");
-    else
+    top_widget_style = gtk_widget_get_style_context(top_widget);
+    gtk_style_context_get(top_widget_style, GTK_STATE_FLAG_NORMAL,
+                          "font", font_desc,
+                          NULL);
+
+    if (font_desc == NULL)
+        goto fallback;
+    default_font_family =
+        pango_font_description_get_family(font_desc);
+
+    if (default_font_family != NULL)
         return g_strdup(default_font_family);
+
+fallback:
+    return g_strdup(FALLBACK_FONT);
 }
 
 static gboolean
