@@ -770,16 +770,16 @@ RESTART:
             break;
         case RESPONSE_READONLY:
             is_readonly = TRUE;
-            // re-enable the splash screen, file loading and display of
+            // mark as busy, file loading and display of
             // reports may take some time
-            gnc_show_splash_screen();
+            g_application_mark_busy (g_application_get_default());
             /* user told us to open readonly. We do ignore locks (just as before), but now also force the opening. */
             qof_session_begin (new_session, newfile, is_readonly, FALSE, TRUE);
             break;
         case RESPONSE_OPEN:
-            // re-enable the splash screen, file loading and display of
+            // mark as busy, file loading and display of
             // reports may take some time
-            gnc_show_splash_screen();
+            g_application_mark_busy (g_application_get_default());
             /* user told us to ignore locks. So ignore them. */
             qof_session_begin (new_session, newfile, TRUE, FALSE, FALSE);
             break;
@@ -968,6 +968,8 @@ RESTART:
         gnc_warning_dialog(NULL, "%s", message);
         g_free ( message );
     }
+
+    g_application_unmark_busy (g_application_get_default ());
 
     return TRUE;
 }

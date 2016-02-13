@@ -1674,27 +1674,6 @@ many months before the current month:</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="pref/general/show-splash-screen">
-                    <property name="label" translatable="yes">Show splash scree_n</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">False</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="tooltip_markup">Show splash screen at startup.</property>
-                    <property name="tooltip_text" translatable="yes">Show splash screen at startup.</property>
-                    <property name="use_underline">True</property>
-                    <property name="draw_indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="right_attach">4</property>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                    <property name="x_options">GTK_FILL</property>
-                    <property name="y_options"/>
-                    <property name="x_padding">12</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label119">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>

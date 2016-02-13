@@ -29,7 +29,6 @@
 #include "gnc-engine.h"
 #include "gnc-plugin-page.h"
 #include "gnc-window.h"
-#include "gnc-splash.h"
 
 static QofLogModule log_module = GNC_MOD_GUI;
 
@@ -178,8 +177,6 @@ gnc_window_show_progress (const char *message, double percentage)
         DEBUG( "no progressbar in hack-window" );
         return;
     }
-
-    gnc_update_splash_screen(message, percentage);
 
     if (percentage < 0)
     {
