@@ -1,9 +1,14 @@
-<ui>
-  <menubar>
-    <menu name="Edit" action="EditAction">
-      <placeholder name="EditStyleSheetsPlaceholder">
-        <menuitem name="EditStyleSheets" action="EditStyleSheetsAction"/>
-      </placeholder>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-edit">
+        <section id="menubar-edit-preferences-section">
+          <item>
+            <attribute name="label" translatable="yes">Style Sheets</attribute>
+            <attribute name="action">view.style-sheets</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>

@@ -1,11 +1,14 @@
-<ui>
-  <menubar>
-    <menu name="File" action="FileAction">
-      <menu name="FileImport" action="FileImportAction">
-      	<placeholder name="FileImportPlaceholder">
-      	   <menuitem name="LogReplay" action="LogReplayAction"/>
-      	</placeholder>
-      </menu>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-file">
+        <section id="menubar-file-import-section">
+          <item>
+            <attribute name="label" translatable="yes">Replay Gnucash .log file...</attribute>
+            <attribute name="action">file.import.log</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>

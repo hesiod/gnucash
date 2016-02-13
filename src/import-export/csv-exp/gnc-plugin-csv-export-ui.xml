@@ -1,13 +1,26 @@
-<ui>
-  <menubar>
-    <menu name="File" action="FileAction">
-      <menu name="FileExport" action="FileExportAction">
-      	<placeholder name="FileExportPlaceholder">
-      	   <menuitem name="FileCsvExportTree" action="CsvExportTreeAction"/>
-      	   <menuitem name="FileCsvExportTrans" action="CsvExportTransAction"/>
-	   <menuitem name="FileCsvExportRegister" action="CsvExportRegisterAction"/>
-      	</placeholder>
-      </menu>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-file">
+        <section id="menubar-file-print-section">
+          <submenu id="menubar-file-export-submenu">
+            <section id="menubar-file-export-section">
+              <item>
+                <attribute name="label" translatable="yes">Export Account Tree to CSV...</attribute>
+                <attribute name="action">file.export.csv.tree</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Export Transactions to CSV...</attribute>
+                <attribute name="action">file.export.csv.transaction</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Export Accounts to CSV...</attribute>
+                <attribute name="action">file.export.csv.register</attribute>
+              </item>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>

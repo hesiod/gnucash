@@ -2,7 +2,6 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-file">
-        <attribute name="label" translatable="yes">File</attribute>
         <section id="menubar-file-new-section">
           <item>
             <attribute name="label" translatable="yes">Print</attribute>
@@ -68,7 +67,7 @@
                   <attribute name="action">scheduled.since-last-run</attribute>
                 </item>
                 <item>
-                  <attribute name="label" translatable="yes">Mortgage & Loan Repayment...</attribute>
+                  <attribute name="label" translatable="yes">Mortgage &amp; Loan Repayment...</attribute>
                   <attribute name="action">scheduled.load-calculator</attribute>
                 </item>
               </section>

@@ -17,11 +17,11 @@
         <section id="menubar-file-print-section">
           <item>
             <attribute name="label" translatable="yes">Print</attribute>
-            <attribute name="action">app.print</attribute>
+            <attribute name="action">win.file.print</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Page Setup</attribute>
-            <attribute name="action">app.page-setup</attribute>
+            <attribute name="action">win.file.page-setup</attribute>
           </item>
           <submenu id="menubar-file-export-submenu">
             <attribute name="label" translatable="yes">Export</attribute>
@@ -31,7 +31,7 @@
         <section id="menubar-file-properties-section">
           <item>
             <attribute name="label" translatable="yes">Properties</attribute>
-            <attribute name="action">app.properties</attribute>
+            <attribute name="action">win.file.properties</attribute>
           </item>
         </section>
         <section id="menubar-file-open-recent-section">
@@ -39,7 +39,7 @@
         <section id="menubar-file-close-section">
           <item>
             <attribute name="label" translatable="yes">Close</attribute>
-            <attribute name="action">app.file.close</attribute>
+            <attribute name="action">win.file.close</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Quit</attribute>
@@ -79,33 +79,33 @@
         <section id="menubar-view-bars-section">
           <item>
             <attribute name="label" translatable="yes">Toolbar</attribute>
-            <attribute name="action">window.toolbar</attribute>
+            <attribute name="action">win.view.toolbar</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Summary Bar</attribute>
-            <attribute name="action">window.summarybar</attribute>
+            <attribute name="action">win.view.summarybar</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Statusbar</attribute>
-            <attribute name="action">window.statusbar</attribute>
+            <attribute name="action">win.view.statusbar</attribute>
           </item>
         </section>
         <section id="menubar-view-content-section"></section>
         <section id="menubar-view-collate-section">
           <item>
             <attribute name="label" translatable="yes">Sort by...</attribute>
-            <attribute name="action">window.sort</attribute>
+            <attribute name="action">win.view.sort</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Filter by...</attribute>
-            <attribute name="action">window.filter</attribute>
+            <attribute name="action">win.view.filter</attribute>
           </item>
         </section>
         <section id="menubar-view-zoom-section"></section>
         <section id="menubar-view-refresh-section">
           <item>
             <attribute name="label" translatable="yes">Refresh</attribute>
-            <attribute name="action">window.refresh</attribute>
+            <attribute name="action">win.view.refresh</attribute>
           </item>
         </section>
       </submenu>
@@ -125,11 +125,11 @@
         <section id="menubar-actions-tail-section">
           <item>
             <attribute name="label" translatable="yes">Forget Warnings</attribute>
-            <attribute name="action">window.forget-warnings</attribute>
+            <attribute name="action">win.actions.forget-warnings</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Rename Page</attribute>
-            <attribute name="action">window.rename-page</attribute>
+            <attribute name="action">win.actions.rename-page</attribute>
           </item>
         </section>
       </submenu>

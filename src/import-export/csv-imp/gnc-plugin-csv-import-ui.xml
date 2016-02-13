@@ -1,13 +1,26 @@
-<ui>
-  <menubar>
-    <menu name="File" action="FileAction">
-      <menu name="FileImport" action="FileImportAction">
-      	<placeholder name="FileImportPlaceholder">
-      	   <menuitem name="FileCsvImportAccounts" action="CsvImportAccountAction"/>
-      	   <menuitem name="FileCsvImportTrans" action="CsvImportTransAction"/>
-      	   <menuitem name="FileCsvImportFixedTrans" action="CsvImportFixedTransAction"/>
-      	</placeholder>
-      </menu>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-file">
+        <section id="menubar-file-open-section">
+          <submenu id="menubar-file-import-submenu">
+            <section id="menubar-file-import-section">
+              <item>
+                <attribute name="label" translatable="yes">Import Accounts from CSV...</attribute>
+                <attribute name="action">file.import.csv.account</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import Transactions from CSV...</attribute>
+                <attribute name="action">file.import.csv.transaction</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import Fixed Transactions from CSV...</attribute>
+                <attribute name="action">file.import.csv.transaction-fixed</attribute>
+              </item>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>

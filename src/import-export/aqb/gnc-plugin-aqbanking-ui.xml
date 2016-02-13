@@ -1,39 +1,93 @@
-<ui>
-  <menubar>
-    <menu name="File" action="FileAction">
-      <menu name="FileImport" action="FileImportAction">
-        <placeholder name="FileImportPlaceholder">
-           <menuitem name="FileMt940Import"     action="Mt940ImportAction"/>
-           <menuitem name="FileMt942Import"     action="Mt942ImportAction"/>
-           <menuitem name="FileDtausImport"     action="DtausImportAction"/>
-           <menuitem name="FileDtausImportsend" action="DtausImportSendAction"/>
-           <!-- When CsvImport works:
-           <menuitem name="FileCsvImport"       action="CsvImportAction"/>
-           <menuitem name="FileCsvImportsend"   action="CsvImportSendAction"/>
-           -->
-        </placeholder>
-      </menu>
-    </menu>
-    <menu name="Actions" action="ActionsAction">
-      <placeholder name="ActionsPlaceholder">
-        <menu name="OnlineActions" action="OnlineActionsAction">
-          <menuitem name="ABGetBalance"         action="ABGetBalanceAction"/>
-          <menuitem name="ABGetTrans"           action="ABGetTransAction"/>
-          <separator name="OnlineActionsSep1"/>
-          <menuitem name="ABIssueTrans"         action="ABIssueTransAction"/>
-          <menuitem name="ABIssueSepaTrans"         action="ABIssueSepaTransAction"/>
-          <menuitem name="ABIssueIntTrans"      action="ABIssueIntTransAction"/>
-          <menuitem name="ABIssueDirectDebit"   action="ABIssueDirectDebitAction"/>
-          <!--menuitem name="ABIssueSepaDirectDebit"         action="ABIssueSepaDirectDebitAction"/-->
-          <separator name="OnlineActionsSep2"/>
-          <menuitem name="ABViewLogwindow"   action="ABViewLogwindowAction"/>
-        </menu>
-      </placeholder>
-    </menu>
-    <menu name="Tools" action="ToolsAction">
-      <placeholder name="ToolsPlaceholder">
-        <menuitem name="ABSetup"                action="ABSetupAction"/>
-     </placeholder>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-file">
+        <section id="menubar-file-open-section">
+          <submenu id="menubar-file-import-submenu">
+            <section id="menubar-file-import-section">
+              <item>
+                <attribute name="label" translatable="yes">Import from Mt940</attribute>
+                <attribute name="action">file.import.mt940</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import from Mt942</attribute>
+                <attribute name="action">file.import.mt942</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import from DTAUS</attribute>
+                <attribute name="action">file.import.dtaus</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import from DTAUS and send...</attribute>
+                <attribute name="action">file.import.dtaus-send</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import from CSV (AqB)</attribute>
+                <attribute name="action">file.import.aqb-csv</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Import from CSV (AqB) and send...</attribute>
+                <attribute name="action">file.import.aqb-csv-send</attribute>
+              </item>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+      <submenu id="menubar-actions">
+        <section id="menubar-actions-section">
+          <submenu id="menubar-actions-online">
+            <attribute name="label" translatable="yes">Online Actions...</attribute>
+            <section id="menubar-actions-online-section">
+              <section id="menubar-actions-online-fetch-section">
+                <item>
+                  <attribute name="label" translatable="yes">Fetch Balance</attribute>
+                  <attribute name="action">actions.online.get.balance</attribute>
+                </item>
+                <item>
+                  <attribute name="label" translatable="yes">Fetch Transaction</attribute>
+                  <attribute name="action">actions.online.get.transaction</attribute>
+                </item>
+              </section>
+              <section id="menubar-actions-online-issue-section">
+                <item>
+                  <attribute name="label" translatable="yes">Issue Transaction</attribute>
+                  <attribute name="action">actions.online.issue.transaction.normal</attribute>
+                </item>
+                <item>
+                  <attribute name="label" translatable="yes">Issue SEPA Transaction</attribute>
+                  <attribute name="action">actions.online.issue.transaction.sepa</attribute>
+                </item>
+                <item>
+                  <attribute name="label" translatable="yes">Issue International Transaction</attribute>
+                  <attribute name="action">actions.online.issue.transaction.int</attribute>
+                </item>
+                <item>
+                  <attribute name="label" translatable="yes">Issue Direct Debit Action</attribute>
+                  <attribute name="action">actions.online.issue.transaction.direct-debit</attribute>
+                </item>
+                <!--<item>
+                  <attribute name="label" translatable="yes">Issue SEPA Direct Debit Action</attribute>
+                  <attribute name="action">actions.online.issue.transaction.sepa-direct-debit</attribute>
+                </item>/-->
+              </section>
+              <section id="menubar-actions-online-log-section">
+                <item>
+                  <attribute name="label" translatable="yes">View Log Window</attribute>
+                  <attribute name="action">actions.online.view-log</attribute>
+                </item>
+              </section>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+      <submenu id="menubar-tools">
+        <section id="menubar-tools-section">
+          <item>
+            <attribute name="label" translatable="yes">Online Banking Setup...</attribute>
+            <attribute name="action">tools.ab.setup</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>

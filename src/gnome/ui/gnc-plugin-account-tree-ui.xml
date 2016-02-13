@@ -1,9 +1,14 @@
-<ui>
-  <menubar>
-    <menu name="View" action="ViewAction">
-      <placeholder name="ViewMiddlePlaceholder">
-        <menuitem name="ViewAccountTree" action="ViewAccountTreeAction"/>
-      </placeholder>
-    </menu>
-  </menubar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-view">
+        <section id="menubar-view-content-section">
+          <item>
+            <attribute name="label" translatable="yes">New Accounts Page</attribute>
+            <attribute name="action">view.account-tree</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>
