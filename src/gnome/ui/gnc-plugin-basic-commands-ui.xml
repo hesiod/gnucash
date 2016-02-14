@@ -4,28 +4,28 @@
       <submenu id="menubar-file">
         <section id="menubar-file-new-section">
           <item>
-            <attribute name="label" translatable="yes">Print</attribute>
-            <attribute name="action">app.file.new</attribute>
+            <attribute name="label" translatable="yes">New</attribute>
+            <attribute name="action">win.file.new</attribute>
           </item>
         </section>
         <section id="menubar-file-open-section">
           <item>
             <attribute name="label" translatable="yes">Open</attribute>
-            <attribute name="action">app.file.open</attribute>
+            <attribute name="action">win.file.open</attribute>
           </item>
         </section>
         <section id="menubar-file-save-section">
           <item>
             <attribute name="label" translatable="yes">Save</attribute>
-            <attribute name="action">app.file.save</attribute>
+            <attribute name="action">win.file.save</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Save As</attribute>
-            <attribute name="action">app.file.save-as</attribute>
+            <attribute name="action">win.file.save-as</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Revert</attribute>
-            <attribute name="action">app.file.revert</attribute>
+            <attribute name="action">win.file.revert</attribute>
           </item>
         </section>
         <section id="menubar-file-print-section">
@@ -33,7 +33,7 @@
             <section id="menubar-file-export-section">
               <item>
                 <attribute name="label" translatable="yes">Export Accounts</attribute>
-                <attribute name="action">app.file.export</attribute>
+                <attribute name="action">win.file.export.accounts</attribute>
               </item>
             </section>
           </submenu>
@@ -43,13 +43,13 @@
         <section id="menubar-edit-find-section">
           <item>
             <attribute name="label" translatable="yes">Find</attribute>
-            <attribute name="action">edit.find</attribute>
+            <attribute name="action">win.edit.find</attribute>
           </item>
         </section>
         <section id="menubar-edit-preferences-section">
           <item>
             <attribute name="label" translatable="yes">Tax Report Options</attribute>
-            <attribute name="action">app.tax-options</attribute>
+            <attribute name="action">win.edit.tax-options</attribute>
           </item>
         </section>
       </submenu>
@@ -60,15 +60,15 @@
               <section id="menubar-actions-scheduled-section">
                 <item>
                   <attribute name="label" translatable="yes">Scheduled Transaction Editor</attribute>
-                  <attribute name="action">scheduled.editor</attribute>
+                  <attribute name="action">win.actions.scheduled.editor</attribute>
                 </item>
                 <item>
                   <attribute name="label" translatable="yes">Since Last Run</attribute>
-                  <attribute name="action">scheduled.since-last-run</attribute>
+                  <attribute name="action">win.actions.scheduled.since-last-run</attribute>
                 </item>
                 <item>
                   <attribute name="label" translatable="yes">Mortgage &amp; Loan Repayment...</attribute>
-                  <attribute name="action">scheduled.load-calculator</attribute>
+                  <attribute name="action">win.actions.scheduled.load-calculator</attribute>
                 </item>
               </section>
           </submenu>
@@ -78,23 +78,23 @@
         <section id="menubar-tools-section">
           <item>
             <attribute name="label" translatable="yes">Price Editor</attribute>
-            <attribute name="action">tool.editor.price</attribute>
+            <attribute name="action">win.tools.editor.price</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Commodity Editor</attribute>
-            <attribute name="action">tool.editor.commodity</attribute>
+            <attribute name="action">win.tools.editor.commodity</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Financial Calculator</attribute>
-            <attribute name="action">tool.calculator</attribute>
+            <attribute name="action">win.tools.calculator</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Close Books</attribute>
-            <attribute name="action">tool.close-books</attribute>
+            <attribute name="action">win.tools.close-books</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Imap Editor</attribute>
-            <attribute name="action">tool.editor.imap</attribute>
+            <attribute name="action">win.tools.editor.imap</attribute>
           </item>
         </section>
       </submenu>
@@ -116,7 +116,7 @@
         <section id="toolbar-save-section">
           <item>
             <attribute name="label" translatable="yes">Save</attribute>
-            <attribute name="action">app.file.save</attribute>
+            <attribute name="action">win.file.save</attribute>
           </item>
         </section>
       </section>

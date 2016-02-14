@@ -2,11 +2,15 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-file">
-        <section id="menubar-file-import-section">
-          <item>
-            <attribute name="label" translatable="yes">Replay Gnucash .log file...</attribute>
-            <attribute name="action">file.import.log</attribute>
-          </item>
+        <section id="menubar-file-open-section">
+          <submenu id="menubar-file-import-submenu">
+            <section id="menubar-file-import-section">
+              <item>
+                <attribute name="label" translatable="yes">Replay Gnucash .log file...</attribute>
+                <attribute name="action">file.import.log</attribute>
+              </item>
+            </section>
+          </submenu>
         </section>
       </submenu>
     </section>

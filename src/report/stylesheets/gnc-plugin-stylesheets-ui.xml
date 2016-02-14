@@ -2,10 +2,10 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-edit">
-        <section id="menubar-edit-preferences-section">
+        <section id="menubar-edit-style-sheets-section">
           <item>
             <attribute name="label" translatable="yes">Style Sheets</attribute>
-            <attribute name="action">view.style-sheets</attribute>
+            <attribute name="action">win.edit.style-sheets</attribute>
           </item>
         </section>
       </submenu>

@@ -16,10 +16,6 @@
         </section>
         <section id="menubar-file-print-section">
           <item>
-            <attribute name="label" translatable="yes">Print</attribute>
-            <attribute name="action">win.file.print</attribute>
-          </item>
-          <item>
             <attribute name="label" translatable="yes">Page Setup</attribute>
             <attribute name="action">win.file.page-setup</attribute>
           </item>
@@ -48,7 +44,7 @@
         </section>
       </submenu>
       <submenu id="menubar-edit">
-        <attribute name="label" translatable="yes">File</attribute>
+        <attribute name="label" translatable="yes">Edit</attribute>
         <section id="menubar-edit-modification-section"></section>
         <section id="menubar-edit-clipboard-section">
           <item>
@@ -111,17 +107,28 @@
       </submenu>
       <submenu id="menubar-transaction">
         <attribute name="label" translatable="yes">Transaction</attribute>
-        <section id="menubar-transaction-section"></section>
+        <section id="menubar-transaction-section">
+          <section id="menubar-transaction-edit-section"></section>
+          <section id="menubar-transaction-record-section"></section>
+          <section id="menubar-transaction-undo-section"></section>
+          <section id="menubar-transaction-associate-section"></section>
+        </section>
       </submenu>
       <submenu id="menubar-actions">
         <attribute name="label" translatable="yes">Actions</attribute>
-        <section id="menubar-actions-section"></section>
-        <section id="menubar-budget-section"></section>
-        <section id="menubar-actions-scrub-section">
-          <submenu id="menubar-actions-scrub-submenu">
-            <attribute name="label" translatable="yes">Check &amp; Repair</attribute>
+        <section id="menubar-actions-section">
+          <submenu id="menubar-actions-online">
+            <attribute name="label" translatable="yes">Online Actions...</attribute>
+            <section id="menubar-actions-online-section"></section>
           </submenu>
+          <section id="menubar-actions-account-new-section"></section>
+          <section id="menubar-actions-account-edit-section"></section>
         </section>
+        <section id="menubar-budget-section"></section>
+        <submenu id="menubar-actions-scrub-submenu">
+          <attribute name="label" translatable="yes">Check &amp; Repair</attribute>
+          <section id="menubar-actions-scrub-section"></section>
+        </submenu>
         <section id="menubar-actions-tail-section">
           <item>
             <attribute name="label" translatable="yes">Forget Warnings</attribute>
@@ -141,12 +148,8 @@
         <section id="menubar-reports-other-reports-section"></section>
       </submenu>
       <submenu id="menubar-tools">
-        <attribute name="label" translatable="yes">File</attribute>
+        <attribute name="label" translatable="yes">Tools</attribute>
         <section id="menubar-tools-section"></section>
-      </submenu>
-      <submenu id="menubar-extensions">
-        <attribute name="label" translatable="yes">Extensions</attribute>
-        <section id="menubar-extensions-section"></section>
       </submenu>
       <submenu id="menubar-windows">
         <attribute name="label" translatable="yes">Windows</attribute>

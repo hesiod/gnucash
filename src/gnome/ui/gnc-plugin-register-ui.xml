@@ -2,11 +2,11 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-tools">
-        <attribute name="label" translatable="yes">File</attribute>
+        <attribute name="label" translatable="yes">Tools</attribute>
         <section id="menubar-tools-section">
           <item>
             <attribute name="label" translatable="yes">General Ledger</attribute>
-            <attribute name="action">tool.general-ledger</attribute>
+            <attribute name="action">win.tools.general-ledger</attribute>
           </item>
         </section>
       </submenu>
