@@ -39,7 +39,6 @@
 #include "gnc-gui-query.h"
 #include "gnc-hooks.h"
 #include "gnc-keyring.h"
-#include "gnc-splash.h"
 #include "gnc-ui.h"
 #include "gnc-ui-util.h"
 #include "gnc-uri-utils.h"
@@ -775,6 +774,7 @@ RESTART:
             g_application_mark_busy (g_application_get_default());
             /* user told us to open readonly. We do ignore locks (just as before), but now also force the opening. */
             qof_session_begin (new_session, newfile, is_readonly, FALSE, TRUE);
+            g_application_unmark_busy (g_application_get_default ());
             break;
         case RESPONSE_OPEN:
             // mark as busy, file loading and display of
@@ -782,6 +782,7 @@ RESTART:
             g_application_mark_busy (g_application_get_default());
             /* user told us to ignore locks. So ignore them. */
             qof_session_begin (new_session, newfile, TRUE, FALSE, FALSE);
+            g_application_unmark_busy (g_application_get_default ());
             break;
         default:
             /* Can't use the given file, so just create a new
@@ -968,8 +969,6 @@ RESTART:
         gnc_warning_dialog(NULL, "%s", message);
         g_free ( message );
     }
-
-    g_application_unmark_busy (g_application_get_default ());
 
     return TRUE;
 }

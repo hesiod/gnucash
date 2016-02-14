@@ -68,7 +68,7 @@ gnc_window_get_type (void)
 GtkWindow *
 gnc_window_get_gtk_window (GncWindow *window)
 {
-    g_return_val_if_fail(GNC_WINDOW (window), NULL);
+    g_return_val_if_fail(GNC_IS_WINDOW (window), NULL);
 
     /* mandatory */
     g_return_val_if_fail(GNC_WINDOW_GET_IFACE (window)->get_gtk_window, NULL);
@@ -79,7 +79,7 @@ gnc_window_get_gtk_window (GncWindow *window)
 static GtkWidget *
 gnc_window_get_statusbar (GncWindow *window)
 {
-    g_return_val_if_fail(GNC_WINDOW (window), NULL);
+    g_return_val_if_fail(GNC_IS_WINDOW (window), NULL);
 
     /* mandatory */
     g_return_val_if_fail(GNC_WINDOW_GET_IFACE (window)->get_statusbar, NULL);
@@ -90,7 +90,7 @@ gnc_window_get_statusbar (GncWindow *window)
 static GtkWidget *
 gnc_window_get_progressbar (GncWindow *window)
 {
-    g_return_val_if_fail(GNC_WINDOW (window), NULL);
+    g_return_val_if_fail(GNC_IS_WINDOW (window), NULL);
 
     /* optional */
     if (GNC_WINDOW_GET_IFACE (window)->get_progressbar == NULL)
@@ -109,7 +109,7 @@ gnc_window_update_status (GncWindow *window, GncPluginPage *page)
     GtkWidget *statusbar;
     const gchar *message;
 
-    g_return_if_fail(GNC_WINDOW (window));
+    g_return_if_fail(GNC_IS_WINDOW (window));
 
     statusbar = gnc_window_get_statusbar (window);
     message = gnc_plugin_page_get_statusbar_text(page);
@@ -121,8 +121,8 @@ void
 gnc_window_set_status (GncWindow *window, GncPluginPage *page,
                        const gchar *message)
 {
-    g_return_if_fail(GNC_WINDOW (window));
-    g_return_if_fail(GNC_PLUGIN_PAGE (page));
+    g_return_if_fail(GNC_IS_WINDOW (window));
+    g_return_if_fail(GNC_IS_PLUGIN_PAGE (page));
 
     gnc_plugin_page_set_statusbar_text(page, message);
     gnc_window_update_status (window, page);

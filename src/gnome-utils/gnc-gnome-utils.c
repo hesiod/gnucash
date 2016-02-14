@@ -42,7 +42,6 @@
 #include "gnc-menu-extensions.h"
 #include "gnc-module.h"
 #include "gnc-report.h"
-#include "gnc-splash.h"
 #include "gnc-window.h"
 #include "dialog-options.h"
 #include "dialog-commodity.h"
@@ -286,13 +285,6 @@ gnc_launch_assoc (const char *uri)
 }
 #endif
 
-static void
-update_message(const gchar *msg)
-{
-    gnc_update_splash_screen(msg, GNC_SPLASH_PERCENTAGE_UNKNOWN);
-    g_message("%s", msg);
-}
-
 void
 gnc_log_init(const gchar *log_to_filename, const gchar **log_flags)
 {
@@ -383,7 +375,7 @@ load_system_config(void)
 
     if (is_system_config_loaded) return;
 
-    update_message("loading system configuration");
+    g_message("loading system configuration");
     system_config_dir = gnc_path_get_pkgsysconfdir();
     system_config = g_build_filename(system_config_dir, "config", NULL);
     is_system_config_loaded = gfec_try_load(system_config);
@@ -417,13 +409,13 @@ load_user_config(void)
         return;
     else is_user_config_loaded = TRUE;
 
-    update_message("loading user configuration");
+    g_message("loading user configuration");
     try_load_config_array(user_config_files);
-    update_message("loading auto configuration");
+    g_message("loading auto configuration");
     try_load_config_array(auto_config_files);
-    update_message("loading saved reports");
+    g_message("loading saved reports");
     try_load_config_array(saved_report_files);
-    update_message("loading stylesheets");
+    g_message("loading stylesheets");
     try_load_config_array(stylesheet_files);
 }
 
@@ -471,7 +463,7 @@ load_gnucash_modules(void)
         { "gnucash/engine", 0, FALSE },
         { "gnucash/register/ledger-core", 0, FALSE },
         { "gnucash/register/register-core", 0, FALSE },
-        { "gnucash/register/register-gnome", 0, FALSE },
+        { "gnucash/register/register-gnome", 0, TRUE },
         { "gnucash/import-export/qif-import", 0, FALSE },
         { "gnucash/import-export/ofx", 0, TRUE },
         { "gnucash/import-export/csv-import", 0, TRUE },
@@ -493,16 +485,17 @@ load_gnucash_modules(void)
 
     /* module initializations go here */
     len = sizeof(modules) / sizeof(*modules);
+    g_application_mark_busy (g_application_get_default());
     for (i = 0; i < len; i++)
     {
         DEBUG("Loading module %s started", modules[i].name);
-        gnc_update_splash_screen(modules[i].name, GNC_SPLASH_PERCENTAGE_UNKNOWN);
         if (modules[i].optional)
             gnc_module_load_optional(modules[i].name, modules[i].version);
         else
             gnc_module_load(modules[i].name, modules[i].version);
         DEBUG("Loading module %s finished", modules[i].name);
     }
+    g_application_unmark_busy (g_application_get_default());
     if (!gnc_engine_is_initialized())
     {
         /* On Windows this check used to fail anyway, see
@@ -522,7 +515,6 @@ gnc_gui_init(GncMainWindow *main_window)
     ENTER ("");
 
     gnc_prefs_init();
-    gnc_show_splash_screen();
 
     gnome_is_initialized = TRUE;
 

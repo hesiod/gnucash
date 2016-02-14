@@ -108,8 +108,6 @@ enum
 
 /** The debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
-/** A pointer to the parent class of an embedded window. */
-static GObjectClass *parent_class = NULL;
 /** An identifier that indicates a "main" window. */
 static GQuark window_type = 0;
 /** A list of all extant main windows. This is for convenience as the
@@ -168,7 +166,7 @@ static GtkWidget *gnc_main_window_get_statusbar (GncWindow *window_in);
 static void statusbar_notification_lastmodified(void);
 
 struct _GncMainWindow {
-    GtkWidget * gtk_window;
+    GtkApplicationWindow parent_instance;
 };
 
 /** The instance private data structure for an embedded window
@@ -205,11 +203,6 @@ typedef struct GncMainWindowPrivate
     GtkWidget *about_dialog;
 
     GtkWidget *menu;
-
-    /** The group of all actions provided by the main window
-     *  itself.  This does not include any action provided by menu
-     *  or content plugins. */
-    GActionGroup *action_group;
 
     /** A list of all pages that are installed in this window. */
     GList *installed_pages;
@@ -257,154 +250,99 @@ static guint main_window_signals[LAST_SIGNAL] = { 0 };
  *  them. */
 static GActionEntry gnc_menu_actions [] =
 {
-    /* Toplevel */
-
-    { "FileAction" },
-    { "EditAction" },
-    { "ViewAction" },
-    { "ActionsAction" },
-    { "TransactionAction" },
-    { "ReportsAction" },
-    { "ToolsAction" },
-    { "ExtensionsAction" },
-    { "WindowsAction" },
-    { "HelpAction" },
-
     /* File menu */
-
-    { "FileImportAction" },
-    { "FileExportAction" },
     {
-        "FilePrintAction"
-    },
-    {
-        "FilePageSetupAction", NULL, NULL, NULL,
+        "file.page-setup", NULL, NULL, NULL,
         gnc_main_window_cmd_page_setup
     },
     {
-        "FilePropertiesAction", NULL, NULL, NULL,
+        "file.properties", NULL, NULL, NULL,
         gnc_main_window_cmd_file_properties
     },
     {
-        "FileCloseAction", NULL, NULL, NULL,
+        "file.close", NULL, NULL, NULL,
         gnc_main_window_cmd_file_close
     },
     {
-        "FileQuitAction", NULL, NULL, NULL,
+        "quit", NULL, NULL, NULL,
         gnc_main_window_cmd_file_quit
     },
 
     /* Edit menu */
 
     {
-        "EditCutAction", NULL, NULL, NULL,
+        "edit.cut", NULL, NULL, NULL,
         gnc_main_window_cmd_edit_cut
     },
     {
-        "EditCopyAction", NULL, NULL, NULL,
+        "edit.copy", NULL, NULL, NULL,
         gnc_main_window_cmd_edit_copy
     },
     {
-        "EditPasteAction", NULL, NULL, NULL,
+        "edit.paste", NULL, NULL, NULL,
         gnc_main_window_cmd_edit_paste
     },
     {
-        "EditPreferencesAction", NULL, NULL, NULL,
+        "edit.preferences", NULL, NULL, NULL,
         gnc_main_window_cmd_edit_preferences
     },
 
     /* View menu */
-
     {
-        "ViewSortByAction"
-    },
-    {
-        "ViewFilterByAction"
-    },
-    {
-        "ViewRefreshAction", NULL, NULL, NULL,
+        "view.refresh", NULL, NULL, NULL,
         gnc_main_window_cmd_view_refresh
     },
 
     /* Actions menu */
-
-    { "ScrubMenuAction" },
     {
-        "ActionsForgetWarningsAction", NULL, NULL, NULL,
+        "actions.forget-warnings", NULL, NULL, NULL,
         gnc_main_window_cmd_actions_reset_warnings
     },
     {
-        "ActionsRenamePageAction", NULL, NULL, NULL,
+        "actions.rename-page", NULL, NULL, NULL,
         gnc_main_window_cmd_actions_rename_page
     },
 
     /* Windows menu */
-
     {
-        "WindowNewAction", NULL, NULL, NULL,
+        "window.new", NULL, NULL, NULL,
         gnc_main_window_cmd_window_new
     },
     {
-        "WindowMovePageAction", NULL, NULL, NULL,
+        "window.move-page", NULL, NULL, NULL,
         gnc_main_window_cmd_window_move_page
     },
 
     /* Help menu */
-
     {
-        "HelpTutorialAction", NULL, NULL, NULL,
+        "help.tutorial", NULL, NULL, NULL,
         gnc_main_window_cmd_help_tutorial
     },
     {
-        "HelpContentsAction", NULL, NULL, NULL,
+        "help.contents", NULL, NULL, NULL,
         gnc_main_window_cmd_help_contents
     },
     {
-        "HelpAboutAction", NULL, NULL, NULL,
+        "help.about", NULL, NULL, NULL,
         gnc_main_window_cmd_help_about
     },
      /* Toggle actions */
     {
-        "ViewToolbarAction", NULL, NULL, NULL,
+        "view.toolbar", NULL, "b", "true",
         gnc_main_window_cmd_view_toolbar
     },
     {
-        "ViewSummaryAction", NULL, NULL, NULL,
+        "view.summarybar", NULL, "b", "true",
         gnc_main_window_cmd_view_summary
     },
     {
-        "ViewStatusbarAction", NULL, NULL, NULL,
+        "view.statusbar", NULL, "b", "true",
         gnc_main_window_cmd_view_statusbar
-    },
-
-     /** An array of all of the radio action provided by the main window
-      *  code. */
-     { "Window0Action", NULL, NULL, NULL, NULL },
-     { "Window1Action", NULL, NULL, NULL, NULL },
-     { "Window2Action", NULL, NULL, NULL, NULL },
-     { "Window3Action", NULL, NULL, NULL, NULL },
-     { "Window4Action", NULL, NULL, NULL, NULL },
-     { "Window5Action", NULL, NULL, NULL, NULL },
-     { "Window6Action", NULL, NULL, NULL, NULL },
-     { "Window7Action", NULL, NULL, NULL, NULL },
-     { "Window8Action", NULL, NULL, NULL, NULL },
-     { "Window9Action", NULL, NULL, NULL, NULL },
-
+    }
 };
 /** The number of actions provided by the main window. */
 static guint gnc_menu_n_actions = G_N_ELEMENTS (gnc_menu_actions);
 static guint n_radio_entries = 10;
-
-
-/** The following are in the main window so they will always be
- *  present in the menu structure, but they are never sensitive.
- *  These actions should be overridden in child windows where they
- *  have meaning. */
-static const gchar *always_insensitive_actions[] =
-{
-    "FilePrintAction",
-    NULL
-};
 
 
 /** The following items in the main window should be made insensitive
@@ -412,19 +350,7 @@ static const gchar *always_insensitive_actions[] =
  *  event. */
 static const gchar *initially_insensitive_actions[] =
 {
-    "FileCloseAction",
-    NULL
-};
-
-
-/** The following are in the main window so they will always be
- *  present in the menu structure, but they are always hidden.
- *  These actions should be overridden in child windows where they
- *  have meaning. */
-static const gchar *always_hidden_actions[] =
-{
-    "ViewSortByAction",
-    "ViewFilterByAction",
+    "file.close",
     NULL
 };
 
@@ -433,7 +359,7 @@ static const gchar *always_hidden_actions[] =
  *  cannot be performed on that page. */
 static const gchar *immutable_page_actions[] =
 {
-    "FileCloseAction",
+    "file.close",
     NULL
 };
 
@@ -442,7 +368,7 @@ static const gchar *immutable_page_actions[] =
  *  pages in a window. */
 static const gchar *multiple_page_actions[] =
 {
-    "WindowMovePageAction",
+    "window.move-page",
     NULL
 };
 
@@ -750,10 +676,10 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
         gtk_window_maximize(GTK_WINDOW(window));
     }
 
-    group = G_ACTION_GROUP(g_application_get_default());
+    group = G_ACTION_GROUP(window);
     /* Common view menu items */
     visible = g_variant_get_boolean (
-                   g_action_group_get_action_state (group, "ViewToolbarAction"));
+                   g_action_group_get_action_state (group, "view.toolbar"));
     desired_visibility = g_key_file_get_boolean(data->key_file, window_group,
                          TOOLBAR_VISIBLE, &error);
     if (error)
@@ -766,12 +692,12 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
     else if (visible != desired_visibility)
     {
         g_action_group_change_action_state (group,
-                                            "ViewToolbarAction",
+                                            "view.toolbar",
                                             g_variant_new_boolean(desired_visibility));
     }
 
     visible = g_variant_get_boolean(
-                   g_action_group_get_action_state (group, "ViewSummaryAction"));
+                   g_action_group_get_action_state (group, "view.summarybar"));
     desired_visibility = g_key_file_get_boolean(data->key_file, window_group,
                          SUMMARYBAR_VISIBLE, &error);
     if (error)
@@ -784,12 +710,12 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
     else if (visible != desired_visibility)
     {
               g_action_group_change_action_state (group,
-                                                  "ViewSummaryAction",
+                                                  "view.summarybar",
                                                   g_variant_new_boolean(desired_visibility));
     }
 
     visible = g_variant_get_boolean(
-                   g_action_group_get_action_state (group,  "ViewStatusbarAction"));
+                   g_action_group_get_action_state (group,  "view.statusbar"));
     desired_visibility = g_key_file_get_boolean(data->key_file, window_group,
                          STATUSBAR_VISIBLE, &error);
     if (error)
@@ -802,7 +728,7 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
     else if (visible != desired_visibility)
     {
         g_action_group_change_action_state (group,
-                                            "ViewStatusbarAction",
+                                            "view.statusbar",
                                             g_variant_new_boolean(desired_visibility));
     }
 
@@ -1434,6 +1360,7 @@ gnc_main_window_generate_title (GncMainWindow *window)
     const gchar *readonly_text = NULL;
     gchar *readonly;
     gchar *title;
+    gchar *middle;
 
     if (gnc_current_session_exist())
     {
@@ -1476,25 +1403,27 @@ gnc_main_window_generate_title (GncMainWindow *window)
     page = priv->current_page;
     if (page)
     {
-        /* The Gnome HIG 2.0 recommends the application name not be used. (p16)
-         * but several developers prefer to use it anyway. */
-        title = g_strdup_printf("%s%s%s - %s - GnuCash", dirty, filename, readonly,
-                                gnc_plugin_page_get_page_name(page));
+        g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), "GnuCash");
+        middle = g_strdup_printf(" - %s", gnc_plugin_page_get_page_name(page));
+        /* Update the menus based upon whether this is an "immutable" page. */
+        immutable = page &&
+                    g_object_get_data (G_OBJECT (page), PLUGIN_PAGE_IMMUTABLE);
+        gnc_plugin_update_actions(G_ACTION_MAP(window),
+                                  immutable_page_actions,
+                                  "enabled", !immutable);
+        /* Trigger sensitivity updates of other actions such as Save/Revert */
+        g_signal_emit_by_name (window, "page-changed", page);
     }
     else
     {
-        title = g_strdup_printf("%s%s%s - GnuCash", dirty, filename, readonly);
+        middle = g_strdup("");
     }
-    /* Update the menus based upon whether this is an "immutable" page. */
-    immutable = page &&
-                g_object_get_data (G_OBJECT (page), PLUGIN_PAGE_IMMUTABLE);
-    gnc_plugin_update_actions(priv->action_group,
-                              immutable_page_actions,
-                              "sensitive", !immutable);
-    /* Trigger sensitivity updtates of other actions such as Save/Revert */
-    g_signal_emit_by_name (window, "page_changed", page);
-    g_free( filename );
+    /* The Gnome HIG 2.0 recommends the application name not be used. (p16)
+     * but several developers prefer to use it anyway. */
+    title = g_strdup_printf("%s%s%s%s - GnuCash", dirty, filename, readonly, middle);
+    g_free(filename);
     g_free(readonly);
+    g_free(middle);
 
     return title;
 }
@@ -1680,18 +1609,15 @@ statusbar_notification_lastmodified()
 
 
 /** This data structure is used to describe the requested state of a
- *  GtkRadioAction, and us used to pass data among several
+ *  GAction, and us used to pass data among several
  *  functions. */
 struct menu_update
 {
-    /** The name of the GtkRadioAction to be updated. */
+    /** The name of the GAction to be updated. */
     gchar    *action_name;
 
-    /** The new label for this GtkRadioAction. */
-    gchar    *label;
-
-    /** Whether or not the GtkRadioAction should be visible. */
-    gboolean  visible;
+    /** Whether or not the GAction should be enabled. */
+    gboolean  enabled;
 };
 
 /** Update the label on the specified GtkRadioAction in the specified
@@ -1711,20 +1637,14 @@ static void
 gnc_main_window_update_one_menu_action (GncMainWindow *window,
                                         struct menu_update *data)
 {
-    GncMainWindowPrivate *priv;
     GAction* action;
 
-    ENTER("window %p, action %s, label %s, visible %d", window,
-          data->action_name, data->label, data->visible);
-    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    g_return_if_fail(priv->action_group != NULL);
+    ENTER("window %p, action %s, enabled %d", window,
+          data->action_name, data->enabled);
     g_return_if_fail(data->action_name != NULL);
-    action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group), data->action_name);
-    if (action)
-        g_object_set(G_OBJECT(action),
-                     "label", data->label,
-                     "visible", data->visible,
-                     (char *)NULL);
+    action = g_action_map_lookup_action(G_ACTION_MAP(window), data->action_name);
+    g_return_if_fail(action != NULL);
+    g_simple_action_set_enabled (G_SIMPLE_ACTION(action), data->enabled);
     LEAVE(" ");
 }
 
@@ -1743,6 +1663,7 @@ gnc_main_window_update_one_menu_action (GncMainWindow *window,
 static void
 gnc_main_window_update_radio_button (GncMainWindow *window)
 {
+#if 0
     GncMainWindowPrivate *priv;
     GAction *action, *first_action;
     GSList *action_list;
@@ -1759,32 +1680,12 @@ gnc_main_window_update_radio_button (GncMainWindow *window)
         return;
     }
 
-    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     action_name = g_strdup_printf("window.open.%d", index);
-    g_return_if_fail(priv->action_group != NULL);
-    action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group), action_name);
+    action = g_action_map_lookup_action(G_ACTION_MAP(window), action_name);
 
-    // FIXME Why do we need this?
-    /* Block the signal so as not to affect window ordering (top to
-     * bottom) on the screen */
-#if 0
-    action_list = gtk_radio_action_get_group(action);
-    if (action_list)
-    {
-        first_action = g_slist_last(action_list)->data;
-        g_signal_handlers_block_by_func(G_OBJECT(first_action),
-                                        G_CALLBACK(gnc_main_window_cmd_window_raise),
-                                        window);
-        DEBUG("blocked signal on %p, set %p active, window %p", first_action,
-              action, window);
-        g_action_activate(first_action, NULL);
-        g_signal_handlers_unblock_by_func(G_OBJECT(first_action),
-                                          G_CALLBACK(gnc_main_window_cmd_window_raise),
-                                          window);
-    }
-#endif
     g_free(action_name);
     LEAVE(" ");
+#endif
 }
 
 /** In every window that the user has open, update the "Window" menu
@@ -1803,6 +1704,7 @@ gnc_main_window_update_radio_button (GncMainWindow *window)
 static void
 gnc_main_window_update_menu_item (GncMainWindow *window)
 {
+#if 0
     struct menu_update data;
     gchar **strings, *title, *expanded;
     gint index;
@@ -1815,31 +1717,15 @@ gnc_main_window_update_menu_item (GncMainWindow *window)
         return;
     }
 
-    /* Figure out the label name. Add the accelerator if possible. */
-    title = gnc_main_window_generate_title(window);
-    strings = g_strsplit(title, "_", 0);
-    g_free(title);
-    expanded = g_strjoinv("__", strings);
-    if (index < 10)
-    {
-        data.label = g_strdup_printf("_%d %s", (index + 1) % 10, expanded);
-        g_free(expanded);
-    }
-    else
-    {
-        data.label = expanded;
-    }
-    g_strfreev(strings);
-
-    data.visible = TRUE;
-    data.action_name = g_strdup_printf("Window%dAction", index);
+    data.enabled = TRUE;
+    data.action_name = g_strdup_printf("window.open.%d", index);
     g_list_foreach(active_windows,
                    (GFunc)gnc_main_window_update_one_menu_action,
                    &data);
     g_free(data.action_name);
-    g_free(data.label);
 
     LEAVE(" ");
+#endif
 }
 
 /** Update all menu entries for all window menu items in all windows.
@@ -1849,13 +1735,11 @@ gnc_main_window_update_menu_item (GncMainWindow *window)
  *
  *  @internal
  */
-
-
 static void
 gnc_main_window_update_all_menu_items (void)
 {
+#if 0
     struct menu_update data;
-    gchar *label;
     gint i;
 
     ENTER("");
@@ -1867,22 +1751,20 @@ gnc_main_window_update_all_menu_items (void)
                    (GFunc)gnc_main_window_update_radio_button,
                    NULL);
 
-    /* Now hide any entries that aren't being used. */
-    data.visible = FALSE;
+    /* Now disable any entries that aren't being used. */
+    data.enabled = FALSE;
     for (i = g_list_length(active_windows); i < n_radio_entries; i++)
     {
-        data.action_name = g_strdup_printf("Window%dAction", i);
-        label = g_strdup_printf("Window _%d", (i - 1) % 10);
-        data.label = gettext(label);
+        data.action_name = g_strdup_printf("window.open.%d", i);
 
         g_list_foreach(active_windows,
                        (GFunc)gnc_main_window_update_one_menu_action,
                        &data);
 
         g_free(data.action_name);
-        g_free(label);
     }
     LEAVE(" ");
+#endif
 }
 
 /** Show/hide the close box on the tab of a notebook page.  This
@@ -2376,16 +2258,14 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-    parent_class = g_type_class_peek_parent (klass);
-
     window_type = g_quark_from_static_string ("gnc-main-window");
 
     object_class->finalize = gnc_main_window_finalize;
 
-    /* GObject signals */
+    /* GtkWidget signals */
     widget_class->destroy = gnc_main_window_destroy;
 
-    g_type_class_add_private(klass, sizeof(GncMainWindowPrivate));
+    //g_type_class_add_private(klass, sizeof(GncMainWindowPrivate));
 
     /**
      * GncMainWindow::page-added:
@@ -2501,7 +2381,7 @@ gnc_main_window_finalize (GObject *object)
     }
 
     gnc_gobject_tracking_forget(object);
-    G_OBJECT_CLASS (parent_class)->finalize (object);
+    G_OBJECT_CLASS (gnc_main_window_parent_class)->finalize (object);
 }
 
 
@@ -2524,7 +2404,6 @@ gnc_main_window_destroy (GtkWidget *object)
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     if (priv->merged_actions_table)
     {
-
         /* Close any pages in this window */
         while (priv->current_page)
             gnc_main_window_close_page(priv->current_page);
@@ -2554,7 +2433,7 @@ gnc_main_window_destroy (GtkWidget *object)
     }
     if (priv->about_dialog)
         g_object_unref (priv->about_dialog);
-    GTK_WIDGET_CLASS (parent_class)->destroy (object);
+    GTK_WIDGET_CLASS (gnc_main_window_parent_class)->destroy (object);
 }
 
 
@@ -2564,21 +2443,22 @@ GncMainWindow *
 gnc_main_window_new (void)
 {
     GncMainWindow *window;
-    GtkWidget *old_window;
 
     window = g_object_new (GNC_TYPE_MAIN_WINDOW, NULL);
     gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 
-    old_window = gnc_ui_get_toplevel();
-    if (old_window)
-    {
-        gint width, height;
-        gtk_window_get_size (GTK_WINDOW (old_window), &width, &height);
-        gtk_window_resize (GTK_WINDOW (window), width, height);
-        if ((gdk_window_get_state((gtk_widget_get_window (GTK_WIDGET(old_window))))
-                & GDK_WINDOW_STATE_MAXIMIZED) != 0)
+    if (0) {
+        GtkWidget *old_window = gnc_ui_get_toplevel();
+        if (old_window)
         {
-            gtk_window_maximize (GTK_WINDOW (window));
+            gint width, height;
+            gtk_window_get_size (GTK_WINDOW (old_window), &width, &height);
+            gtk_window_resize (GTK_WINDOW (window), width, height);
+            if ((gdk_window_get_state((gtk_widget_get_window (GTK_WIDGET(old_window))))
+                    & GDK_WINDOW_STATE_MAXIMIZED) != 0)
+            {
+                gtk_window_maximize (GTK_WINDOW (window));
+            }
         }
     }
     active_windows = g_list_append (active_windows, window);
@@ -3025,7 +2905,7 @@ gnc_main_window_merge_actions (GncMainWindow *window,
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     entry = g_new0 (MergedActionEntry, 1);
-    g_action_map_add_action_entries (G_ACTION_MAP(g_application_get_default()),
+    g_action_map_add_action_entries (G_ACTION_MAP(window),
                                      actions, n_actions, data);
     entry->merge_id = egg_menu_manager_add_filename (priv->ui_merge, pathname, &error);
     g_assert(entry->merge_id || error);
@@ -3175,13 +3055,15 @@ static void
 gnc_main_window_edit_menu_draw_cb (GtkWidget *menu,
                                    GncMainWindow *window)
 {
-    gnc_main_window_update_edit_actions_sensitivity (window);
+    //gnc_main_window_update_edit_actions_sensitivity (window);
 }
 
 
 static void
 gnc_main_window_init_menu_updaters (GncMainWindow *window)
 {
+    // FIXME Maybe dump this
+#if 0
     GtkWidget *edit_menu_item, *edit_menu;
     GList *children, *elem;
     GncMainWindowPrivate *priv;
@@ -3202,6 +3084,7 @@ gnc_main_window_init_menu_updaters (GncMainWindow *window)
 
     g_signal_connect (edit_menu, "draw",
                       G_CALLBACK(gnc_main_window_edit_menu_draw_cb), window);
+#endif
 }
 
 static void
@@ -3219,7 +3102,7 @@ gnc_main_window_window_menu (GncMainWindow *window)
     g_free(filename);
     g_assert(merge_id != 0);
 
-    g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
+    g_action_map_add_action_entries (G_ACTION_MAP(window),
                                      gnc_menu_actions, gnc_menu_n_actions,
                                      window);
 
@@ -3283,19 +3166,12 @@ gnc_main_window_setup_window (GncMainWindow *window)
     priv->ui_merge = egg_menu_manager_new ();
 
     /* Create menu and toolbar information */
-    priv->action_group = G_ACTION_GROUP(g_application_get_default ());
-    g_action_map_add_action_entries (G_ACTION_MAP(priv->action_group),
+    g_action_map_add_action_entries (G_ACTION_MAP(window),
                                      gnc_menu_actions,
                                      gnc_menu_n_actions, window);
-    gnc_plugin_update_actions(priv->action_group,
+    gnc_plugin_update_actions(G_ACTION_MAP(window),
                               initially_insensitive_actions,
-                              "sensitive", FALSE);
-    gnc_plugin_update_actions(priv->action_group,
-                              always_insensitive_actions,
-                              "sensitive", FALSE);
-    gnc_plugin_update_actions(priv->action_group,
-                              always_hidden_actions,
-                              "visible", FALSE);
+                              "enabled", FALSE);
 
     filename = gnc_filepath_locate_ui_file("gnc-main-window-ui.xml");
 
@@ -3320,7 +3196,7 @@ gnc_main_window_setup_window (GncMainWindow *window)
 
     menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(priv->ui_merge, "menubar"));
     priv->menu = gtk_menu_new_from_model (menu_model);
-    gtk_application_set_app_menu (GTK_APPLICATION (g_application_get_default()),
+    gtk_application_set_menubar (GTK_APPLICATION (g_application_get_default()),
                                   menu_model);
     menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(priv->ui_merge, "toolbar"));
     priv->toolbar = gtk_menu_new_from_model (menu_model);
@@ -3347,20 +3223,6 @@ gnc_main_window_setup_window (GncMainWindow *window)
     gnc_main_window_update_tab_position(NULL, NULL, window);
 
     gnc_main_window_init_menu_updaters(window);
-
-    /* Testing */
-    /* Now update the "eXtensions" menu */
-    // FIXME Update this
-#if 0
-    if (!gnc_prefs_is_extra_enabled())
-    {
-        GSimpleAction*  action;
-
-        action = G_SIMPLE_ACTION(g_action_map_lookup_action(G_ACTION_MAP(priv->action_group),
-                                             "ExtensionsAction"));
-        g_simple_action_set_enabled (action)
-    }
-#endif
 
     /* GncPluginManager stuff */
     manager = gnc_plugin_manager_get ();
@@ -3395,8 +3257,8 @@ gnc_main_window_show_summarybar (GncMainWindow *window, GAction *action)
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     if (action == NULL)
-        action = g_action_map_lookup_action(G_ACTION_MAP(priv->action_group),
-                                             "ViewSummaryAction");
+        action = g_action_map_lookup_action(G_ACTION_MAP(window),
+                                             "view.summarybar");
     if (action == NULL)
         return TRUE;
 
@@ -3463,9 +3325,9 @@ gnc_main_window_switch_page (GtkNotebook *notebook,
         priv->usage_order = g_list_prepend (priv->usage_order, page);
     }
 
-    gnc_plugin_update_actions(priv->action_group,
+    gnc_plugin_update_actions(G_ACTION_MAP(window),
                               multiple_page_actions,
-                              "sensitive",
+                              "enabled",
                               g_list_length(priv->installed_pages) > 1);
 
     gnc_main_window_update_title(window);
@@ -3790,7 +3652,7 @@ gnc_main_window_cmd_view_toolbar (GSimpleAction *action,
     GncMainWindowPrivate *priv;
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    if (g_variant_get_boolean(g_action_get_state(G_ACTION(action))))
+    if (g_variant_get_boolean(parameter))
     {
         gtk_widget_show (priv->toolbar);
     }
@@ -3823,11 +3685,9 @@ gnc_main_window_cmd_view_statusbar (GSimpleAction *action,
                                     gpointer       window)
 {
     GncMainWindowPrivate *priv;
-    GVariant *var;
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    var = g_action_get_state(G_ACTION(action));
-    if (g_variant_get_boolean(var))
+    if (g_variant_get_boolean(parameter))
     {
         gtk_widget_show (priv->statusbar);
     }
@@ -3835,7 +3695,6 @@ gnc_main_window_cmd_view_statusbar (GSimpleAction *action,
     {
         gtk_widget_hide (priv->statusbar);
     }
-    g_variant_unref(var);
 }
 
 static void

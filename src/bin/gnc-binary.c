@@ -132,6 +132,14 @@ fail:
 int
 main (int argc, char *argv[])
 {
+    GApplication *app;
+    int status;
+
     g_set_application_name(PACKAGE_NAME);
-    return g_application_run (G_APPLICATION (gnc_application_new ()), argc, argv);
+    app = G_APPLICATION (gnc_application_new ());
+    status = g_application_run (app, argc, argv);
+
+    g_object_unref (app);
+
+    return status;
 }

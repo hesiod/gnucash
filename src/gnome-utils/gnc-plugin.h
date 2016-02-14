@@ -267,7 +267,7 @@ void gnc_plugin_set_important_actions (GActionGroup *action_group,
  *  can be easily used to make a list of actions visible, invisible,
  *  sensitive, or insensitive.
  *
- *  @param action_group The group of all actions associated with a
+ *  @param action_map The group of all actions associated with a
  *  plugin or plugin page.  All actions to be modified must be
  *  contained in this group.
  *
@@ -281,7 +281,7 @@ void gnc_plugin_set_important_actions (GActionGroup *action_group,
  *  @param value A boolean specifying the new state for the specified
  *  property.
  */
-void gnc_plugin_update_actions (GActionGroup *action_group,
+void gnc_plugin_update_actions (GActionMap *action_map,
                                 const gchar **action_names,
                                 const gchar *property_name,
                                 gboolean value);

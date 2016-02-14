@@ -1128,7 +1128,7 @@ gnc_plugin_page_report_constr_init(GncPluginPageReport *plugin_page, gint report
                                     report_actions,
                                     num_report_actions,
                                     plugin_page);
-    gnc_plugin_update_actions(G_ACTION_GROUP(action_map),
+    gnc_plugin_update_actions(action_map,
                               initially_insensitive_actions,
                               "sensitive", FALSE);
     // FIXME Migrate this

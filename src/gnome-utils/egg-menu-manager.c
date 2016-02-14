@@ -157,9 +157,13 @@ model_copy_attributes_to_item (GMenuModel *model,
   g_assert (item_index >= 0);
   g_assert (G_IS_MENU_ITEM (item));
 
+  printf("printing attrs!\n");
+
   iter = g_menu_model_iterate_item_attributes (model, item_index);
-  while (g_menu_attribute_iter_get_next (iter, &attr_name, &attr_value))
+  while (g_menu_attribute_iter_get_next (iter, &attr_name, &attr_value)) {
+    printf("attr: name = %s val = %s\n", attr_name, g_variant_print(attr_value, TRUE));
     g_menu_item_set_attribute_value (item, attr_name, attr_value);
+  }
   g_object_unref (iter);
 }
 
@@ -211,10 +215,17 @@ egg_menu_manager_add_to_menu (EggMenuManager *self,
                               GMenuItem      *item)
 {
   gint position;
+  GVariant *var;
 
   g_assert (EGG_IS_MENU_MANAGER (self));
   g_assert (G_IS_MENU (menu));
   g_assert (G_IS_MENU_ITEM (item));
+
+  var = g_menu_item_get_attribute_value(item, "label", G_VARIANT_TYPE_STRING);
+  if (var) {
+    printf("%s\n", g_variant_get_string(var, NULL));
+    g_variant_unref(var);
+  }
 
   position = find_position_for_item (G_MENU_MODEL (menu), item);
   g_menu_insert_item (menu, position, item);
@@ -260,7 +271,9 @@ egg_menu_manager_merge_model (EggMenuManager *self,
        * target, before, after, etc. Also set our merge-id so that we
        * can remove the item when we are unmerged.
        */
+      printf("copying %i from n_items%i merge_id%i\n", i, n_items, merge_id);
       model_copy_attributes_to_item (model, i, item);
+      printf("setting merge id\n");
       g_menu_item_set_attribute (item, EGG_MENU_ATTRIBUTE_MERGE_ID, "u", merge_id);
 
       /*
@@ -317,6 +330,7 @@ egg_menu_manager_merge_model (EggMenuManager *self,
       if (egg_menu_manager_menu_contains (self, menu, item))
         continue;
 
+      printf("adding\n");
       egg_menu_manager_add_to_menu (self, menu, item);
     }
 }

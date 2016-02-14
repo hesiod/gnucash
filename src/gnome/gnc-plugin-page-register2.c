@@ -215,61 +215,61 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
     /* File menu */
 
     {
-        "FilePrintAction", gnc_plugin_page_register2_cmd_print_check
+        "file.print", gnc_plugin_page_register2_cmd_print_check
     },
 
     /* Edit menu */
 
     {
-        "EditCutAction", gnc_plugin_page_register2_cmd_cut
+        "edit.cut", gnc_plugin_page_register2_cmd_cut
     },
     {
-        "EditCopyAction", gnc_plugin_page_register2_cmd_copy
+        "edit.copy", gnc_plugin_page_register2_cmd_copy
     },
     {
-        "EditPasteAction", gnc_plugin_page_register2_cmd_paste
+        "edit.paste", gnc_plugin_page_register2_cmd_paste
     },
     {
-        "EditEditAccountAction", gnc_plugin_page_register2_cmd_edit_account
+        "edit.account", gnc_plugin_page_register2_cmd_edit_account
     },
-    {
-        "EditFindTransactionsAction", gnc_plugin_page_register2_cmd_find_transactions
-    },
+    /*{
+        "edit.find.transaction", gnc_plugin_page_register2_cmd_find_transactions
+    },*/
 
     /* Transaction menu */
 
     {
-        "CutTransactionAction", gnc_plugin_page_register2_cmd_cut_transaction
+        "transaction.cut", gnc_plugin_page_register2_cmd_cut_transaction
     },
     {
-        "CopyTransactionAction", gnc_plugin_page_register2_cmd_copy_transaction
+        "transaction.copy", gnc_plugin_page_register2_cmd_copy_transaction
     },
     {
-        "PasteTransactionAction", gnc_plugin_page_register2_cmd_paste_transaction
+        "transaction.paste", gnc_plugin_page_register2_cmd_paste_transaction
     },
     {
-        "DuplicateTransactionAction", gnc_plugin_page_register2_cmd_duplicate_transaction
+        "transaction.duplicate", gnc_plugin_page_register2_cmd_duplicate_transaction
     },
     {
-        "DeleteTransactionAction", gnc_plugin_page_register2_cmd_delete_transaction
+        "transaction.delete", gnc_plugin_page_register2_cmd_delete_transaction
     },
     {
-        "RemoveTransactionSplitsAction", gnc_plugin_page_register2_cmd_reinitialize_transaction
+        "transaction.remove-splits", gnc_plugin_page_register2_cmd_reinitialize_transaction
     },
     {
-        "RecordTransactionAction", gnc_plugin_page_register2_cmd_enter_transaction
+        "transaction.record.start", gnc_plugin_page_register2_cmd_enter_transaction
     },
     {
-        "CancelTransactionAction", gnc_plugin_page_register2_cmd_cancel_transaction
+        "transaction.record.stop", gnc_plugin_page_register2_cmd_cancel_transaction
     },
     {
-        "VoidTransactionAction", gnc_plugin_page_register2_cmd_void_transaction
+        "transaction.void", gnc_plugin_page_register2_cmd_void_transaction
     },
     {
-        "UnvoidTransactionAction", gnc_plugin_page_register2_cmd_unvoid_transaction
+        "transaction.unvoid", gnc_plugin_page_register2_cmd_unvoid_transaction
     },
     {
-        "ReverseTransactionAction", gnc_plugin_page_register2_cmd_reverse_transaction
+        "transaction.reverse", gnc_plugin_page_register2_cmd_reverse_transaction
     },
     {
         TRANSACTION_UP_ACTION, gnc_plugin_page_register2_cmd_entryUp
@@ -281,82 +281,82 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
     /* View menu */
 
     {
-        "ViewFilterByAction", gnc_plugin_page_register2_cmd_view_filter_by
+        "view.filter", gnc_plugin_page_register2_cmd_view_filter_by
     },
     {
-        "ViewRefreshAction", gnc_plugin_page_register2_cmd_reload
+        "view.refresh", gnc_plugin_page_register2_cmd_reload
     },
 
     /* Actions menu */
 
     {
-        "ActionsTransferAction", gnc_plugin_page_register2_cmd_transfer
+        "actions.account.transfer", gnc_plugin_page_register2_cmd_transfer
     },
     {
-        "ActionsReconcileAction", gnc_plugin_page_register2_cmd_reconcile
+        "actions.account.reconcile", gnc_plugin_page_register2_cmd_reconcile
     },
     {
-        "ActionsAutoClearAction", gnc_plugin_page_register2_cmd_autoclear
+        "actions.account.autoclear", gnc_plugin_page_register2_cmd_autoclear
     },
     {
-        "ActionsStockSplitAction", gnc_plugin_page_register2_cmd_stock_split
+        "actions.account.stock-split", gnc_plugin_page_register2_cmd_stock_split
     },
     {
-        "ActionsLotsAction", gnc_plugin_page_register2_cmd_lots
+        "actions.account.view-lots", gnc_plugin_page_register2_cmd_lots
     },
     {
-        "BlankTransactionAction", gnc_plugin_page_register2_cmd_blank_transaction
+        "actions.transaction.blank", gnc_plugin_page_register2_cmd_blank_transaction
     },
     {
-        "EditExchangeRateAction", gnc_plugin_page_register2_cmd_exchange_rate
+        "actions.transaction.edit-xchg-rate", gnc_plugin_page_register2_cmd_exchange_rate
     },
     {
-        "JumpTransactionAction", gnc_plugin_page_register2_cmd_jump
+        "actions.transaction.jump", gnc_plugin_page_register2_cmd_jump
     },
     {
-        "ScheduleTransactionAction", gnc_plugin_page_register2_cmd_schedule
+        "actions.transaction.schedule", gnc_plugin_page_register2_cmd_schedule
     },
     {
-        "ScrubAllAction", gnc_plugin_page_register2_cmd_scrub_all
+        "actions.account.scrub-all", gnc_plugin_page_register2_cmd_scrub_all
     },
     {
-        "ScrubCurrentAction", gnc_plugin_page_register2_cmd_scrub_current
+        "actions.account.scrub", gnc_plugin_page_register2_cmd_scrub_current
     },
 
     /* Reports menu */
 
     {
-        "ReportsAccountReportAction", gnc_plugin_page_register2_cmd_account_report
+        "reports.account", gnc_plugin_page_register2_cmd_account_report
     },
     {
-        "ReportsAcctTransReportAction", gnc_plugin_page_register2_cmd_transaction_report
+        "report.account-transaction", gnc_plugin_page_register2_cmd_transaction_report
     },
 
     /* Toggle Actions */
     {
-        "ViewStyleDoubleLineAction", gnc_plugin_page_register2_cmd_style_double_line, "b", "false"
+        "view.double-line", gnc_plugin_page_register2_cmd_style_double_line, "b", "false"
     },
 
-    {
+    /*{
         "ViewStyleExtraDatesAction", gnc_plugin_page_register2_cmd_style_extra_dates, "b", "false"
-    },
+    },*/
 
     {
-        "SplitTransactionAction", gnc_plugin_page_register2_cmd_expand_transaction, "b", "false"
+        "actions.transaction.split", gnc_plugin_page_register2_cmd_expand_transaction, "b", "false"
     },
 
     /* Radio Actions */
     /* Translators: This is a menu item in the View menu */
     {
-        "ViewStyleBasicAction", NULL, "y", REG2_STYLE_LEDGER
+        "view.ledger", NULL, "y", REG2_STYLE_LEDGER
     },
     /* Translators: This is a menu item in the View menu */
     {
-        "ViewStyleAutoSplitAction", NULL, "y", REG2_STYLE_AUTO_LEDGER
+        "view.ledger", NULL, "y", REG2_STYLE_AUTO_LEDGER
     },
     /* Translators: This is a menu item in the View menu */
     {
-        "ViewStyleJournalAction", NULL, "y", REG2_STYLE_JOURNAL
+        "view.ledger", NULL, "y", REG2_STYLE_JOURNAL
     }
 };
 
@@ -667,12 +667,12 @@ gnc_plugin_page_register2_init (GncPluginPageRegister2 *plugin_page)
     g_object_set(G_OBJECT(plugin_page),
                  "page-name",      _("General Journal2"),
                  "page-uri",       "default:",
-                 "ui-description", "gnc-plugin-page-register2-ui.xml",
+                 "ui-description", "gnc-plugin-page-register-ui.xml",
                  "use-new-window", use_new,
                  NULL);
 
     /* Create menu and toolbar information */
-    action_map = G_ACTION_MAP(g_application_get_default());
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(plugin_page)));
     g_action_map_add_action_entries (action_map, gnc_plugin_page_register2_actions,
                                   gnc_plugin_page_register2_n_actions, plugin_page);
 
@@ -817,7 +817,7 @@ gnc_plugin_page_register2_ui_update (gpointer various, GncPluginPageRegister2 *p
 
     expanded = gnc_tree_view_split_reg_trans_expanded (view, NULL);
     action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
-                                         "SplitTransactionAction"));
+                                         "actions.transaction.split"));
     g_simple_action_set_enabled (action, model->style == REG2_STYLE_LEDGER);
     g_signal_handlers_block_by_func
     (action, gnc_plugin_page_register2_cmd_expand_transaction, page);
@@ -830,11 +830,11 @@ gnc_plugin_page_register2_ui_update (gpointer various, GncPluginPageRegister2 *p
     voided = xaccTransHasSplitsInState (trans, VREC); 
 
     action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
-                                         "VoidTransactionAction"));
+                                         "actions.transaction.void"));
     g_simple_action_set_enabled (action, !voided);
 
     action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
-                                         "UnvoidTransactionAction"));
+                                         "actions.transaction.unvoid"));
     g_simple_action_set_enabled (action, voided);
 
     /* Modify the activeness of the up/down arrows */
@@ -920,12 +920,12 @@ gnc_plugin_page_register2_ui_initial_state (GncPluginPageRegister2 *page) // thi
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (page);
     account = gnc_plugin_page_register2_get_account (page);
     action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group (GNC_PLUGIN_PAGE (page)));
-    gnc_plugin_update_actions(G_ACTION_GROUP(action_map), actions_requiring_account,
+    gnc_plugin_update_actions(action_map, actions_requiring_account,
                               "sensitive", is_readwrite && account != NULL);
 
     /* Set "style" radio button */
     ledger_type = gnc_ledger_display2_type (priv->ledger);
-    gnc_plugin_update_actions (G_ACTION_GROUP(action_map), view_style_actions,
+    gnc_plugin_update_actions (action_map, view_style_actions,
                               "sensitive", ledger_type == LD2_SINGLE);
 
     // FIXME Migrate this to Gtk+ 3
@@ -1374,7 +1374,7 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
     use_double_line =
         g_key_file_get_boolean (key_file, group_name, KEY_DOUBLE_LINE, &error);
     DEBUG("Setting double_line_mode: %d", use_double_line);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "ViewStyleDoubleLineAction"));
+    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "view.double-line"));
     g_simple_action_set_state (action, g_variant_new_boolean(use_double_line));
 
     /* Update the extra dates action on this page */
@@ -1487,13 +1487,13 @@ gnc_plugin_page_register2_update_edit_menu (GncPluginPage *page) //this works
     can_paste = is_readwrite;
 
     // FIXME Migrate visibility?
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "EditCopyAction"));
+    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "edit.copy"));
     g_simple_action_set_enabled (action, can_copy);
     //gtk_action_set_visible (action, !hide || can_copy);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "EditCutAction"));
+    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "edit.cut"));
     g_simple_action_set_enabled (action, can_cut);
     //gtk_action_set_visible (action, !hide || can_cut);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "EditPasteAction"));
+    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "edit.paste"));
     g_simple_action_set_enabled (action, can_paste);
     //gtk_action_set_visible (action,  !hide || can_paste);
 }

@@ -52,7 +52,6 @@
 #include "gnc-prefs.h"
 #include "gnc-prefs-utils.h"
 #include "gnc-session.h"
-#include "gnc-splash.h"
 #include "gnc-ui-util.h"
 
 #include "top-level.h"
@@ -189,69 +188,6 @@ gnc_ui_check_events (gpointer not_used)
 }
 
 static void
-inner_main (void *closure, int argc, char **argv)
-{
-    scm_c_eval_string("(debug-set! stack 200000)");
-
-    {
-        SCM main_mod;
-
-        main_mod = scm_c_resolve_module("gnucash main");
-        scm_set_current_module(main_mod);
-    }
-
-    /* GnuCash switched to gsettings to store its preferences in version 2.5.6
-     * Migrate the user's preferences from gconf if needed */
-    gnc_gsettings_migrate_from_gconf();
-
-    load_gnucash_modules();
-
-    /* Load the config before starting up the gui. This insures that
-     * custom reports have been read into memory before the Reports
-     * menu is created. */
-    load_system_config();
-    load_user_config();
-
-    /* Setting-up the report menu must come after the module
-       loading but before the gui initialization. */
-    scm_c_use_module("gnucash report report-gnome");
-    scm_c_eval_string("(gnc:report-menu-setup)");
-
-    /* TODO: After some more guile-extraction, this should happen even
-       before booting guile.  */
-    gnc_main_gui_init();
-
-    gnc_hook_add_dangler(HOOK_UI_SHUTDOWN, (GFunc)gnc_file_quit, NULL);
-
-    /* Install Price Quote Sources */
-    gnc_update_splash_screen(_("Checking Finance::Quote..."), GNC_SPLASH_PERCENTAGE_UNKNOWN);
-    scm_c_use_module("gnucash price-quotes");
-    scm_c_eval_string("(gnc:price-quotes-install-sources)");
-
-    gnc_hook_run(HOOK_STARTUP, NULL);
-
-    if (!nofile && file_to_load)
-    {
-        char* fn = g_strdup(file_to_load);
-        gnc_update_splash_screen(_("Loading data..."), GNC_SPLASH_PERCENTAGE_UNKNOWN);
-        gnc_file_open_file(fn, /*open_readonly*/ FALSE);
-        g_free(fn);
-    }
-    else if (gnc_prefs_get_bool(GNC_PREFS_GROUP_NEW_USER, GNC_PREF_FIRST_STARTUP))
-    {
-        gnc_destroy_splash_screen();
-        gnc_ui_new_user_dialog();
-    }
-    /* Ensure temporary preferences are temporary */
-    gnc_prefs_reset_group (GNC_PREFS_GROUP_WARNINGS_TEMP);
-
-    gnc_destroy_splash_screen();
-    gnc_main_window_show_all_windows();
-
-    gnc_hook_run(HOOK_UI_POST_STARTUP, NULL);
-}
-
-static void
 gnc_application_shutdown (GApplication *app)
 {
     if (gnc_file_query_save(FALSE))
@@ -271,7 +207,7 @@ gnc_application_shutdown (GApplication *app)
     gnc_extensions_shutdown ();
 
     gnc_hook_run(HOOK_SHUTDOWN, NULL);
-    //gnc_engine_shutdown();
+    gnc_engine_shutdown();
 
     G_APPLICATION_CLASS (gnc_application_parent_class)->shutdown(app);
 }
@@ -279,6 +215,7 @@ gnc_application_shutdown (GApplication *app)
 static void
 gnc_application_init (GncApplication *app)
 {
+    printf("init\n");
     g_application_add_main_option_entries (G_APPLICATION (app), options);
 }
 
@@ -286,6 +223,7 @@ static gint
 gnc_application_command_line (GApplication            *application,
                               GApplicationCommandLine *command_line)
 {
+    printf("cmd line\n");
     gnc_prefs_set_debugging(debugging);
     gnc_prefs_set_extra(extra);
 
@@ -295,9 +233,6 @@ gnc_application_command_line (GApplication            *application,
     if (namespace_regexp)
         gnc_prefs_set_namespace_regexp(namespace_regexp);
 
-    if (args_remaining)
-        file_to_load = args_remaining[0];
-
     return 0;
 }
 
@@ -305,6 +240,7 @@ static gint
 gnc_application_handle_local_options (GApplication *app,
                                       GVariantDict *dict)
 {
+    printf("localopt\n");
     if (gnucash_show_version)
     {
         gchar *fixed_message;
@@ -338,7 +274,9 @@ gnc_application_handle_local_options (GApplication *app,
 static void
 gnc_application_startup (GApplication *app)
 {
+    printf("startup\n");
     G_APPLICATION_CLASS (gnc_application_parent_class)->startup(app);
+    g_application_mark_busy (g_application_get_default());
 
 #ifdef ENABLE_BINRELOC
     {
@@ -365,7 +303,60 @@ gnc_application_startup (GApplication *app)
     id = g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE, 10000, /* 10 secs */
                              gnc_ui_check_events, NULL, NULL);
 
-    //scm_boot_guile(argc, argv, inner_main, 0);
+    printf("inner_main\n");
+
+    {
+        SCM main_mod;
+
+        scm_init_guile();
+        //scm_c_eval_string("(debug-set! stack 200000)");
+        main_mod = scm_c_resolve_module("gnucash main");
+        scm_set_current_module(main_mod);
+    }
+
+    /* GnuCash switched to gsettings to store its preferences in version 2.5.6
+     * Migrate the user's preferences from gconf if needed */
+    gnc_gsettings_migrate_from_gconf();
+
+    load_gnucash_modules();
+
+    /* Load the config before starting up the gui. This insures that
+     * custom reports have been read into memory before the Reports
+     * menu is created. */
+    load_system_config();
+    load_user_config();
+
+    /* Setting-up the report menu must come after the module
+       loading but before the gui initialization. */
+    scm_c_use_module("gnucash report report-gnome");
+    scm_c_eval_string("(gnc:report-menu-setup)");
+
+    /* TODO: After some more guile-extraction, this should happen even
+       before booting guile.  */
+    printf("mginit\n");
+    gnc_main_gui_init();
+
+    gnc_hook_add_dangler(HOOK_UI_SHUTDOWN, (GFunc)gnc_file_quit, NULL);
+
+    /* Install Price Quote Sources */
+    printf("check f::q\n");
+    scm_c_use_module("gnucash price-quotes");
+    scm_c_eval_string("(gnc:price-quotes-install-sources)");
+
+    gnc_hook_run(HOOK_STARTUP, NULL);
+
+    printf("destroy splash\n");
+    g_application_unmark_busy (g_application_get_default());
+
+    if (gnc_prefs_get_bool(GNC_PREFS_GROUP_NEW_USER, GNC_PREF_FIRST_STARTUP))
+    {
+        gnc_ui_new_user_dialog();
+    }
+    /* Ensure temporary preferences are temporary */
+    gnc_prefs_reset_group (GNC_PREFS_GROUP_WARNINGS_TEMP);
+
+    gnc_hook_run(HOOK_UI_POST_STARTUP, NULL);
+    printf("exiting\n");
 }
 
 static void
@@ -373,9 +364,12 @@ gnc_application_activate (GApplication *app)
 {
     GncMainWindow *win;
 
+    printf("activate\n");
     win = gnc_main_window_new ();
+    gtk_application_add_window(GTK_APPLICATION(app), GTK_WINDOW(win));
     gnc_gui_init(win);
     gtk_window_present (GTK_WINDOW (win));
+    gtk_widget_show_all (GTK_WIDGET (win));
 }
 
 static void
@@ -387,6 +381,14 @@ gnc_application_open (GApplication  *app,
     GList *windows;
     GncMainWindow *win;
     int i;
+
+    printf("open\n");
+    // FIXME this
+    {
+        char* fn = g_file_get_path(files[0]);
+        gnc_file_open_file(fn, /*open_readonly*/ FALSE);
+        g_free(fn);
+    }
 
     windows = gtk_application_get_windows (GTK_APPLICATION (app));
     if (windows)
@@ -419,7 +421,6 @@ gnc_application_new (void)
 {
      return g_object_new (GNC_TYPE_APPLICATION,
                           "application-id", "org.gnucash",
-                          "flags", G_APPLICATION_HANDLES_OPEN
-                                   | G_APPLICATION_HANDLES_COMMAND_LINE,
+                          "flags", G_APPLICATION_HANDLES_OPEN,
                           NULL);
 }

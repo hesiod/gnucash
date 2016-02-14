@@ -296,7 +296,9 @@ gnc_ui_select_commodity_create(const gnc_commodity * orig_sel,
         gtk_widget_destroy(button);
         break;
     }
+    g_return_val_if_fail(title != NULL, NULL);
     gtk_window_set_title (GTK_WINDOW(retval->dialog), title);
+    g_return_val_if_fail(text != NULL, NULL);
     gtk_label_set_text_with_mnemonic (GTK_LABEL(label), text);
 
     /* build the menus of namespaces and commodities */

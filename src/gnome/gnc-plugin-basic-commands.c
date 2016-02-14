@@ -101,77 +101,71 @@ static void gnc_main_window_cmd_help_totd (GSimpleAction *action, GVariant *para
  *  plugin. */
 static GActionEntry gnc_plugin_actions [] =
 {
-
     /* File menu */
-
     {
-        "FileNewAction", gnc_main_window_cmd_file_new
+        "file.new", gnc_main_window_cmd_file_new
     },
     {
-        "FileOpenAction", gnc_main_window_cmd_file_open
+        "file.open", gnc_main_window_cmd_file_open
     },
     {
-        "FileSaveAction", gnc_main_window_cmd_file_save
+        "file.save", gnc_main_window_cmd_file_save
     },
     {
-        "FileSaveAsAction", gnc_main_window_cmd_file_save_as
+        "file.save-as", gnc_main_window_cmd_file_save_as
     },
     {
-        "FileRevertAction", gnc_main_window_cmd_file_revert
+        "file.revert", gnc_main_window_cmd_file_revert
     },
     {
-        "FileExportAccountsAction", gnc_main_window_cmd_file_export_accounts
+        "file.export.accounts", gnc_main_window_cmd_file_export_accounts
     },
 
     /* Edit menu */
-
     {
-        "EditFindTransactionsAction", gnc_main_window_cmd_tools_find_transactions
+        "edit.find", gnc_main_window_cmd_tools_find_transactions
     },
     {
-        "EditTaxOptionsAction", gnc_main_window_cmd_edit_tax_options
+        "edit.tax-options", gnc_main_window_cmd_edit_tax_options
     },
 
     /* Actions menu */
 
-    { "ActionsScheduledTransactionsAction" },
     {
-        "ActionsScheduledTransactionEditorAction", gnc_main_window_cmd_actions_scheduled_transaction_editor
+        "actions.scheduled.editor", gnc_main_window_cmd_actions_scheduled_transaction_editor
     },
     {
-        "ActionsSinceLastRunAction", gnc_main_window_cmd_actions_since_last_run
+        "actions.scheduled.since-last-run", gnc_main_window_cmd_actions_since_last_run
     },
     {
-        "ActionsMortgageLoanAction", gnc_main_window_cmd_actions_mortgage_loan
+        "actions.scheduled.loan-calculator", gnc_main_window_cmd_actions_mortgage_loan
     },
-    { "ActionsBudgetAction" },
 #ifdef CLOSE_BOOKS_ACTUALLY_WORKS
     {
-        "ActionsCloseBooksAction", gnc_main_window_cmd_actions_close_books
+        "actions.close-books", gnc_main_window_cmd_actions_close_books
     },
 #endif // CLOSE_BOOKS_ACTUALLY_WORKS
 
     /* Tools menu */
     {
-        "ToolsPriceEditorAction", gnc_main_window_cmd_tools_price_editor
+        "tools.editor.price", gnc_main_window_cmd_tools_price_editor
     },
     {
-        "ToolsCommodityEditorAction", gnc_main_window_cmd_tools_commodity_editor
+        "tools.editor.commmodity", gnc_main_window_cmd_tools_commodity_editor
     },
     {
-        "ToolsFinancialCalculatorAction", gnc_main_window_cmd_tools_financial_calculator
+        "tools.calculator", gnc_main_window_cmd_tools_financial_calculator
     },
     {
-        "ToolsBookCloseAction", gnc_main_window_cmd_tools_close_book
+        "tools.close-books", gnc_main_window_cmd_tools_close_book
     },
     {
-        "ToolsImapEditorAction", gnc_main_window_cmd_tools_imap_editor
+        "tools.editor.imap", gnc_main_window_cmd_tools_imap_editor
     },
 
     /* Help menu */
-
     {
-        "HelpTipsOfTheDayAction", gnc_main_window_cmd_help_totd
+        "help.tips-of-the-day", gnc_main_window_cmd_help_totd
     },
 };
 /** The number of actions provided by this plugin. */
@@ -183,7 +177,7 @@ static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);
  *  "Icons and important text" (e.g. GTK_TOOLBAR_BOTH_HORIZ) mode. */
 static const gchar *gnc_plugin_important_actions[] =
 {
-    "FileSaveAction",
+    "file.save",
     NULL,
 };
 
@@ -193,7 +187,7 @@ static const gchar *gnc_plugin_important_actions[] =
  */
 static const gchar *readwrite_only_active_actions[] =
 {
-    "ToolsBookCloseAction",
+    "tools.close-books",
     NULL
 };
 
@@ -205,8 +199,8 @@ static const gchar *readwrite_only_active_actions[] =
  */
 static const gchar *dirty_only_active_actions[] =
 {
-    "FileSaveAction",
-    "FileRevertAction",
+    "file.save",
+    "file.revert",
     NULL
 };
 
@@ -298,7 +292,7 @@ gnc_plugin_basic_commands_add_to_window (GncPlugin *plugin,
 static void update_inactive_actions(GncPluginPage *plugin_page)
 {
     GncMainWindow  *window;
-    GActionGroup *action_group;
+    GActionMap *action_map;
 
     // We are readonly - so we have to switch particular actions to inactive.
     gboolean is_readwrite = !qof_book_is_readonly(gnc_get_current_book());
@@ -310,12 +304,12 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     window = GNC_MAIN_WINDOW(plugin_page->window);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
-    action_group = G_ACTION_GROUP(g_application_get_default());
+    action_map = G_ACTION_MAP(window);
 
     /* Set the action's sensitivity */
-    gnc_plugin_update_actions (action_group, readwrite_only_active_actions,
+    gnc_plugin_update_actions (action_map, readwrite_only_active_actions,
                                "sensitive", is_readwrite);
-    gnc_plugin_update_actions (action_group, dirty_only_active_actions,
+    gnc_plugin_update_actions (action_map, dirty_only_active_actions,
                                "sensitive", is_dirty);
 }
 

@@ -159,79 +159,71 @@ static GActionEntry gnc_plugin_page_account_tree_actions [] =
 {
     /* File menu */
     {
-        "FileNewAccountAction", gnc_plugin_page_account_tree_cmd_new_account
+        "file.account.new", gnc_plugin_page_account_tree_cmd_new_account
     },
     {
-        "FileAddAccountHierarchyAssistantAction", gnc_plugin_page_account_tree_cmd_file_new_hierarchy
+        "file.account.new-hierarchy", gnc_plugin_page_account_tree_cmd_file_new_hierarchy
     },
 #ifdef WITH_REGISTER2
     {
-        "FileOpenAccount2Action", gnc_plugin_page_account_tree_cmd_open2_account
+        "file.account.open", gnc_plugin_page_account_tree_cmd_open2_account
     },
 #else
     {
-        "FileOpenAccountAction", gnc_plugin_page_account_tree_cmd_open_account
+        "file.account.open", gnc_plugin_page_account_tree_cmd_open_account
     },
 #endif
 
 #ifdef WITH_REGISTER2
     {
-        "FileOpenSubaccounts2Action", gnc_plugin_page_account_tree_cmd_open2_subaccounts
+        "file.account.open-sub", gnc_plugin_page_account_tree_cmd_open2_subaccounts
     },
 #else
     {
-        "FileOpenSubaccountsAction", gnc_plugin_page_account_tree_cmd_open_subaccounts
+        "file.account.open-sub", gnc_plugin_page_account_tree_cmd_open_subaccounts
     },
 #endif
 
     /* Edit menu */
     {
-        "EditEditAccountAction", gnc_plugin_page_account_tree_cmd_edit_account
+        "edit.accout", gnc_plugin_page_account_tree_cmd_edit_account
     },
     {
-        "EditDeleteAccountAction", gnc_plugin_page_account_tree_cmd_delete_account
+        "edit.account.delete", gnc_plugin_page_account_tree_cmd_delete_account
     },
     {
-        "EditRenumberSubaccountsAction", gnc_plugin_page_account_tree_cmd_renumber_accounts
+        "edit.account.renumber", gnc_plugin_page_account_tree_cmd_renumber_accounts
     },
 
     /* View menu */
     {
-        "ViewFilterByAction", gnc_plugin_page_account_tree_cmd_view_filter_by
+        "view.filter", gnc_plugin_page_account_tree_cmd_view_filter_by
     },
 
     /* Actions menu */
     {
-        "ActionsReconcileAction", gnc_plugin_page_account_tree_cmd_reconcile
+        "actions.account.reconcile", gnc_plugin_page_account_tree_cmd_reconcile
     },
     {
-        "ActionsAutoClearAction", gnc_plugin_page_account_tree_cmd_autoclear
+        "actions.account.autoclear", gnc_plugin_page_account_tree_cmd_autoclear
     },
     {
-        "ActionsTransferAction", gnc_plugin_page_account_tree_cmd_transfer
+        "actions.account.transfer", gnc_plugin_page_account_tree_cmd_transfer
     },
     {
-        "ActionsStockSplitAction", gnc_plugin_page_account_tree_cmd_stock_split
+        "actions.account.stock-split", gnc_plugin_page_account_tree_cmd_stock_split
     },
     {
-        "ActionsLotsAction", gnc_plugin_page_account_tree_cmd_lots
+        "actions.account.view-lots", gnc_plugin_page_account_tree_cmd_lots
     },
     {
-        "ScrubAction", gnc_plugin_page_account_tree_cmd_scrub
+        "actions.account.scrub", gnc_plugin_page_account_tree_cmd_scrub
     },
     {
-        "ScrubSubAction", gnc_plugin_page_account_tree_cmd_scrub_sub
+        "actions.account.scrub-sub", gnc_plugin_page_account_tree_cmd_scrub_sub
     },
     {
-        "ScrubAllAction", gnc_plugin_page_account_tree_cmd_scrub_all
-    },
-    /* Extensions Menu */
-    { "Register2TestAction" },
-    {
-        "Register2TestAccountAction", gnc_plugin_page_account_tree_cmd_open2_account
-    },
-    {
-        "Register2TestSubAccountAction", gnc_plugin_page_account_tree_cmd_open2_subaccounts
+        "actions.account.scrub-all", gnc_plugin_page_account_tree_cmd_scrub_all
     },
 };
 /** The number of actions provided by this plugin. */
@@ -242,10 +234,10 @@ static guint gnc_plugin_page_account_tree_n_actions = G_N_ELEMENTS (gnc_plugin_p
  *  enabled, and the book is in read-write mode. */
 static const gchar *actions_requiring_account_rw[] =
 {
-    "EditEditAccountAction",
-    "EditDeleteAccountAction",
-    "ActionsReconcileAction",
-    "ActionsAutoClearAction",
+    "edit.account",
+    "edit.account.delete",
+    "actions.account.reconcile",
+    "actions.account.autoclear",
     NULL
 };
 
@@ -253,43 +245,37 @@ static const gchar *actions_requiring_account_rw[] =
  *  enabled. Those actions can be selected even if the book is in readonly mode. */
 static const gchar *actions_requiring_account_always[] =
 {
-    "FileOpenAccountAction",
-#ifdef WITH_REGISTER2
-    "FileOpenAccount2Action",
-#endif
-    "FileOpenSubaccountsAction",
-    "ActionsLotsAction",
+    "file.account.open",
+    "file.account.open-sub",
+    "actions.account.view-lots",
     NULL
 };
 
 /* This is the list of actions which are switched inactive in a read-only book. */
 static const gchar* readonly_inactive_actions[] =
 {
-    "FileNewAccountAction",
-    "FileAddAccountHierarchyAssistantAction",
-    "EditEditAccountAction",
-    "EditDeleteAccountAction",
-    "EditRenumberSubaccountsAction",
-    "ActionsTransferAction",
-    "ActionsReconcileAction",
-    "ActionsAutoClearAction",
-    "ActionsStockSplitAction",
-    "ScrubAction",
-    "ScrubSubAction",
-    "ScrubAllAction",
+    "file.account.new",
+    "file.account.new-hierarchy",
+    "edit.account",
+    "edit.account.delete",
+    "edit.account.renumber",
+    "actions.account.transfer",
+    "actions.account.reconcile",
+    "actions.account.autoclear",
+    "actions.account.stock-split",
+    "actions.account.scrub",
+    "actions.account.scrub-sub",
+    "actions.account.scrub-all",
     NULL
 };
 
 /** Short labels for use on the toolbar buttons. */
 static action_toolbar_labels toolbar_labels[] =
 {
-    { "FileOpenAccountAction", 	            N_("Open") },
-#ifdef WITH_REGISTER2
-    { "FileOpenAccount2Action", 	    N_("Open2") },
-#endif
-    { "EditEditAccountAction", 	            N_("Edit") },
-    { "FileNewAccountAction",    	    N_("New") },
-    { "EditDeleteAccountAction", 	    N_("Delete") },
+    { "file.account.new",     N_("New") },
+    { "file.account.open",    N_("Open") },
+    { "edit.account",         N_("Edit") },
+    { "edit.account.delete",  N_("Delete") },
     { NULL, NULL },
 };
 
@@ -618,7 +604,7 @@ gnc_plugin_page_account_tree_destroy_widget (GncPluginPage *plugin_page)
 
 static void update_inactive_actions(GncPluginPage *plugin_page)
 {
-    GActionGroup *action_group;
+    GActionMap *action_map;
     gboolean is_sensitive = !qof_book_is_readonly(gnc_get_current_book());
 
     // We are readonly - so we have to switch particular actions to inactive.
@@ -626,11 +612,11 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
 
     /* Get the action group */
-    action_group = gnc_plugin_page_get_action_group(plugin_page);
-    g_return_if_fail(GTK_IS_ACTION_GROUP (action_group));
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(plugin_page));
+    g_return_if_fail(G_IS_ACTION_MAP (action_map));
 
     /* Set the action's sensitivity */
-    gnc_plugin_update_actions (action_group, readonly_inactive_actions,
+    gnc_plugin_update_actions (action_map, readonly_inactive_actions,
                                "sensitive", is_sensitive);
 }
 
@@ -850,7 +836,7 @@ static void
 gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
         GncPluginPageAccountTree *page)
 {
-    GSimpleActionGroup *action_group;
+    GActionMap *action_map;
     GAction *action;
     GtkTreeView *view;
     Account *account = NULL;
@@ -876,20 +862,20 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
         /* Check here for placeholder accounts, etc. */
     }
 
-    action_group = G_SIMPLE_ACTION_GROUP(gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(page)));
-    gnc_plugin_update_actions (G_ACTION_GROUP(action_group), actions_requiring_account_rw,
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(page)));
+    gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_rw,
                                "sensitive", is_readwrite && sensitive);
-    gnc_plugin_update_actions (G_ACTION_GROUP(action_group), actions_requiring_account_always,
+    gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_always,
                                "sensitive", sensitive);
     g_signal_emit (page, plugin_page_signals[ACCOUNT_SELECTED], 0, account);
 
-    action = g_action_map_lookup_action (G_ACTION_MAP(action_group), "EditRenumberSubaccountsAction");
+    action = g_action_map_lookup_action (action_map, "EditRenumberSubaccountsAction");
     g_object_set (G_OBJECT(action), "sensitive",
                   is_readwrite && sensitive && subaccounts, NULL);
 
-    gnc_plugin_update_actions (G_ACTION_GROUP(action_group), actions_requiring_account_rw,
+    gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_rw,
                                "sensitive", is_readwrite && sensitive);
-    gnc_plugin_update_actions (G_ACTION_GROUP(action_group), actions_requiring_account_always,
+    gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_always,
                                "sensitive", sensitive);
 }
 

@@ -161,11 +161,6 @@
       <summary>Maximum number of months to go back.</summary>
       <description>Dates will be completed so that they are close to the current date. Enter the maximum number of months to go backwards in time when completing dates.</description>
     </key>
-    <key name="show-splash-screen" type="b">
-      <default>true</default>
-      <summary>Show splash screen</summary>
-      <description>If active, a splash screen will be shown at startup. Otherwise no splash screen will be shown.</description>
-    </key>
     <key name="tab-position-top" type="b">
       <default>true</default>
       <summary>Display the notebook tabs at the top of the window.</summary>

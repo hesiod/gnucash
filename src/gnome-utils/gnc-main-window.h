@@ -74,7 +74,7 @@ typedef void (*GncMainWindowPageFunc) (GncPluginPage *page, gpointer user_data);
  *
  *  @return A GType.
  */
-GType gnc_main_window_get_type (void);
+//GType gnc_main_window_get_type (void);
 
 
 /** Create a new gnc main window plugin.

@@ -47,7 +47,7 @@ static GActionEntry gnc_plugin_actions [] =
 {
     /* Menu Items */
     {
-        "EditStyleSheetsAction", gnc_plugin_stylesheets_cmd_edit_style_sheet
+        "edit.style-sheets", gnc_plugin_stylesheets_cmd_edit_style_sheet
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);

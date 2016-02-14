@@ -86,84 +86,80 @@ static void gnc_plugin_ab_cmd_dtaus_importsend(GSimpleAction *action, GVariant *
 #define PLUGIN_ACTIONS_NAME "gnc-plugin-aqbanking-actions"
 #define PLUGIN_UI_FILENAME  "gnc-plugin-aqbanking-ui.xml"
 
-#define MENU_TOGGLE_ACTION_AB_VIEW_LOGWINDOW "ABViewLogwindowAction"
+#define MENU_TOGGLE_ACTION_AB_VIEW_LOGWINDOW "actions.online.view-log"
 
 
 static GActionEntry gnc_plugin_actions [] =
 {
-    /* Menus */
-    { "OnlineActionsAction" },
-
     /* Menu Items */
     {
-        "ABSetupAction", gnc_plugin_ab_cmd_setup
+        "tools.ab.setup", gnc_plugin_ab_cmd_setup
     },
     {
-        "ABGetBalanceAction", gnc_plugin_ab_cmd_get_balance
+        "actions.online.get.balance", gnc_plugin_ab_cmd_get_balance
     },
     {
-        "ABGetTransAction", gnc_plugin_ab_cmd_get_transactions
+        "actions.online.get.transaction", gnc_plugin_ab_cmd_get_transactions
     },
     {
-        "ABIssueTransAction", gnc_plugin_ab_cmd_issue_transaction
+        "actions.online.issue.transaction.normal", gnc_plugin_ab_cmd_issue_transaction
     },
     {
-        "ABIssueSepaTransAction", gnc_plugin_ab_cmd_issue_sepatransaction
+        "actions.online.issue.transaction.sepa", gnc_plugin_ab_cmd_issue_sepatransaction
     },
     {
-        "ABIssueIntTransAction", gnc_plugin_ab_cmd_issue_inttransaction
+        "actions.online.issue.transaction.int", gnc_plugin_ab_cmd_issue_inttransaction
     },
     {
-        "ABIssueDirectDebitAction", gnc_plugin_ab_cmd_issue_direct_debit
+        "actions.online.issue.transaction.direct-debit", gnc_plugin_ab_cmd_issue_direct_debit
     },
     {
-        "ABIssueSepaDirectDebitAction", gnc_plugin_ab_cmd_issue_sepa_direct_debit
+        "actions.online.issue.transaction.sepa-direct-debit", gnc_plugin_ab_cmd_issue_sepa_direct_debit
     },
 
     /* File -> Import menu item */
     {
-        "Mt940ImportAction", gnc_plugin_ab_cmd_mt940_import
+        "file.import.mt940", gnc_plugin_ab_cmd_mt940_import
     },
     {
-        "Mt942ImportAction", gnc_plugin_ab_cmd_mt942_import
+        "file.import.mt942", gnc_plugin_ab_cmd_mt942_import
     },
     {
-        "DtausImportAction", gnc_plugin_ab_cmd_dtaus_import
+        "file.import.dtaus", gnc_plugin_ab_cmd_dtaus_import
     },
-    /* #ifdef CSV_IMPORT_FUNCTIONAL */
-    /*     { "CsvImportAction", GTK_STOCK_CONVERT, N_("Import _CSV"), NULL, */
-    /*       N_("Import a CSV file into GnuCash"), */
-    /*       G_CALLBACK(gnc_plugin_ab_cmd_csv_import) }, */
-    /*     { "CsvImportSendAction", GTK_STOCK_CONVERT, N_("Import CSV and s_end..."), NULL, */
-    /*       N_("Import a CSV file into GnuCash and send the transfers online through Online Banking"), */
-    /*       G_CALLBACK(gnc_plugin_ab_cmd_csv_importsend) }, */
-    /* #endif */
     {
-        "DtausImportSendAction", gnc_plugin_ab_cmd_dtaus_importsend
+        "file.import.dtaus-send", gnc_plugin_ab_cmd_dtaus_importsend
     },
+    #ifdef CSV_IMPORT_FUNCTIONAL
+    {
+        "file.import.aqb-csv", gnc_plugin_ab_cmd_csv_import
+    },
+    {
+        "file.import.aqb-csv-send", gnc_plugin_ab_cmd_csv_importsend
+    },
+    #endif
     /* Toggle Actions */
     {
-        MENU_TOGGLE_ACTION_AB_VIEW_LOGWINDOW, gnc_plugin_ab_cmd_view_logwindow, "b", "true"
+        MENU_TOGGLE_ACTION_AB_VIEW_LOGWINDOW, gnc_plugin_ab_cmd_view_logwindow, "b", "false"
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS(gnc_plugin_actions);
 
 static const gchar *need_account_actions[] =
 {
-    "ABGetBalanceAction",
-    "ABGetTransAction",
-    "ABIssueTransAction",
-    "ABIssueSepaTransAction",
-    "ABIssueIntTransAction",
-    "ABIssueDirectDebitAction",
-    "ABIssueSepaDirectDebitAction",
+    "actions.online.get.balance",
+    "actions.online.get.transaction",
+    "actions.online.issue.transaction.normal",
+    "actions.online.issue.transaction.sepa",
+    "actions.online.issue.transaction.int",
+    "actions.online.issue.transaction.direct-debit",
+    "actions.online.issue.transaction.sepa-direct-debit",
     NULL
 };
 
 static const gchar *readonly_inactive_actions[] =
 {
-    "OnlineActionsAction",
-    "ABSetupAction",
+    "tools.ab.setup",
     NULL
 };
 
@@ -211,8 +207,6 @@ static void
 gnc_plugin_aqbanking_add_to_window(GncPlugin *plugin, GncMainWindow *window,
                                    GQuark type)
 {
-    GSimpleAction *action;
-
     gnc_main_window = window;
 
     g_signal_connect(window, "page-added",
@@ -221,11 +215,6 @@ gnc_plugin_aqbanking_add_to_window(GncPlugin *plugin, GncMainWindow *window,
     g_signal_connect(window, "page-changed",
                      G_CALLBACK(gnc_plugin_ab_main_window_page_changed),
                      plugin);
-
-    action = G_SIMPLE_ACTION(gnc_main_window_find_action(window,
-                                MENU_TOGGLE_ACTION_AB_VIEW_LOGWINDOW));
-    g_return_if_fail(action != NULL);
-    g_simple_action_set_enabled (action, FALSE);
 }
 
 static void
@@ -283,7 +272,7 @@ gnc_plugin_ab_main_window_page_added(GncMainWindow *window, GncPluginPage *page,
 static void update_inactive_actions(GncPluginPage *plugin_page)
 {
     GncMainWindow  *window;
-    GActionGroup *action_group;
+    GActionMap *action_map;
 
     // We are readonly - so we have to switch particular actions to inactive.
     gboolean is_readwrite = !qof_book_is_readonly(gnc_get_current_book());
@@ -294,11 +283,11 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     window = GNC_MAIN_WINDOW(plugin_page->window);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
-    action_group = gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME);
-    g_return_if_fail(G_IS_ACTION_GROUP(action_group));
+    action_map = G_ACTION_MAP(gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME));
+    g_return_if_fail(G_IS_ACTION_GROUP(action_map));
 
     /* Set the action's sensitivity */
-    gnc_plugin_update_actions (action_group, readonly_inactive_actions,
+    gnc_plugin_update_actions (action_map, readonly_inactive_actions,
                                "sensitive", is_readwrite);
 }
 
@@ -333,33 +322,33 @@ gnc_plugin_ab_account_selected(GncPluginPage *plugin_page, Account *account,
                                gpointer user_data)
 {
     GncMainWindow  *window;
-    GActionGroup *action_group;
+    GActionMap *action_map;
     const gchar *bankcode = NULL;
     const gchar *accountid = NULL;
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
     window = GNC_MAIN_WINDOW(plugin_page->window);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
-    action_group = gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME);
-    g_return_if_fail(GTK_IS_ACTION_GROUP(action_group));
+    action_map = G_ACTION_MAP(gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME));
+    g_return_if_fail(G_IS_ACTION_MAP(action_map));
 
     if (account)
     {
         bankcode = gnc_ab_get_account_bankcode(account);
         accountid = gnc_ab_get_account_accountid(account);
 
-        gnc_plugin_update_actions(action_group, need_account_actions,
+        gnc_plugin_update_actions(action_map, need_account_actions,
                                   "sensitive",
                                   (account && bankcode && *bankcode
                                    && accountid && *accountid));
-        gnc_plugin_update_actions(action_group, need_account_actions,
+        gnc_plugin_update_actions(action_map, need_account_actions,
                                   "visible", TRUE);
     }
     else
     {
-        gnc_plugin_update_actions(action_group, need_account_actions,
+        gnc_plugin_update_actions(action_map, need_account_actions,
                                   "sensitive", FALSE);
-        gnc_plugin_update_actions(action_group, need_account_actions,
+        gnc_plugin_update_actions(action_map, need_account_actions,
                                   "visible", FALSE);
     }
 
