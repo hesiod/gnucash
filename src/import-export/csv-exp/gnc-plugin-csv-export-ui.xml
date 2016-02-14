@@ -3,7 +3,7 @@
     <section id="menubar-main-section">
       <submenu id="menubar-file">
         <section id="menubar-file-print-section">
-          <submenu id="menubar-file-export-submenu">
+          <submenu id="menubar-file-export">
             <section id="menubar-file-export-section">
               <item>
                 <attribute name="label" translatable="yes">Export Account Tree to CSV...</attribute>

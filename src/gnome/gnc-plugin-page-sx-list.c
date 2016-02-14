@@ -218,19 +218,11 @@ gnc_plugin_page_sx_list_init (GncPluginPageSxList *plugin_page)
 
     /* Init parent declared variables */
     parent = GNC_PLUGIN_PAGE(plugin_page);
-#ifdef WITH_REGISTER2
-    g_object_set(G_OBJECT(plugin_page),
-                 "page-name",      _("Scheduled Transactions"),
-                 "page-uri",       "default:",
-                 "ui-description", "gnc-plugin-page-sx-list2-ui.xml",
-                 NULL);
-#else
     g_object_set(G_OBJECT(plugin_page),
                  "page-name",      _("Scheduled Transactions"),
                  "page-uri",       "default:",
                  "ui-description", "gnc-plugin-page-sx-list-ui.xml",
                  NULL);
-#endif
 
     gnc_plugin_page_add_book(parent, gnc_get_current_book());
     action_map = G_ACTION_MAP(g_application_get_default());

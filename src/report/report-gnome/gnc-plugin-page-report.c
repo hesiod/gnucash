@@ -155,7 +155,7 @@ static int gnc_plugin_page_report_check_urltype(URLType t);
 static void gnc_plugin_page_report_load_cb(GncHtml * html, URLType type,
         const gchar * location, const gchar * label,
         gpointer data);
-static void gnc_plugin_page_report_expose_event_cb(GtkWidget *unused, GdkEventExpose *unused1, gpointer data);
+static void gnc_plugin_page_report_draw_cb(GtkWidget *unused, cairo_t *unused1, gpointer data);
 static void gnc_plugin_page_report_refresh (gpointer data);
 static void gnc_plugin_page_report_set_fwd_button(GncPluginPageReport * page, int enabled);
 static void gnc_plugin_page_report_set_back_button(GncPluginPageReport * page, int enabled);
@@ -381,8 +381,8 @@ gnc_plugin_page_report_create_widget( GncPluginPage *page )
     g_free(url_location);
     gnc_window_set_progressbar_window( NULL );
 
-    g_signal_connect(priv->container, "expose_event",
-                     G_CALLBACK(gnc_plugin_page_report_expose_event_cb), report);
+    g_signal_connect(priv->container, "draw",
+                     G_CALLBACK(gnc_plugin_page_report_draw_cb), report);
 
     gtk_widget_show_all( GTK_WIDGET(priv->container) );
 
@@ -653,7 +653,7 @@ gnc_plugin_page_report_history_destroy_cb(gnc_html_history_node * node,
 
 /* We got a draw event.  See if we need to reload the report */
 static void
-gnc_plugin_page_report_expose_event_cb(GtkWidget *unused, GdkEventExpose *unused1, gpointer data)
+gnc_plugin_page_report_draw_cb(GtkWidget *unused, cairo_t *unused1, gpointer data)
 {
     GncPluginPageReport *page = data;
     GncPluginPageReportPrivate *priv;

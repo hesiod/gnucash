@@ -3,7 +3,7 @@
     <section id="menubar-main-section">
       <submenu id="menubar-file">
         <section id="menubar-file-open-section">
-          <submenu id="menubar-file-import-submenu">
+          <submenu id="menubar-file-import">
             <section id="menubar-file-import-section">
               <item>
                 <attribute name="label" translatable="yes">Import QIF...</attribute>

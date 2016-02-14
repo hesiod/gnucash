@@ -5,7 +5,7 @@
         <attribute name="label" translatable="yes">File</attribute>
         <section id="menubar-file-new-section"></section>
         <section id="menubar-file-open-section">
-          <submenu id="menubar-file-import-submenu">
+          <submenu id="menubar-file-import">
             <attribute name="label" translatable="yes">Import</attribute>
             <section id="menubar-file-import-section"></section>
           </submenu>
@@ -19,7 +19,7 @@
             <attribute name="label" translatable="yes">Page Setup</attribute>
             <attribute name="action">win.file.page-setup</attribute>
           </item>
-          <submenu id="menubar-file-export-submenu">
+          <submenu id="menubar-file-export">
             <attribute name="label" translatable="yes">Export</attribute>
             <section id="menubar-file-export-section"></section>
           </submenu>
@@ -121,11 +121,16 @@
             <attribute name="label" translatable="yes">Online Actions...</attribute>
             <section id="menubar-actions-online-section"></section>
           </submenu>
+          <submenu id="menubar-actions-scheduled">
+            <attribute name="label" translatable="yes">Scheduled Transactions...</attribute>
+            <section id="menubar-actions-scheduled-general-section"></section>
+            <section id="menubar-actions-scheduled-section"></section>
+          </submenu>
           <section id="menubar-actions-account-new-section"></section>
           <section id="menubar-actions-account-edit-section"></section>
         </section>
         <section id="menubar-budget-section"></section>
-        <submenu id="menubar-actions-scrub-submenu">
+        <submenu id="menubar-actions-scrub">
           <attribute name="label" translatable="yes">Check &amp; Repair</attribute>
           <section id="menubar-actions-scrub-section"></section>
         </submenu>

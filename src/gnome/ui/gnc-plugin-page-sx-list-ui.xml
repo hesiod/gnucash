@@ -1,20 +1,44 @@
-<ui>
-  <menubar>
-    <placeholder name="AdditionalMenusPlaceholder">
-      <menu action="SxListAction">
-        <menuitem name="SxListNew" action="SxListNewAction"/>
-        <menuitem name="SxListEdit" action="SxListEditAction"/>
-        <menuitem name="SxListDelete" action="SxListDeleteAction"/>
-      </menu>
-    </placeholder>
-  </menubar>
-
-  <toolbar name="DefaultToolbar">
-    <placeholder name="DefaultToolbarPlaceholder">
-      <separator name="ToolbarSep2" />
-      <toolitem name="SxListToolbarNew" action="SxListNewAction"/>
-      <toolitem name="SxListToolbarEdit" action="SxListEditAction"/>
-      <toolitem name="SxListToolbarDelete" action="SxListDeleteAction"/>
-    </placeholder>
-  </toolbar>
-</ui>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-actions">
+        <section id="menubar-actions-section">
+          <submenu id="menubar-actions-scheduled">
+            <section id="menubar-actions-scheduled-section">
+              <item>
+                <attribute name="label" translatable="yes">New</attribute>
+                <attribute name="action">win.actions.scheduled.new</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Edit</attribute>
+                <attribute name="action">win.actions.scheduled.edit</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Delete</attribute>
+                <attribute name="action">win.actions.scheduled.delete</attribute>
+                </item>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+  <menu id="toolbar">
+    <section id="toolbar-section">
+      <section id="toolbar-main-section">
+        <item>
+          <attribute name="label" translatable="yes">New</attribute>
+          <attribute name="action">win.actions.scheduled.new</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Edit</attribute>
+          <attribute name="action">win.actions.scheduled.edit</attribute>
+        </item>
+        <item>
+          <attribute name="label" translatable="yes">Delete</attribute>
+          <attribute name="action">win.actions.scheduled.delete</attribute>
+        </item>
+      </section>
+    </section>
+  </menu>
+</interface>

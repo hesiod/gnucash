@@ -29,7 +29,7 @@
           </item>
         </section>
         <section id="menubar-file-print-section">
-          <submenu id="menubar-file-export-submenu">
+          <submenu id="menubar-file-export">
             <section id="menubar-file-export-section">
               <item>
                 <attribute name="label" translatable="yes">Export Accounts</attribute>
@@ -55,22 +55,21 @@
       </submenu>
       <submenu id="menubar-actions">
         <section id="menubar-actions-section">
-          <submenu id="menubar-actions-scheduled-submenu">
-            <attribute name="label" translatable="yes">Scheduled Transactions</attribute>
-              <section id="menubar-actions-scheduled-section">
-                <item>
-                  <attribute name="label" translatable="yes">Scheduled Transaction Editor</attribute>
-                  <attribute name="action">win.actions.scheduled.editor</attribute>
-                </item>
-                <item>
-                  <attribute name="label" translatable="yes">Since Last Run</attribute>
-                  <attribute name="action">win.actions.scheduled.since-last-run</attribute>
-                </item>
-                <item>
-                  <attribute name="label" translatable="yes">Mortgage &amp; Loan Repayment...</attribute>
-                  <attribute name="action">win.actions.scheduled.load-calculator</attribute>
-                </item>
-              </section>
+          <submenu id="menubar-actions-scheduled">
+            <section id="menubar-actions-scheduled-general-section">
+              <item>
+                <attribute name="label" translatable="yes">Scheduled Transaction Editor</attribute>
+                <attribute name="action">win.actions.scheduled.editor</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Since Last Run</attribute>
+                <attribute name="action">win.actions.scheduled.since-last-run</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Mortgage &amp; Loan Repayment...</attribute>
+                <attribute name="action">win.actions.scheduled.load-calculator</attribute>
+              </item>
+            </section>
           </submenu>
         </section>
       </submenu>

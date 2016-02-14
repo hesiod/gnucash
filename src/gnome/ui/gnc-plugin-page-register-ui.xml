@@ -143,7 +143,7 @@
             <attribute name="action">win.actions.transaction.jump</attribute>
           </item>
         </section>
-        <submenu id="menubar-actions-scrub-submenu">
+        <submenu id="menubar-actions-scrub">
           <section id="menubar-actions-scrub-section">
             <item>
               <attribute name="label" translatable="yes">This Account</attribute>
