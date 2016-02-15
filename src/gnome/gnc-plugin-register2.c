@@ -50,7 +50,7 @@ static GActionEntry gnc_plugin_actions [] =
 {
 #ifdef WITH_REGISTER2
     {
-        "ToolsGeneralJournal2Action", gnc_plugin_register2_cmd_general_ledger
+        "win.tools.general-ledger", gnc_plugin_register2_cmd_general_ledger
     },
 #endif
 };

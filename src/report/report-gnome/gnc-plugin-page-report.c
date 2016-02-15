@@ -1123,7 +1123,7 @@ gnc_plugin_page_report_constr_init(GncPluginPageReport *plugin_page, gint report
     gnc_plugin_page_add_book(parent, gnc_get_current_book());
 
     /* Create menu and toolbar information */
-    action_map = G_ACTION_MAP(g_application_get_default());
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(parent));
     g_action_map_add_action_entries(action_map,
                                     report_actions,
                                     num_report_actions,

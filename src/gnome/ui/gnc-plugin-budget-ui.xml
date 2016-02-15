@@ -2,19 +2,21 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-actions">
-        <section id="menubar-budget-section">
-          <item>
-            <attribute name="label" translatable="yes">New Budget</attribute>
-            <attribute name="action">edit.budget.new</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Open Budget</attribute>
-            <attribute name="action">edit.budget.open</attribute>
-          </item>
-          <item>
-            <attribute name="label" translatable="yes">Copy Budget</attribute>
-            <attribute name="action">edit.budget.copy</attribute>
-          </item>
+        <section id="menubar-actions-section">
+          <section id="menubar-actions-budget-section">
+            <item>
+              <attribute name="label" translatable="yes">New Budget</attribute>
+              <attribute name="action">win.edit.budget.new</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Open Budget</attribute>
+              <attribute name="action">win.edit.budget.open</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Copy Budget</attribute>
+              <attribute name="action">win.edit.budget.copy</attribute>
+            </item>
+          </section>
         </section>
       </submenu>
     </section>

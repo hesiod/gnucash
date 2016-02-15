@@ -62,10 +62,10 @@ typedef struct GncPluginPage
     GObject gobject;		/**< The parent object data. */
 
     GtkWidget *window;		/**< The window that contains the
-                                 *   display widget for this plugin.
-                                 *   This field is private to the
-                                 *   gnucash window management
-                                 *   code.  */
+                             *   display widget for this plugin.
+                             *   This field is private to the
+                             *   gnucash window management
+                             *   code.  */
     GtkWidget *notebook_page;	/**< The display widget for this
                                  *   plugin.  This field is private to
                                  *   the gnucash window management

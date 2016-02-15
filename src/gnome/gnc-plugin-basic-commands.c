@@ -319,11 +319,9 @@ gnc_plugin_basic_commands_main_window_page_changed(GncMainWindow *window,
         gpointer user_data)
 {
     /* Make sure not to call this with a NULL GncPluginPage */
-    if (page)
-    {
-        // Update the action sensitivity due to read-only
-        update_inactive_actions(page);
-    }
+    g_return_if_fail(page != NULL);
+    // Update the action sensitivity due to read-only
+    update_inactive_actions(page);
 }
 
 /** Initialize the class for a new basic commands plugin.  This will

@@ -16,7 +16,7 @@
               <item>
                 <attribute name="label" translatable="yes">Delete</attribute>
                 <attribute name="action">win.actions.scheduled.delete</attribute>
-                </item>
+              </item>
             </section>
           </submenu>
         </section>

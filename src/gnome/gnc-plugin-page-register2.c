@@ -348,15 +348,15 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
     /* Radio Actions */
     /* Translators: This is a menu item in the View menu */
     {
-        "view.ledger", NULL, "y", REG2_STYLE_LEDGER
+        "view.ledger", NULL, "s", "basic"
     },
     /* Translators: This is a menu item in the View menu */
     {
-        "view.ledger", NULL, "y", REG2_STYLE_AUTO_LEDGER
+        "view.ledger", NULL, "s", "auto"
     },
     /* Translators: This is a menu item in the View menu */
     {
-        "view.ledger", NULL, "y", REG2_STYLE_JOURNAL
+        "view.ledger", NULL, "y", "journal"
     }
 };
 
@@ -366,38 +366,18 @@ static guint gnc_plugin_page_register2_n_actions = G_N_ELEMENTS (gnc_plugin_page
  *  enabled. */
 static const gchar *actions_requiring_account[] =
 {
-    "EditEditAccountAction",
-    "ActionsReconcileAction",
-    "ActionsAutoClearAction",
-    "ActionsLotsAction",
+    "edit.account",
+    "actions.account.reconcile",
+    "actions.account.autoclear",
+    "actions.account.view-lots",
     NULL
 };
 
 /** View Style actions */
 static const gchar *view_style_actions[] =
 {
-    "ViewStyleBasicAction",
-    "ViewStyleAutoSplitAction",
-    "ViewStyleJournalAction",
+    "view.ledger",
     NULL
-};
-
-/** Short labels for use on the toolbar buttons. */
-static action_toolbar_labels toolbar_labels[] =
-{
-    { "ActionsTransferAction", 	  N_("Transfer") },
-    { "RecordTransactionAction", 	  N_("Enter") },
-    { "CancelTransactionAction", 	  N_("Cancel") },
-    { "DeleteTransactionAction", 	  N_("Delete") },
-    { "DuplicateTransactionAction", N_("Duplicate") },
-    { "SplitTransactionAction",     N_("Split") },
-    { "ScheduleTransactionAction",  N_("Schedule") },
-    { "BlankTransactionAction",     N_("Blank") },
-    { "ActionsReconcileAction",     N_("Reconcile") },
-    { "ActionsAutoClearAction",     N_("Auto-clear") },
-    { TRANSACTION_UP_ACTION, N_("Up") },
-    { TRANSACTION_DOWN_ACTION, N_("Down") },
-    { NULL, NULL },
 };
 
 struct status_action
@@ -665,7 +645,7 @@ gnc_plugin_page_register2_init (GncPluginPageRegister2 *plugin_page)
     parent = GNC_PLUGIN_PAGE(plugin_page);
     use_new = gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL_REGISTER, GNC_PREF_USE_NEW);
     g_object_set(G_OBJECT(plugin_page),
-                 "page-name",      _("General Journal2"),
+                 "page-name",      _("General Journal"),
                  "page-uri",       "default:",
                  "ui-description", "gnc-plugin-page-register-ui.xml",
                  "use-new-window", use_new,
@@ -675,8 +655,6 @@ gnc_plugin_page_register2_init (GncPluginPageRegister2 *plugin_page)
     action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(plugin_page)));
     g_action_map_add_action_entries (action_map, gnc_plugin_page_register2_actions,
                                   gnc_plugin_page_register2_n_actions, plugin_page);
-
-    gnc_plugin_init_short_names (G_ACTION_GROUP(action_map), toolbar_labels);
 
     priv->lines_default     = DEFAULT_LINES_AMOUNT;
     priv->read_only         = FALSE;
@@ -718,8 +696,8 @@ gnc_plugin_page_register2_get_account (GncPluginPageRegister2 *page)
 /* This is the list of actions which are switched inactive in a read-only book. */
 static const char* readonly_inactive_actions[] =
 {
-    "EditCutAction",
-    "EditPasteAction",
+    "edit.cut",
+    "edit.paste",
     "CutTransactionAction",
     "PasteTransactionAction",
     TRANSACTION_UP_ACTION,

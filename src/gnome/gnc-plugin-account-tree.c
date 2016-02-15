@@ -56,7 +56,7 @@ static void gnc_plugin_account_tree_cmd_new_account_tree (GSimpleAction *action,
 static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "ViewAccountTreeAction", gnc_plugin_account_tree_cmd_new_account_tree
+        "view.account-tree", gnc_plugin_account_tree_cmd_new_account_tree
     },
 };
 /** The number of actions provided by this plugin. */

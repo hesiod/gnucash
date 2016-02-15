@@ -1695,21 +1695,20 @@ recnWindow2WithBalance (GtkWidget *parent, Account *account,
     {
         gchar *filename;
         gint merge_id;
-        GSimpleAction *action;
         GActionMap *action_map;
         GError *error = NULL;
+        GncMainWindow *win;
 
         recnData->ui_merge = egg_menu_manager_new ();
         g_signal_connect (recnData->ui_merge, "add_widget",
                           G_CALLBACK (recnWindow2_add_widget), dock);
 
-        action_map = G_ACTION_MAP(g_application_get_default());
+        win = GNC_MAIN_WINDOW(parent);
+        g_return_val_if_fail(GNC_IS_MAIN_WINDOW(win), NULL);
+        action_map = G_ACTION_MAP(win);
         recnData->action_map = action_map;
         g_action_map_add_action_entries (action_map, recnWindow2_actions,
-                                      recnWindow2_n_actions, recnData);
-        action =
-            G_SIMPLE_ACTION(g_action_map_lookup_action (action_map, "AccountOpenAccountAction"));
-        g_object_set (G_OBJECT (action), "short_label", _("Open"), NULL);
+                                         recnWindow2_n_actions, recnData);
 
         filename = gnc_filepath_locate_ui_file("gnc-reconcile-window-ui.xml");
         /* Can't do much without a ui. */

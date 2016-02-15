@@ -339,9 +339,11 @@ gnc_embedded_window_new (GActionEntry *action_entries,
     priv->parent_window = enclosing_win;
 
     /* Create menu and toolbar information */
+#if 0
     g_action_map_add_action_entries (
-                   G_ACTION_MAP(g_application_get_default()),
+                   G_ACTION_MAP(enclosing_win),
                    action_entries, n_action_entries, user_data);
+#endif
     merge_id = egg_menu_manager_add_filename (window->ui_merge, ui_fullname,
                &error);
 

@@ -2,7 +2,6 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-tools">
-        <attribute name="label" translatable="yes">Tools</attribute>
         <section id="menubar-tools-section">
           <item>
             <attribute name="label" translatable="yes">General Ledger</attribute>

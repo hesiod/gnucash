@@ -283,8 +283,8 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     window = GNC_MAIN_WINDOW(plugin_page->window);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
-    action_map = G_ACTION_MAP(gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME));
-    g_return_if_fail(G_IS_ACTION_GROUP(action_map));
+    action_map = G_ACTION_MAP(window);
+    g_return_if_fail(G_IS_ACTION_MAP(action_map));
 
     /* Set the action's sensitivity */
     gnc_plugin_update_actions (action_map, readonly_inactive_actions,
@@ -329,7 +329,7 @@ gnc_plugin_ab_account_selected(GncPluginPage *plugin_page, Account *account,
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
     window = GNC_MAIN_WINDOW(plugin_page->window);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
-    action_map = G_ACTION_MAP(gnc_main_window_get_action_group(window, PLUGIN_ACTIONS_NAME));
+    action_map = G_ACTION_MAP(window);
     g_return_if_fail(G_IS_ACTION_MAP(action_map));
 
     if (account)

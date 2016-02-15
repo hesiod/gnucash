@@ -63,23 +63,23 @@
               <attribute name="action">win.actions.account.view-lots</attribute>
             </item>
           </section>
+          <submenu id="menubar-actions-scrub">
+            <section id="menubar-actions-scrub-section">
+              <item>
+                <attribute name="label" translatable="yes">This Account</attribute>
+                <attribute name="action">win.actions.account.scrub</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Subaccounts</attribute>
+                <attribute name="action">win.actions.account.scrub-sub</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Everything</attribute>
+                <attribute name="action">win.actions.account.scrub-all</attribute>
+              </item>
+            </section>
+          </submenu>
         </section>
-        <submenu id="menubar-actions-scrub">
-          <section id="menubar-actions-scrub-section">
-            <item>
-              <attribute name="label" translatable="yes">This Account</attribute>
-              <attribute name="action">win.edit.account.scrub</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Subaccounts</attribute>
-              <attribute name="action">win.edit.account.scrub-sub</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Everything</attribute>
-              <attribute name="action">win.edit.account.scrub-all</attribute>
-            </item>
-          </section>
-        </submenu>
       </submenu>
     </section>
   </menu>
@@ -134,15 +134,15 @@
       <section id="popup-scrub-section">
         <item>
           <attribute name="label" translatable="yes">This Account</attribute>
-          <attribute name="action">win.edit.account.scrub</attribute>
+          <attribute name="action">win.actions.account.scrub</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Subaccounts</attribute>
-          <attribute name="action">win.edit.account.scrub-sub</attribute>
+          <attribute name="action">win.actions.account.scrub-sub</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Everything</attribute>
-          <attribute name="action">win.edit.account.scrub-all</attribute>
+          <attribute name="action">win.actions.account.scrub-all</attribute>
         </item>
       </section>
     </section>
@@ -169,5 +169,6 @@
           <attribute name="action">win.edit.account.delete</attribute>
         </item>
       </section>
+    </section>
   </menu>
 </interface>

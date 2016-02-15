@@ -253,6 +253,8 @@ void
 gnc_plugin_init_short_names (GActionGroup *action_group,
                              action_toolbar_labels *toolbar_labels)
 {
+    // FIXME obselete, remove this
+#if 0
     GAction *action;
     GValue value = { 0, };
     gint i;
@@ -267,6 +269,7 @@ gnc_plugin_init_short_names (GActionGroup *action_group,
         g_value_set_static_string (&value, gettext(toolbar_labels[i].label));
         g_object_set_property (G_OBJECT(action), "short_label", &value);
     }
+#endif
 }
 
 

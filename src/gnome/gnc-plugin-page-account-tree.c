@@ -269,17 +269,6 @@ static const gchar* readonly_inactive_actions[] =
     NULL
 };
 
-/** Short labels for use on the toolbar buttons. */
-static action_toolbar_labels toolbar_labels[] =
-{
-    { "file.account.new",     N_("New") },
-    { "file.account.open",    N_("Open") },
-    { "edit.account",         N_("Edit") },
-    { "edit.account.delete",  N_("Delete") },
-    { NULL, NULL },
-};
-
-
 GType
 gnc_plugin_page_account_tree_get_type (void)
 {
@@ -355,7 +344,7 @@ gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
 static void
 gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
 {
-    GActionMap *action_group;
+    GActionMap *action_map;
     GncPluginPageAccountTreePrivate *priv;
     GncPluginPage *parent;
     const GList *page_list;
@@ -365,19 +354,11 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
 
     /* Init parent declared variables */
     parent = GNC_PLUGIN_PAGE(plugin_page);
-#ifdef WITH_REGISTER2
-    g_object_set(G_OBJECT(plugin_page),
-                 "page-name",      _("Accounts"),
-                 "page-uri",       "default:",
-                 "ui-description", "gnc-plugin-page-account-tree2-ui.xml",
-                 NULL);
-#else
     g_object_set(G_OBJECT(plugin_page),
                  "page-name",      _("Accounts"),
                  "page-uri",       "default:",
                  "ui-description", "gnc-plugin-page-account-tree-ui.xml",
                  NULL);
-#endif
     g_signal_connect (G_OBJECT (plugin_page), "selected",
                       G_CALLBACK (gnc_plugin_page_account_tree_selected), plugin_page);
 
@@ -394,12 +375,12 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
     }
 
     /* Create menu and toolbar information */
-    action_group = G_ACTION_MAP(g_application_get_default());
-    g_action_map_add_action_entries(action_group,
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(plugin_page)));
+    g_return_if_fail(action_map != NULL);
+    g_action_map_add_action_entries(action_map,
                                  gnc_plugin_page_account_tree_actions,
                                  gnc_plugin_page_account_tree_n_actions,
                                  plugin_page);
-    gnc_plugin_init_short_names (G_ACTION_GROUP(action_group), toolbar_labels);
 
     /* Visible types */
     priv->fd.visible_types = -1; /* Start with all types */
@@ -407,8 +388,8 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
     priv->fd.show_unused = TRUE;
     priv->fd.show_zero_total = TRUE;
 
-    LEAVE("page %p, priv %p, action group %p",
-          plugin_page, priv, action_group);
+    LEAVE("page %p, priv %p, action map %p",
+          plugin_page, priv, action_map);
 }
 
 static void
@@ -862,14 +843,16 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
         /* Check here for placeholder accounts, etc. */
     }
 
-    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(page)));
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(page)));
+    g_return_if_fail(action_map != NULL);
     gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_rw,
                                "sensitive", is_readwrite && sensitive);
     gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_always,
                                "sensitive", sensitive);
     g_signal_emit (page, plugin_page_signals[ACCOUNT_SELECTED], 0, account);
 
-    action = g_action_map_lookup_action (action_map, "EditRenumberSubaccountsAction");
+    action = g_action_map_lookup_action (action_map, "edit.account.renumber-sub");
+    g_return_if_fail(action != NULL);
     g_object_set (G_OBJECT(action), "sensitive",
                   is_readwrite && sensitive && subaccounts, NULL);
 

@@ -259,23 +259,6 @@ void gnc_main_window_unmerge_actions (GncMainWindow *window,
 void gnc_main_window_actions_updated (GncMainWindow *window);
 
 
-/** Retrieve a specific set of user interface actions from a window.
- *  This function can be used to get an group of action to be
- *  manipulated when the front page of a window has changed.
- *
- *  @param window The window to check when looking for the action group.
- *
- *  @param group_name The name of a set of actions.  This must be a
- *  name provided when the actions were installed.
- *
- *  @return A pointer to a GActionGroup that was added with the
- *  specified name.  If the name cannot be found, then NULL will be
- *  returned.
- */
-GActionGroup *gnc_main_window_get_action_group (GncMainWindow *window,
-        const gchar *group_name);
-
-
 /** Set the window where all progressbar updates should occur.  This
  *  is a wrapper around the gnc_window_set_progressbar_window()
  *  function.

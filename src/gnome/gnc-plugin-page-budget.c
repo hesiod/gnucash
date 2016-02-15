@@ -126,26 +126,26 @@ static GActionEntry gnc_plugin_page_budget_actions [] =
 {
     /* File menu */
     {
-        "OpenAccountAction", gnc_plugin_page_budget_cmd_open_account
+        "file.account.open", gnc_plugin_page_budget_cmd_open_account
     },
     {
-        "OpenSubaccountsAction", gnc_plugin_page_budget_cmd_open_subaccounts
+        "file.account.open-subs", gnc_plugin_page_budget_cmd_open_subaccounts
     },
 
     /* Edit menu */
     {
-        "DeleteBudgetAction", gnc_plugin_page_budget_cmd_delete_budget
+        "edit.budget.delete", gnc_plugin_page_budget_cmd_delete_budget
     },
     {
-        "OptionsBudgetAction", gnc_plugin_page_budget_cmd_view_options
+        "edit.budget.options", gnc_plugin_page_budget_cmd_view_options
     },
     {
-        "EstimateBudgetAction", gnc_plugin_page_budget_cmd_estimate_budget
+        "edit.budget.estimate", gnc_plugin_page_budget_cmd_estimate_budget
     },
 
     /* View menu */
     {
-        "ViewFilterByAction", gnc_plugin_page_budget_cmd_view_filter_by
+        "view.filter", gnc_plugin_page_budget_cmd_view_filter_by
     },
 
 };
@@ -158,16 +158,6 @@ static const gchar *actions_requiring_account[] =
     "OpenAccountAction",
     "OpenSubaccountsAction",
     NULL
-};
-
-/** Short labels for use on the toolbar buttons. */
-static action_toolbar_labels toolbar_labels[] =
-{
-    { "OpenAccountAction",          N_("Open") },
-    { "DeleteBudgetAction",         N_("Delete") },
-    { "OptionsBudgetAction",        N_("Options") },
-    { "EstimateBudgetAction",       N_("Estimate") },
-    { NULL, NULL },
 };
 
 typedef struct GncPluginPageBudgetPrivate
@@ -311,12 +301,11 @@ gnc_plugin_page_budget_init (GncPluginPageBudget *plugin_page)
     gnc_plugin_page_add_book(parent, gnc_get_current_book());
 
     /* Create menu and toolbar information */
-    action_map = G_ACTION_MAP(g_application_get_default());
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(parent));
     g_action_map_add_action_entries (action_map,
-                                  gnc_plugin_page_budget_actions,
-                                  gnc_plugin_page_budget_n_actions,
-                                  plugin_page);
-    gnc_plugin_init_short_names (G_ACTION_GROUP(action_map), toolbar_labels);
+                                     gnc_plugin_page_budget_actions,
+                                     gnc_plugin_page_budget_n_actions,
+                                     plugin_page);
 
     /* Visible types */
     priv->fd.visible_types = -1; /* Start with all types */

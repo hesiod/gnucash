@@ -225,11 +225,11 @@ gnc_plugin_page_sx_list_init (GncPluginPageSxList *plugin_page)
                  NULL);
 
     gnc_plugin_page_add_book(parent, gnc_get_current_book());
-    action_map = G_ACTION_MAP(g_application_get_default());
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(parent));
     g_action_map_add_action_entries(action_map,
-                                 gnc_plugin_page_sx_list_actions,
-                                 gnc_plugin_page_sx_list_n_actions,
-                                 plugin_page);
+                                    gnc_plugin_page_sx_list_actions,
+                                    gnc_plugin_page_sx_list_n_actions,
+                                    plugin_page);
     /* gnc_plugin_init_short_names (G_ACTION_GROUP(action_map), toolbar_labels); */
 }
 
