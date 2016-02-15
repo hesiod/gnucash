@@ -43,7 +43,7 @@ typedef struct _GNCSplitRegClass GNCSplitRegClass;
 struct _GNCSplitReg
 {
     /* The "parent" widget. */
-    GtkVBox vbox;
+    GtkBox vbox;
 
     /* The containing window. */
     GtkWidget *window;
@@ -90,7 +90,7 @@ struct _GNCSplitReg
 
 struct _GNCSplitRegClass
 {
-    GtkVBoxClass parent_class;
+    GtkBoxClass parent_class;
 
     /* Signal defaults */
     void (*enter_ent_cb)    ( GNCSplitReg *w, gpointer user_data );

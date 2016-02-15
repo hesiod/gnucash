@@ -1070,7 +1070,7 @@ gnc_plugin_page_register_create_widget (GncPluginPage *plugin_page)
         return priv->widget;
     }
 
-    priv->widget = gtk_vbox_new (FALSE, 0);
+    priv->widget = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (priv->widget);
 
     numRows = priv->lines_default;

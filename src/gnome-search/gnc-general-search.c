@@ -77,7 +77,7 @@ struct _GNCGeneralSearchPrivate
 #define _PRIVATE(o) \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), GNC_TYPE_GENERAL_SEARCH, GNCGeneralSearchPrivate))
 
-static GtkHBoxClass *parent_class;
+static GtkBoxClass *parent_class;
 static guint general_search_signals[LAST_SIGNAL];
 
 

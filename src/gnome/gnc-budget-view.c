@@ -78,12 +78,12 @@ typedef struct GncBudgetViewPrivate GncBudgetViewPrivate;
 
 struct _GncBudgetView
 {
-    GtkVBox w;
+    GtkBox w;
 };
 
 struct _GncBudgetViewClass
 {
-    GtkVBoxClass w;
+    GtkBoxClass w;
 };
 
 enum

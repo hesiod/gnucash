@@ -570,7 +570,7 @@ gnc_plugin_page_owner_tree_create_widget (GncPluginPage *plugin_page)
         return priv->widget;
     }
 
-    priv->widget = gtk_vbox_new (FALSE, 0);
+    priv->widget = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     gtk_widget_show (priv->widget);
 
     scrolled_window = gtk_scrolled_window_new (NULL, NULL);

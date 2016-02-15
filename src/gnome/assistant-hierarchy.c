@@ -1102,7 +1102,7 @@ book_options_dialog_close_cb(GNCOptionWin * optionwin,
 static void
 assistant_instert_book_options_page (hierarchy_data *data)
 {
-    GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
 
     data->options = gnc_option_db_new_for_type (QOF_ID_BOOK);
     qof_book_load_options (gnc_get_current_book (),

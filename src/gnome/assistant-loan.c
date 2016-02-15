@@ -242,9 +242,9 @@ typedef struct LoanAssistantData_
     GtkComboBox   *prmIrateType;
 
     /* opt = options */
-    GtkVBox        *optVBox;
+    GtkBox        *optVBox;
     GtkCheckButton *optEscrowCb;
-    GtkHBox        *optEscrowHBox;
+    GtkBox        *optEscrowHBox;
     GNCAccountSel  *optEscrowGAS;
 
     /* rep = repayment */
@@ -728,7 +728,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
              */
 
             RepayOptUIData *rouid;
-            GtkVBox *vb;
+            GtkBox *vb;
             GtkAlignment *optAlign, *subOptAlign;
             GString *str;
 
@@ -796,7 +796,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
                           G_CALLBACK(loan_pay_freq_toggle_cb), ldd );
 
         {
-            GtkHBox *hbox;
+            GtkBox *hbox;
             hbox = GTK_HBOX(gtk_builder_get_object(builder, "type_freq_hbox"));
             ldd->prmVarGncFreq = GNC_FREQUENCY(gnc_frequency_new( NULL, NULL ));
             gtk_box_pack_start( GTK_BOX(hbox) , GTK_WIDGET(ldd->prmVarGncFreq), TRUE, FALSE, 0 );
@@ -804,7 +804,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
                               G_CALLBACK (loan_info_page_valid_cb), ldd);
         }
         {
-            GtkHBox *hbox;
+            GtkBox *hbox;
             hbox = GTK_HBOX(gtk_builder_get_object(builder, "freq_frame_hbox"));
             ldd->repGncFreq = GNC_FREQUENCY(gnc_frequency_new( NULL, NULL ));
             gtk_box_pack_start( GTK_BOX(hbox) , GTK_WIDGET(ldd->repGncFreq), TRUE, FALSE, 0 );

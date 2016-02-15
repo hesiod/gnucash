@@ -114,7 +114,7 @@ owner_set_widget (GNCOption *option, GtkBox *page_box,
     GtkWidget *value;
     GtkWidget *label;
 
-    *enclosing = gtk_hbox_new (FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     label = make_name_label (name);
     gtk_box_pack_start (GTK_BOX (*enclosing), label, FALSE, FALSE, 0);
 
@@ -183,7 +183,7 @@ customer_set_widget (GNCOption *option, GtkBox *page_box,
     GtkWidget *value;
     GtkWidget *label;
 
-    *enclosing = gtk_hbox_new (FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     label = make_name_label (name);
     gtk_box_pack_start (GTK_BOX (*enclosing), label, FALSE, FALSE, 0);
 
@@ -241,7 +241,7 @@ vendor_set_widget (GNCOption *option, GtkBox *page_box,
     GtkWidget *value;
     GtkWidget *label;
 
-    *enclosing = gtk_hbox_new (FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     label = make_name_label (name);
     gtk_box_pack_start (GTK_BOX (*enclosing), label, FALSE, FALSE, 0);
 
@@ -298,7 +298,7 @@ employee_set_widget (GNCOption *option, GtkBox *page_box,
     GtkWidget *value;
     GtkWidget *label;
 
-    *enclosing = gtk_hbox_new (FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     label = make_name_label (name);
     gtk_box_pack_start (GTK_BOX (*enclosing), label, FALSE, FALSE, 0);
 
@@ -372,7 +372,7 @@ invoice_set_widget (GNCOption *option, GtkBox *page_box,
     GtkWidget *value;
     GtkWidget *label;
 
-    *enclosing = gtk_hbox_new (FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     label = make_name_label (name);
     gtk_box_pack_start (GTK_BOX (*enclosing), label, FALSE, FALSE, 0);
 
@@ -450,7 +450,7 @@ taxtable_set_widget (GNCOption *option, GtkBox *page_box,
     GtkWidget *value;
     GtkWidget *label;
 
-    *enclosing = gtk_hbox_new (FALSE, 5);
+    *enclosing = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
     label = make_name_label (name);
     gtk_box_pack_start (GTK_BOX (*enclosing), label, FALSE, FALSE, 0);
 

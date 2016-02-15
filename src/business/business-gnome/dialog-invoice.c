@@ -1193,7 +1193,7 @@ add_summary_label (GtkWidget *summarybar, const char *label_str)
     GtkWidget *hbox;
     GtkWidget *label;
 
-    hbox = gtk_hbox_new(FALSE, 2);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
     gtk_box_pack_start (GTK_BOX(summarybar), hbox, FALSE, FALSE, 5);
 
     label = gtk_label_new (label_str);
@@ -1218,7 +1218,7 @@ gnc_invoice_window_create_summary_bar (InvoiceWindow *iw)
     iw->total_subtotal_label  = NULL;
     iw->total_tax_label       = NULL;
 
-    summarybar = gtk_hbox_new (FALSE, 4);
+    summarybar = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 4);
 
     iw->total_label           = add_summary_label (summarybar, _("Total:"));
 
