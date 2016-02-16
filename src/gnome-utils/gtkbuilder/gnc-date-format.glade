@@ -41,7 +41,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkLabel" id="label3">
+          <object class="GtkLabel" id="widget_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Date format:</property>
@@ -52,7 +52,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="label4">
+          <object class="GtkLabel" id="months_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Months:</property>
@@ -63,7 +63,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="label5">
+          <object class="GtkLabel" id="years_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Years:</property>
@@ -74,7 +74,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="label6">
+          <object class="GtkLabel" id="format_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label" translatable="yes">Format:</property>
@@ -82,17 +82,6 @@
           <packing>
             <property name="left_attach">0</property>
             <property name="top_attach">3</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="label7">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Sample:</property>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">4</property>
           </packing>
         </child>
         <child>
@@ -197,7 +186,7 @@
           <object class="GtkLabel" id="sample_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">sample</property>
+            <property name="label" translatable="yes">December 31, 2000</property>
           </object>
           <packing>
             <property name="left_attach">1</property>
