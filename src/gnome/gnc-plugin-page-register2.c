@@ -230,7 +230,7 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
         "edit.paste", gnc_plugin_page_register2_cmd_paste
     },
     {
-        "edit.account", gnc_plugin_page_register2_cmd_edit_account
+        "account.edit", gnc_plugin_page_register2_cmd_edit_account
     },
     /*{
         "edit.find.transaction", gnc_plugin_page_register2_cmd_find_transactions
@@ -290,19 +290,19 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
     /* Actions menu */
 
     {
-        "actions.account.transfer", gnc_plugin_page_register2_cmd_transfer
+        "account.transfer", gnc_plugin_page_register2_cmd_transfer
     },
     {
-        "actions.account.reconcile", gnc_plugin_page_register2_cmd_reconcile
+        "account.reconcile", gnc_plugin_page_register2_cmd_reconcile
     },
     {
-        "actions.account.autoclear", gnc_plugin_page_register2_cmd_autoclear
+        "account.autoclear", gnc_plugin_page_register2_cmd_autoclear
     },
     {
-        "actions.account.stock-split", gnc_plugin_page_register2_cmd_stock_split
+        "account.stock-split", gnc_plugin_page_register2_cmd_stock_split
     },
     {
-        "actions.account.view-lots", gnc_plugin_page_register2_cmd_lots
+        "account.view-lots", gnc_plugin_page_register2_cmd_lots
     },
     {
         "actions.transaction.blank", gnc_plugin_page_register2_cmd_blank_transaction
@@ -317,10 +317,10 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
         "actions.transaction.schedule", gnc_plugin_page_register2_cmd_schedule
     },
     {
-        "actions.account.scrub-all", gnc_plugin_page_register2_cmd_scrub_all
+        "account.scrub-all", gnc_plugin_page_register2_cmd_scrub_all
     },
     {
-        "actions.account.scrub", gnc_plugin_page_register2_cmd_scrub_current
+        "account.scrub", gnc_plugin_page_register2_cmd_scrub_current
     },
 
     /* Reports menu */
@@ -358,10 +358,10 @@ static guint gnc_plugin_page_register2_n_actions = G_N_ELEMENTS (gnc_plugin_page
  *  enabled. */
 static const gchar *actions_requiring_account[] =
 {
-    "edit.account",
-    "actions.account.reconcile",
-    "actions.account.autoclear",
-    "actions.account.view-lots",
+    "account.edit",
+    "account.reconcile",
+    "account.autoclear",
+    "account.view-lots",
     NULL
 };
 

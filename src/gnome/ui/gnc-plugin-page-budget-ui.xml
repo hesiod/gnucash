@@ -36,7 +36,7 @@
       <section id="toolbar-account-section">
         <item>
           <attribute name="label" translatable="yes">Open Account</attribute>
-          <attribute name="action">edit.account.open</attribute>
+          <attribute name="action">account.open</attribute>
         </item>
       </section>
       <section id="toolbar-budget-section">

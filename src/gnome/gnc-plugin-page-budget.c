@@ -126,10 +126,10 @@ static GActionEntry gnc_plugin_page_budget_actions [] =
 {
     /* File menu */
     {
-        "file.account.open", gnc_plugin_page_budget_cmd_open_account
+        "account.open", gnc_plugin_page_budget_cmd_open_account
     },
     {
-        "file.account.open-subs", gnc_plugin_page_budget_cmd_open_subaccounts
+        "account.open-subs", gnc_plugin_page_budget_cmd_open_subaccounts
     },
 
     /* Edit menu */

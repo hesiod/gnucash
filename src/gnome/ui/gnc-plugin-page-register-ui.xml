@@ -5,7 +5,7 @@
         <section id="menubar-edit-selection-section">
           <item>
             <attribute name="label" translatable="yes">Edit Account</attribute>
-            <attribute name="action">win.edit.account</attribute>
+            <attribute name="action">win.account.edit</attribute>
           </item>
         </section>
       </submenu>
@@ -105,19 +105,19 @@
           <section id="menubar-actions-account-edit-section">
             <item>
               <attribute name="label" translatable="yes">Transfer...</attribute>
-              <attribute name="action">win.actions.account.transfer</attribute>
+              <attribute name="action">win.account.transfer</attribute>
             </item>
             <item>
               <attribute name="label" translatable="yes">Reconcile...</attribute>
-              <attribute name="action">win.actions.account.reconcile</attribute>
+              <attribute name="action">win.account.reconcile</attribute>
             </item>
             <item>
               <attribute name="label" translatable="yes">Stock Split...</attribute>
-              <attribute name="action">win.actions.account.stock-split</attribute>
+              <attribute name="action">win.account.stock-split</attribute>
             </item>
             <item>
               <attribute name="label" translatable="yes">View Lots...</attribute>
-              <attribute name="action">win.actions.account.view-lots</attribute>
+              <attribute name="action">win.account.view-lots</attribute>
             </item>
           </section>
           <section id="menubar-actions-transaction-section">
@@ -146,15 +146,15 @@
             <section id="menubar-actions-scrub-section">
               <item>
                 <attribute name="label" translatable="yes">This Account</attribute>
-                <attribute name="action">win.actions.account.scrub</attribute>
+                <attribute name="action">win.account.scrub</attribute>
               </item>
               <item>
                 <attribute name="label" translatable="yes">Subaccounts</attribute>
-                <attribute name="action">win.actions.account.scrub-sub</attribute>
+                <attribute name="action">win.account.scrub-sub</attribute>
               </item>
               <item>
                 <attribute name="label" translatable="yes">Everything</attribute>
-                <attribute name="action">win.actions.account.scrub-all</attribute>
+                <attribute name="action">win.account.scrub-all</attribute>
               </item>
             </section>
           </submenu>
@@ -217,11 +217,11 @@
       <section id="toolbar-edit-section">
         <item>
           <attribute name="label" translatable="yes">Transfer...</attribute>
-          <attribute name="action">win.actions.account.transfer</attribute>
+          <attribute name="action">win.account.transfer</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Reconcile...</attribute>
-          <attribute name="action">win.actions.account.reconcile</attribute>
+          <attribute name="action">win.account.reconcile</attribute>
         </item>
       </section>
     </section>
