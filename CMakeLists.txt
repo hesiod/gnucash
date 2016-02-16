@@ -65,6 +65,7 @@ OPTION (DISABLE_NLS "do not use Native Language Support" OFF)
 OPTION (DISABLE_DEPRECATED_GLIB "don't use deprecated glib funcions" OFF)
 OPTION (DISABLE_DEPRECATED_GTK "don't use deprectacted gtk, gdk or gdk-pixbuf functions" OFF)
 OPTION (DISABLE_DEPRECATED_GNOME "don't use deprecated gnome functions" OFF)
+OPTION (ENFORCE_SINGLE_INCLUDES "enforce usage of toplevel GLib/GDK/GTK headers" ON)
 OPTION (GNC_BUILD_AS_INSTALL "Make build directory structure mirror install" ON)
 # ############################################################
 
@@ -163,6 +164,12 @@ ENDIF (WITH_GNUCASH)
 include_directories(${GTK3_INCLUDE_DIRS})
 link_directories(${GTK3_LIBRARY_DIRS})
 add_definitions(${GTK3_CFLAGS_OTHER})
+
+IF (ENFORCE_SINGLE_INCLUDES)
+  add_definitions(-DG_DISABLE_SINGLE_INCLUDES
+                  -DGDK_PIXBUF_DISABLE_SINGLE_INCLUDES
+                  -DGTK_DISABLE_SINGLE_INCLUDES)
+ENDIF (ENFORCE_SINGLE_INCLUDES)
 
 GNC_PKG_CHECK_MODULES (ZLIB REQUIRED zlib)
 IF (WITH_CUTECASH)
