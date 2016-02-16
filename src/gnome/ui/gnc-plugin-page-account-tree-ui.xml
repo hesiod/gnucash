@@ -30,56 +30,54 @@
         </section>
       </submenu>
       <submenu id="menubar-actions">
-        <section id="menubar-actions-section">
-          <section id="menubar-actions-account-new-section">
-            <item>
-              <attribute name="label" translatable="yes">New Account</attribute>
-              <attribute name="action">win.account.new</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">New Account Hierarchy</attribute>
-              <attribute name="action">win.account.new-hierarchy</attribute>
-            </item>
-          </section>
-          <section id="menubar-actions-account-edit-section">
-            <item>
-              <attribute name="label" translatable="yes">Transfer...</attribute>
-              <attribute name="action">win.account.transfer</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Reconcile...</attribute>
-              <attribute name="action">win.account.reconcile</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Auto-clear...</attribute>
-              <attribute name="action">win.account.autoclear</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Stock Split...</attribute>
-              <attribute name="action">win.account.stock-split</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">View Lots...</attribute>
-              <attribute name="action">win.account.view-lots</attribute>
-            </item>
-          </section>
-          <submenu id="menubar-actions-scrub">
-            <section id="menubar-actions-scrub-section">
-              <item>
-                <attribute name="label" translatable="yes">This Account</attribute>
-                <attribute name="action">win.account.scrub</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Subaccounts</attribute>
-                <attribute name="action">win.account.scrub-sub</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Everything</attribute>
-                <attribute name="action">win.account.scrub-all</attribute>
-              </item>
-            </section>
-          </submenu>
+        <section id="menubar-actions-account-new-section">
+          <item>
+            <attribute name="label" translatable="yes">New Account</attribute>
+            <attribute name="action">win.account.new</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">New Account Hierarchy</attribute>
+            <attribute name="action">win.account.new-hierarchy</attribute>
+          </item>
         </section>
+        <section id="menubar-actions-account-edit-section">
+          <item>
+            <attribute name="label" translatable="yes">Transfer...</attribute>
+            <attribute name="action">win.account.transfer</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Reconcile...</attribute>
+            <attribute name="action">win.account.reconcile</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Auto-clear...</attribute>
+            <attribute name="action">win.account.autoclear</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Stock Split...</attribute>
+            <attribute name="action">win.account.stock-split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">View Lots...</attribute>
+            <attribute name="action">win.account.view-lots</attribute>
+          </item>
+        </section>
+        <submenu id="menubar-actions-scrub">
+          <section id="menubar-actions-scrub-section">
+            <item>
+              <attribute name="label" translatable="yes">This Account</attribute>
+              <attribute name="action">win.account.scrub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Subaccounts</attribute>
+              <attribute name="action">win.account.scrub-sub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Everything</attribute>
+              <attribute name="action">win.account.scrub-all</attribute>
+            </item>
+          </section>
+        </submenu>
       </submenu>
     </section>
   </menu>

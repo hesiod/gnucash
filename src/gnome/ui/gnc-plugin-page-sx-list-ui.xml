@@ -2,24 +2,22 @@
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-actions">
-        <section id="menubar-actions-section">
-          <submenu id="menubar-actions-scheduled">
-            <section id="menubar-actions-scheduled-section">
-              <item>
-                <attribute name="label" translatable="yes">New</attribute>
-                <attribute name="action">win.actions.scheduled.new</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Edit</attribute>
-                <attribute name="action">win.actions.scheduled.edit</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Delete</attribute>
-                <attribute name="action">win.actions.scheduled.delete</attribute>
-              </item>
-            </section>
-          </submenu>
-        </section>
+        <submenu id="menubar-actions-scheduled">
+          <section id="menubar-actions-scheduled-section">
+            <item>
+              <attribute name="label" translatable="yes">New</attribute>
+              <attribute name="action">win.actions.scheduled.new</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Edit</attribute>
+              <attribute name="action">win.actions.scheduled.edit</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Delete</attribute>
+              <attribute name="action">win.actions.scheduled.delete</attribute>
+            </item>
+          </section>
+        </submenu>
       </submenu>
     </section>
   </menu>

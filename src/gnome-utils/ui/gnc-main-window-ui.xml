@@ -112,37 +112,35 @@
       </submenu>
       <submenu id="menubar-actions">
         <attribute name="label" translatable="yes">Actions</attribute>
-        <section id="menubar-actions-section">
-          <submenu id="menubar-actions-online">
-            <attribute name="label" translatable="yes">Online Actions...</attribute>
-            <section id="menubar-actions-online-section">
-              <section id="menubar-actions-online-fetch-section"></section>
-              <section id="menubar-actions-online-issue-section"></section>
-              <section id="menubar-actions-online-log-section"></section>
-            </section>
-          </submenu>
-          <submenu id="menubar-actions-scheduled">
-            <attribute name="label" translatable="yes">Scheduled Transactions...</attribute>
-            <section id="menubar-actions-scheduled-general-section"></section>
-            <section id="menubar-actions-scheduled-section"></section>
-          </submenu>
-          <section id="menubar-actions-account-new-section"></section>
-          <section id="menubar-actions-account-edit-section"></section>
-          <section id="menubar-actions-budget-section"></section>
-          <submenu id="menubar-actions-scrub">
-            <attribute name="label" translatable="yes">Check &amp; Repair</attribute>
-            <section id="menubar-actions-scrub-section"></section>
-          </submenu>
-          <section id="menubar-actions-tail-section">
-            <item>
-              <attribute name="label" translatable="yes">Forget Warnings</attribute>
-              <attribute name="action">win.actions.forget-warnings</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Rename Page</attribute>
-              <attribute name="action">win.actions.rename-page</attribute>
-            </item>
+        <submenu id="menubar-actions-online">
+          <attribute name="label" translatable="yes">Online Actions...</attribute>
+          <section id="menubar-actions-online-section">
+            <section id="menubar-actions-online-fetch-section"></section>
+            <section id="menubar-actions-online-issue-section"></section>
+            <section id="menubar-actions-online-log-section"></section>
           </section>
+        </submenu>
+        <submenu id="menubar-actions-scheduled">
+          <attribute name="label" translatable="yes">Scheduled Transactions...</attribute>
+          <section id="menubar-actions-scheduled-general-section"></section>
+          <section id="menubar-actions-scheduled-section"></section>
+        </submenu>
+        <section id="menubar-actions-account-new-section"></section>
+        <section id="menubar-actions-account-edit-section"></section>
+        <section id="menubar-actions-budget-section"></section>
+        <submenu id="menubar-actions-scrub">
+          <attribute name="label" translatable="yes">Check &amp; Repair</attribute>
+          <section id="menubar-actions-scrub-section"></section>
+        </submenu>
+        <section id="menubar-actions-tail-section">
+          <item>
+            <attribute name="label" translatable="yes">Forget Warnings</attribute>
+            <attribute name="action">win.actions.forget-warnings</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Rename Page</attribute>
+            <attribute name="action">win.actions.rename-page</attribute>
+          </item>
         </section>
       </submenu>
       <submenu id="menubar-reports">

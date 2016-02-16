@@ -101,64 +101,62 @@
         </section>
       </submenu>
       <submenu id="menubar-actions">
-        <section id="menubar-actions-section">
-          <section id="menubar-actions-account-edit-section">
-            <item>
-              <attribute name="label" translatable="yes">Transfer...</attribute>
-              <attribute name="action">win.account.transfer</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Reconcile...</attribute>
-              <attribute name="action">win.account.reconcile</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Stock Split...</attribute>
-              <attribute name="action">win.account.stock-split</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">View Lots...</attribute>
-              <attribute name="action">win.account.view-lots</attribute>
-            </item>
-          </section>
-          <section id="menubar-actions-transaction-section">
-            <item>
-              <attribute name="label" translatable="yes">Blank Transaction</attribute>
-              <attribute name="action">win.actions.transaction.blank</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Split Transaction</attribute>
-              <attribute name="action">win.actions.transaction.split</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Edit Exchange Rate</attribute>
-              <attribute name="action">win.actions.transaction.edit-xchg-rate</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Schedule...</attribute>
-              <attribute name="action">win.actions.transaction.schedule</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Jump</attribute>
-              <attribute name="action">win.actions.transaction.jump</attribute>
-            </item>
-          </section>
-          <submenu id="menubar-actions-scrub">
-            <section id="menubar-actions-scrub-section">
-              <item>
-                <attribute name="label" translatable="yes">This Account</attribute>
-                <attribute name="action">win.account.scrub</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Subaccounts</attribute>
-                <attribute name="action">win.account.scrub-sub</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Everything</attribute>
-                <attribute name="action">win.account.scrub-all</attribute>
-              </item>
-            </section>
-          </submenu>
+        <section id="menubar-actions-account-edit-section">
+          <item>
+            <attribute name="label" translatable="yes">Transfer...</attribute>
+            <attribute name="action">win.account.transfer</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Reconcile...</attribute>
+            <attribute name="action">win.account.reconcile</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Stock Split...</attribute>
+            <attribute name="action">win.account.stock-split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">View Lots...</attribute>
+            <attribute name="action">win.account.view-lots</attribute>
+          </item>
         </section>
+        <section id="menubar-actions-transaction-section">
+          <item>
+            <attribute name="label" translatable="yes">Blank Transaction</attribute>
+            <attribute name="action">win.actions.transaction.blank</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Split Transaction</attribute>
+            <attribute name="action">win.actions.transaction.split</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Edit Exchange Rate</attribute>
+            <attribute name="action">win.actions.transaction.edit-xchg-rate</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Schedule...</attribute>
+            <attribute name="action">win.actions.transaction.schedule</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Jump</attribute>
+            <attribute name="action">win.actions.transaction.jump</attribute>
+          </item>
+        </section>
+        <submenu id="menubar-actions-scrub">
+          <section id="menubar-actions-scrub-section">
+            <item>
+              <attribute name="label" translatable="yes">This Account</attribute>
+              <attribute name="action">win.account.scrub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Subaccounts</attribute>
+              <attribute name="action">win.account.scrub-sub</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Everything</attribute>
+              <attribute name="action">win.account.scrub-all</attribute>
+            </item>
+          </section>
+        </submenu>
       </submenu>
       <submenu id="menubar-reports">
         <section id="menubar-reports-account-reports-section">

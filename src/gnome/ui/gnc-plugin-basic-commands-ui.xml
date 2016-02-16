@@ -54,24 +54,22 @@
         </section>
       </submenu>
       <submenu id="menubar-actions">
-        <section id="menubar-actions-section">
-          <submenu id="menubar-actions-scheduled">
-            <section id="menubar-actions-scheduled-general-section">
-              <item>
-                <attribute name="label" translatable="yes">Scheduled Transaction Editor</attribute>
-                <attribute name="action">win.actions.scheduled.editor</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Since Last Run</attribute>
-                <attribute name="action">win.actions.scheduled.since-last-run</attribute>
-              </item>
-              <item>
-                <attribute name="label" translatable="yes">Mortgage &amp; Loan Repayment...</attribute>
-                <attribute name="action">win.actions.scheduled.load-calculator</attribute>
-              </item>
-            </section>
-          </submenu>
-        </section>
+        <submenu id="menubar-actions-scheduled">
+          <section id="menubar-actions-scheduled-general-section">
+            <item>
+              <attribute name="label" translatable="yes">Scheduled Transaction Editor</attribute>
+              <attribute name="action">win.actions.scheduled.editor</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Since Last Run</attribute>
+              <attribute name="action">win.actions.scheduled.since-last-run</attribute>
+            </item>
+            <item>
+              <attribute name="label" translatable="yes">Mortgage &amp; Loan Repayment...</attribute>
+              <attribute name="action">win.actions.scheduled.load-calculator</attribute>
+            </item>
+          </section>
+        </submenu>
       </submenu>
       <submenu id="menubar-tools">
         <section id="menubar-tools-section">

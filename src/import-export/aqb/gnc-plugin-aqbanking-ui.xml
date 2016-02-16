@@ -34,50 +34,48 @@
         </section>
       </submenu>
       <submenu id="menubar-actions">
-        <section id="menubar-actions-section">
-          <submenu id="menubar-actions-online">
-            <section id="menubar-actions-online-section">
-              <section id="menubar-actions-online-fetch-section">
-                <item>
-                  <attribute name="label" translatable="yes">Fetch Balance</attribute>
-                  <attribute name="action">win.actions.online.get.balance</attribute>
-                </item>
-                <item>
-                  <attribute name="label" translatable="yes">Fetch Transaction</attribute>
-                  <attribute name="action">win.actions.online.get.transaction</attribute>
-                </item>
-              </section>
-              <section id="menubar-actions-online-issue-section">
-                <item>
-                  <attribute name="label" translatable="yes">Issue Transaction</attribute>
-                  <attribute name="action">win.actions.online.issue.transaction.normal</attribute>
-                </item>
-                <item>
-                  <attribute name="label" translatable="yes">Issue SEPA Transaction</attribute>
-                  <attribute name="action">win.actions.online.issue.transaction.sepa</attribute>
-                </item>
-                <item>
-                  <attribute name="label" translatable="yes">Issue International Transaction</attribute>
-                  <attribute name="action">win.actions.online.issue.transaction.int</attribute>
-                </item>
-                <item>
-                  <attribute name="label" translatable="yes">Issue Direct Debit Action</attribute>
-                  <attribute name="action">win.actions.online.issue.transaction.direct-debit</attribute>
-                </item>
-                <!--<item>
-                  <attribute name="label" translatable="yes">Issue SEPA Direct Debit Action</attribute>
-                  <attribute name="action">actions.online.issue.transaction.sepa-direct-debit</attribute>
-                </item>/-->
-              </section>
-              <section id="menubar-actions-online-log-section">
-                <item>
-                  <attribute name="label" translatable="yes">View Log Window</attribute>
-                  <attribute name="action">win.actions.online.view-log</attribute>
-                </item>
-              </section>
+        <submenu id="menubar-actions-online">
+          <section id="menubar-actions-online-section">
+            <section id="menubar-actions-online-fetch-section">
+              <item>
+                <attribute name="label" translatable="yes">Fetch Balance</attribute>
+                <attribute name="action">win.actions.online.get.balance</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Fetch Transaction</attribute>
+                <attribute name="action">win.actions.online.get.transaction</attribute>
+              </item>
             </section>
-          </submenu>
-        </section>
+            <section id="menubar-actions-online-issue-section">
+              <item>
+                <attribute name="label" translatable="yes">Issue Transaction</attribute>
+                <attribute name="action">win.actions.online.issue.transaction.normal</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Issue SEPA Transaction</attribute>
+                <attribute name="action">win.actions.online.issue.transaction.sepa</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Issue International Transaction</attribute>
+                <attribute name="action">win.actions.online.issue.transaction.int</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Issue Direct Debit Action</attribute>
+                <attribute name="action">win.actions.online.issue.transaction.direct-debit</attribute>
+              </item>
+              <!--<item>
+                <attribute name="label" translatable="yes">Issue SEPA Direct Debit Action</attribute>
+                <attribute name="action">actions.online.issue.transaction.sepa-direct-debit</attribute>
+              </item>/-->
+            </section>
+            <section id="menubar-actions-online-log-section">
+              <item>
+                <attribute name="label" translatable="yes">View Log Window</attribute>
+                <attribute name="action">win.actions.online.view-log</attribute>
+              </item>
+            </section>
+          </section>
+        </submenu>
       </submenu>
       <submenu id="menubar-tools">
         <section id="menubar-tools-section">
