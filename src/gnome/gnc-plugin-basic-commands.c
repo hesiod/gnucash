@@ -308,9 +308,9 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     /* Set the action's sensitivity */
     gnc_plugin_update_actions (action_map, readwrite_only_active_actions,
-                               "sensitive", is_readwrite);
+                               "enabled", is_readwrite);
     gnc_plugin_update_actions (action_map, dirty_only_active_actions,
-                               "sensitive", is_dirty);
+                               "enabled", is_dirty);
 }
 
 static void

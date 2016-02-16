@@ -642,7 +642,7 @@ gppb_selection_changed_cb(GtkTreeSelection *selection,
 
     action_group = gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(page));
     gnc_plugin_update_actions (action_group, actions_requiring_account,
-                               "sensitive", sensitive);
+                               "enabled", sensitive);
 }
 #endif
 

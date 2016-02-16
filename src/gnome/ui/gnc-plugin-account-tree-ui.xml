@@ -5,7 +5,7 @@
         <section id="menubar-view-content-section">
           <item>
             <attribute name="label" translatable="yes">New Accounts Page</attribute>
-            <attribute name="action">view.account-tree</attribute>
+            <attribute name="action">win.view.account-tree</attribute>
           </item>
         </section>
       </submenu>

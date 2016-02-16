@@ -891,12 +891,12 @@ gnc_plugin_page_register2_ui_initial_state (GncPluginPageRegister2 *page) // thi
     account = gnc_plugin_page_register2_get_account (page);
     action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page)));
     gnc_plugin_update_actions(action_map, actions_requiring_account,
-                              "sensitive", is_readwrite && account != NULL);
+                              "enabled", is_readwrite && account != NULL);
 
     /* Set "style" radio button */
     ledger_type = gnc_ledger_display2_type (priv->ledger);
     gnc_plugin_update_actions (action_map, view_style_actions,
-                              "sensitive", ledger_type == LD2_SINGLE);
+                              "enabled", ledger_type == LD2_SINGLE);
 
     model = gnc_ledger_display2_get_split_model_register (priv->ledger);
 
