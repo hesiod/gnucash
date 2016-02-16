@@ -73,7 +73,6 @@ enum
     PROP_STATUSBAR_TEXT,
     PROP_USE_NEW_WINDOW,
     PROP_UI_DESCRIPTION,
-    PROP_UI_MERGE,
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
@@ -99,7 +98,6 @@ typedef struct
 
     /** The group of all actions provided by this plugin. */
     GActionGroup *action_group;
-    EggMenuManager *ui_merge;
     guint merge_id;
     char *ui_description;
 
@@ -325,8 +323,7 @@ gnc_plugin_page_merge_actions (GncPluginPage *page,
     g_return_if_fail (GNC_IS_PLUGIN_PAGE(page));
 
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
-    priv->ui_merge = ui_merge;
-    priv->merge_id = gnc_plugin_add_actions(priv->ui_merge,
+    priv->merge_id = gnc_plugin_add_actions(ui_merge,
                                             priv->ui_description);
 }
 
@@ -341,11 +338,10 @@ gnc_plugin_page_unmerge_actions (GncPluginPage *page,
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
 
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
-    g_return_if_fail (priv->merge_id != 0);
+    g_return_if_fail (ui_merge != 0);
 
-    egg_menu_manager_remove (priv->ui_merge, priv->merge_id);
+    egg_menu_manager_remove (ui_merge, priv->merge_id);
 
-    priv->ui_merge = NULL;
     priv->merge_id = 0;
 }
 
@@ -501,16 +497,6 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
                           NULL,
                           G_PARAM_READWRITE));
 
-    g_object_class_install_property
-    (gobject_class,
-     PROP_UI_MERGE,
-     g_param_spec_object ("ui-merge",
-                          "UI Merge",
-                          "A pointer to the EggMenuManager object that "
-                          "represents this pages menu hierarchy.",
-                          EGG_TYPE_MENU_MANAGER,
-                          G_PARAM_READABLE));
-
 
     signals[INSERTED] = g_signal_new ("inserted",
                                       G_OBJECT_CLASS_TYPE (klass),
@@ -661,9 +647,6 @@ gnc_plugin_page_get_property (GObject     *object,
         break;
     case PROP_UI_DESCRIPTION:
         g_value_set_string (value, priv->ui_description);
-        break;
-    case PROP_UI_MERGE:
-        g_value_take_object (value, priv->ui_merge);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -988,19 +971,6 @@ gnc_plugin_page_set_ui_description (GncPluginPage *page,
     if (priv->ui_description)
         g_free(priv->ui_description);
     priv->ui_description = g_strdup(ui_filename);
-}
-
-
-/*  Retrieve the GtkUIManager object associated with this page. */
-EggMenuManager *
-gnc_plugin_page_get_ui_merge (GncPluginPage *page)
-{
-    GncPluginPagePrivate *priv;
-
-    g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), NULL);
-
-    priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
-    return priv->ui_merge;
 }
 
 

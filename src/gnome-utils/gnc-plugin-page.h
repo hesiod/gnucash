@@ -461,15 +461,6 @@ const char *gnc_plugin_page_get_ui_description (GncPluginPage *page);
 void gnc_plugin_page_set_ui_description (GncPluginPage *page,
         const char *ui_filename);
 
-
-/** Retrieve the GtkUIManager object associated with this page.
- *
- *  @param page The page whose UI information should be retrieved.
- *
- *  @return A pointer to the GtkUIManager object for this page. */
-EggMenuManager *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
-
-
 /** Retrieve a GAction object associated with this page.
  *
  *  @param page The page whose menu/toolbar action group should be

@@ -4131,25 +4131,23 @@ static void
 do_popup_menu(GncPluginPage *page, GdkEventButton *event)
 {
     EggMenuManager *ui_merge;
-    GMenu *menu;
+    GMenuModel *menu_model;
+    GtkMenu *menu;
+    GncMainWindow *win;
     int button, event_time;
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(page));
 
     ENTER("page %p, event %p", page, event);
-    ui_merge = gnc_plugin_page_get_ui_merge(page);
-    if (ui_merge == NULL)
-    {
-        LEAVE("no ui merge");
-        return;
-    }
+    win = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
+    g_return_if_fail(win != NULL);
+    ui_merge = gnc_main_window_get_uimanager (win);
+    g_return_if_fail(ui_merge != NULL);
 
-    menu = egg_menu_manager_get_menu_by_id(ui_merge, "/popup");
-    if (!menu)
-    {
-        LEAVE("no menu");
-        return;
-    }
+    menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(ui_merge, "/popup"));
+    g_return_if_fail(menu_model != NULL);
+    menu = GTK_MENU(gtk_menu_new_from_model(menu_model));
+    g_return_if_fail(menu != NULL);
 
     if (event)
     {
@@ -4162,7 +4160,8 @@ do_popup_menu(GncPluginPage *page, GdkEventButton *event)
         event_time = gtk_get_current_event_time ();
     }
 
-    gtk_menu_popup(GTK_MENU(gtk_menu_new_from_model(G_MENU_MODEL(menu))),
+
+    gtk_menu_popup(menu,
                    NULL, NULL, NULL, NULL,
                    button, event_time);
     LEAVE(" ");
