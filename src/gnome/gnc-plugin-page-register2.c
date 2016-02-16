@@ -1318,7 +1318,8 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
     if (style_name)
     {
         DEBUG("Setting style: %s", style_name);
-        action = G_ACTION(gnc_plugin_page_get_action (page, "view.ledger"));
+        action = gnc_plugin_page_get_action (page, "view.ledger");
+        g_return_if_fail(action);
         g_action_change_state (action, g_variant_new_string(style_name));
     }
     g_free (style_name);
