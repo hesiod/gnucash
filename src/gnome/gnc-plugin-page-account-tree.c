@@ -322,7 +322,8 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
     // We are readonly - so we have to switch particular actions to inactive.
     g_return_if_fail(plugin_page);
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
-    win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
+    //win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
+    win = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
     g_return_if_fail(win != NULL);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
 
@@ -333,7 +334,7 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     /* Set the action's sensitivity */
     gnc_plugin_update_actions (action_map, readonly_inactive_actions,
-                               "sensitive", is_sensitive);
+                               "enabled", is_sensitive);
 }
 
 
@@ -373,7 +374,8 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
 #endif
 
     /* Create menu and toolbar information */
-    win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(parent));
+    //win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(parent));
+    win = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
     g_return_if_fail(win != NULL);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
 

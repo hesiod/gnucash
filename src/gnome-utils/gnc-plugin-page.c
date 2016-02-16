@@ -354,14 +354,16 @@ GAction *
 gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name)
 {
     GncPluginPagePrivate *priv;
+    GncMainWindow *win;
 
     g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), NULL);
     g_return_val_if_fail(name != NULL, NULL);
 
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
-    if (!priv->action_group)
-        return NULL;
-    return g_action_map_lookup_action (G_ACTION_MAP(priv->action_group), name);
+    win = GNC_MAIN_WINDOW(priv->window);
+    g_return_val_if_fail(win != NULL, NULL);
+    g_return_val_if_fail(GNC_IS_MAIN_WINDOW(win), NULL);
+    return g_action_map_lookup_action (G_ACTION_MAP(win), name);
 }
 
 
@@ -1001,31 +1003,6 @@ gnc_plugin_page_get_ui_merge (GncPluginPage *page)
     return priv->ui_merge;
 }
 
-
-/*  Retrieve the GtkActionGroup object associated with this page. */
-GActionGroup *
-gnc_plugin_page_get_action_group(GncPluginPage *page)
-{
-    GncPluginPagePrivate *priv;
-
-    g_return_val_if_fail (GNC_IS_PLUGIN_PAGE (page), NULL);
-    priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
-    return priv->action_group;
-}
-
-
-/*  Create the GActionGroup object associated with this page. */
-GActionGroup *
-gnc_plugin_page_create_action_group (GncPluginPage *page, const gchar *group_name)
-{
-    GncPluginPagePrivate *priv;
-    GActionGroup *group;
-
-    priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
-    group = G_ACTION_GROUP(g_simple_action_group_new());
-    priv->action_group = group;
-    return group;
-}
 
 gboolean
 gnc_plugin_page_finish_pending (GncPluginPage *page)

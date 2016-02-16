@@ -470,37 +470,14 @@ void gnc_plugin_page_set_ui_description (GncPluginPage *page,
 EggMenuManager *gnc_plugin_page_get_ui_merge (GncPluginPage *page);
 
 
-/** Retrieve the GtkActionGroup object associated with this page.
+/** Retrieve a GAction object associated with this page.
  *
  *  @param page The page whose menu/toolbar action group should be
  *  retrieved.
  *
- *  @return A pointer to the GtkActionGroup object for this page. */
-GActionGroup *gnc_plugin_page_get_action_group (GncPluginPage *page);
-
-
-/** Create the GtkActionGroup object associated with this page.
+ *  @param name The name of the GAction to find.
  *
- *  @param page The page whose menu/toolbar action group should be
- *  created.
- *
- *  @param group_name The name associate with this action group.  The
- *  name is used to associate key bindings with actions, so it should
- *  be consistent across all pages of the same type.
- *
- *  @return A pointer to the newly created GtkActionGroup object for
- *  this page. */
-GActionGroup * gnc_plugin_page_create_action_group (GncPluginPage *page,
-        const gchar *group_name);
-
-/** Retrieve a GtkAction object associated with this page.
- *
- *  @param page The page whose menu/toolbar action group should be
- *  retrieved.
- *
- *  @param name The name of the GtkAction to find.
- *
- *  @return A pointer to the retuested GtkAction object or NULL. */
+ *  @return A pointer to the retuested GAction object or NULL. */
 GAction *gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name);
 
 /* Signals */

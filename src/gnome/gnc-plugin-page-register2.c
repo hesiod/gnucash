@@ -338,7 +338,7 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
     },
 
     /*{
-        "ViewStyleExtraDatesAction", gnc_plugin_page_register2_cmd_style_extra_dates, "b", "false"
+        "view.extra-dates", gnc_plugin_page_register2_cmd_style_extra_dates, "b", "false"
     },*/
 
     {
@@ -350,14 +350,6 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
     {
         "view.ledger", NULL, "s", "basic"
     },
-    /* Translators: This is a menu item in the View menu */
-    {
-        "view.ledger", NULL, "s", "auto"
-    },
-    /* Translators: This is a menu item in the View menu */
-    {
-        "view.ledger", NULL, "y", "journal"
-    }
 };
 
 static guint gnc_plugin_page_register2_n_actions = G_N_ELEMENTS (gnc_plugin_page_register2_actions);
@@ -652,9 +644,9 @@ gnc_plugin_page_register2_init (GncPluginPageRegister2 *plugin_page)
                  NULL);
 
     /* Create menu and toolbar information */
-    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(GNC_PLUGIN_PAGE(plugin_page)));
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(plugin_page)));
     g_action_map_add_action_entries (action_map, gnc_plugin_page_register2_actions,
-                                  gnc_plugin_page_register2_n_actions, plugin_page);
+                                     gnc_plugin_page_register2_n_actions, plugin_page);
 
     priv->lines_default     = DEFAULT_LINES_AMOUNT;
     priv->read_only         = FALSE;
@@ -887,17 +879,17 @@ gnc_plugin_page_register2_ui_initial_state (GncPluginPageRegister2 *page) // thi
 {
     GncPluginPageRegister2Private *priv ;
     GActionMap *action_map;
-    GSimpleAction *action;
     Account *account;
     GncTreeViewSplitReg *view;
     GncTreeModelSplitReg *model;
     GNCLedgerDisplay2Type ledger_type;
+    GAction *action;
     int i;
     gboolean is_readwrite = !qof_book_is_readonly (gnc_get_current_book());
 
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (page);
     account = gnc_plugin_page_register2_get_account (page);
-    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group (GNC_PLUGIN_PAGE (page)));
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page)));
     gnc_plugin_update_actions(action_map, actions_requiring_account,
                               "sensitive", is_readwrite && account != NULL);
 
@@ -906,40 +898,26 @@ gnc_plugin_page_register2_ui_initial_state (GncPluginPageRegister2 *page) // thi
     gnc_plugin_update_actions (action_map, view_style_actions,
                               "sensitive", ledger_type == LD2_SINGLE);
 
-    // FIXME Migrate this to Gtk+ 3
-#ifndef WITH_REGISTER2
     model = gnc_ledger_display2_get_split_model_register (priv->ledger);
-    for (i = n_radio_entries_2 - 1; i > 0; i--)
-    {
-        DEBUG(" index %d: comparing %s to %x", i, radio_entries_2[i].state,
-              model->style);
-        if (radio_entries_2[i].state == model->style)
-        {
-            DEBUG("match");
-            break;
-        }
-    }
 
-    /* Either a match was found, or fell out with i = 0 */
-    action = G_SIMPLE_ACTION(g_action_map_lookup_action (action_map, radio_entries_2[i].name));
+    action = g_action_map_lookup_action (action_map, "view.ledger");
     g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_changed, page);
-    g_simple_action_set_enabled (action, TRUE);
+    g_action_change_state (action, g_variant_new_string(model->style));
     g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_changed, page);
+
+    /* Set "double line" toggle button */
+    action = g_action_map_lookup_action (action_map, "view.double-line");
+    g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_double_line, page);
+    g_action_change_state (action, g_variant_new_boolean(model->use_double_line));
+    g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_double_line, page);
 
     view = gnc_split_reg2_get_register (priv->gsr);
 
-    /* Set "double line" toggle button */
-    action = G_SIMPLE_ACTION(g_action_map_lookup_action (action_map, "ViewStyleDoubleLineAction"));
-    g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_double_line, page);
-    g_simple_action_set_enabled (action, model->use_double_line);
-    g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_double_line, page);
-
     /* Set "extra dates" toggle button */
-    action = G_SIMPLE_ACTION(g_action_map_lookup_action (action_map, "ViewStyleExtraDatesAction"));
+    action = g_action_map_lookup_action (action_map, "view.extra-dates");
     g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_extra_dates, page);
-    g_simple_action_set_enabled (action, view->show_extra_dates);
+    g_action_change_state (action, g_variant_new_boolean (view->show_extra_dates));
     g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_extra_dates, page);
-#endif
 }
 
 
@@ -1314,7 +1292,7 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
         const gchar *group_name)
 {
     GncPluginPageRegister2Private *priv;
-    GSimpleAction *action;
+    GAction *action;
     GError *error = NULL;
     gchar *style_name;
     gint i;
@@ -1335,32 +1313,29 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
             break;
         }
     }
-    g_free (style_name);
 
     /* Update the style menu action for this page */
-    // FIXME Migrate this to Gtk+ 3
-#if 0
-    if (i <= REG2_STYLE_JOURNAL)
+    if (style_name)
     {
-        DEBUG("Setting style: %d", i);
-        action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, radio_entries_2[i].name));
-        g_simple_action_set_state (action, g_variant_new_boolean(TRUE));
+        DEBUG("Setting style: %s", style_name);
+        action = G_ACTION(gnc_plugin_page_get_action (page, "view.ledger"));
+        g_action_change_state (action, g_variant_new_string(style_name));
     }
-#endif
+    g_free (style_name);
 
     /* Update the double line action on this page */
     use_double_line =
         g_key_file_get_boolean (key_file, group_name, KEY_DOUBLE_LINE, &error);
     DEBUG("Setting double_line_mode: %d", use_double_line);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "view.double-line"));
-    g_simple_action_set_state (action, g_variant_new_boolean(use_double_line));
+    action = gnc_plugin_page_get_action (page, "view.double-line");
+    g_action_change_state (action, g_variant_new_boolean(use_double_line));
 
     /* Update the extra dates action on this page */
     show_extra_dates =
         g_key_file_get_boolean (key_file, group_name, KEY_EXTRA_DATES, &error);
     DEBUG("Setting extra_dates_mode: %d", show_extra_dates);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "ViewStyleExtraDatesAction"));
-    g_simple_action_set_state (action, g_variant_new_boolean(show_extra_dates));
+    action = gnc_plugin_page_get_action (page, "view.extra-dates");
+    g_action_change_state (action, g_variant_new_boolean(show_extra_dates));
     LEAVE(" ");
 }
 
