@@ -14,7 +14,7 @@
             </item>
             <item>
               <attribute name="label" translatable="yes">Renumber Subaccounts</attribute>
-              <attribute name="action">win.edit.account.renumber-sub</attribute>
+              <attribute name="action">win.edit.account.renumber</attribute>
             </item>
           </section>
           <section id="menubar-edit-selection-open-section">

@@ -34,7 +34,6 @@ static GtkPageSetup *page_setup = NULL;
 G_LOCK_DEFINE_STATIC(print_settings);
 G_LOCK_DEFINE_STATIC(page_setup);
 
-
 void
 gnc_print_operation_save_print_settings(GtkPrintOperation *op)
 {

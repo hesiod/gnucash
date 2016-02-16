@@ -43,12 +43,7 @@
 
 /** The debugging module that this .o belongs to.  */
 static QofLogModule log_module = GNC_MOD_GUI;
-/** A pointer to the parent class of a plugin page. */
-static gpointer parent_class = NULL;
 
-static void gnc_plugin_page_class_init (GncPluginPageClass *klass);
-static void gnc_plugin_page_init       (GncPluginPage *plugin_page,
-                                        GncPluginPageClass *klass);
 static void gnc_plugin_page_finalize   (GObject *object);
 static void gnc_plugin_page_set_property (GObject         *object,
         guint            prop_id,
@@ -79,15 +74,29 @@ enum
     PROP_USE_NEW_WINDOW,
     PROP_UI_DESCRIPTION,
     PROP_UI_MERGE,
-    PROP_ACTION_GROUP,
 };
 
 static guint signals[LAST_SIGNAL] = { 0 };
 
 
 /** The instance private data for a content plugin. */
-typedef struct _GncPluginPagePrivate
+typedef struct
 {
+    GtkWidget *window;		/**< The window that contains the
+                             *   display widget for this plugin.
+                             *   This field is private to the
+                             *   gnucash window management
+                             *   code.  */
+    GtkWidget *notebook_page;	/**< The display widget for this
+                                 *   plugin.  This field is private to
+                                 *   the gnucash window management
+                                 *   code.  */
+    GtkWidget *summarybar;		/**< The summary bar widget (if any)
+                                 *   that is associated with this
+                                 *   plugin.  This field is private to
+                                 *   the gnucash window management
+                                 *   code.  */
+
     /** The group of all actions provided by this plugin. */
     GActionGroup *action_group;
     EggMenuManager *ui_merge;
@@ -105,37 +114,22 @@ typedef struct _GncPluginPagePrivate
     gchar *statusbar_text;
 } GncPluginPagePrivate;
 
+
+#if 0
+/** The instance data structure for a content plugin. */
+typedef struct _GncPluginPage
+{
+    GObject gobject;		/**< The parent object data. */
+
+
+} GncPluginPage;
+#endif
+
 #define GNC_PLUGIN_PAGE_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), GNC_TYPE_PLUGIN_PAGE, GncPluginPagePrivate))
 
-GType
-gnc_plugin_page_get_type (void)
-{
-    static GType gnc_plugin_page_type = 0;
-
-    if (gnc_plugin_page_type == 0)
-    {
-        static const GTypeInfo our_info =
-        {
-
-            sizeof (GncPluginPageClass),
-            NULL,		/* base_init */
-            NULL,		/* base_finalize */
-            (GClassInitFunc) gnc_plugin_page_class_init,
-            NULL,		/* class_finalize */
-            NULL,		/* class_data */
-            sizeof (GncPluginPage),
-            0,		/* n_preallocs */
-            (GInstanceInitFunc) gnc_plugin_page_init,
-        };
-
-        gnc_plugin_page_type = g_type_register_static (G_TYPE_OBJECT,
-                               "GncPluginPage",
-                               &our_info, 0);
-    }
-
-    return gnc_plugin_page_type;
-}
+G_DEFINE_TYPE_WITH_CODE(GncPluginPage, gnc_plugin_page, G_TYPE_OBJECT,
+                        G_ADD_PRIVATE(GncPluginPage))
 
 
 /*  Create the display widget that corresponds to this plugin.  This
@@ -169,6 +163,48 @@ gnc_plugin_page_create_widget (GncPluginPage *plugin_page)
     return widget;
 }
 
+void
+gnc_plugin_page_set_window(GncPluginPage *plugin_page, GtkWidget *window)
+{
+    GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(plugin_page);
+    priv->window = window;
+}
+
+GtkWidget *
+gnc_plugin_page_get_window(GncPluginPage *plugin_page)
+{
+    GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(plugin_page);
+    return priv->window;
+}
+
+void
+gnc_plugin_page_set_notebook_page(GncPluginPage *plugin_page, GtkWidget *notebook_page)
+{
+    GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(plugin_page);
+    priv->notebook_page = notebook_page;
+}
+
+
+GtkWidget *
+gnc_plugin_page_get_notebook_page(GncPluginPage *plugin_page)
+{
+    GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(plugin_page);
+    return priv->notebook_page;
+}
+
+void
+gnc_plugin_page_set_summarybar(GncPluginPage *plugin_page, GtkWidget *summarybar)
+{
+    GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(plugin_page);
+    priv->summarybar = summarybar;
+}
+
+GtkWidget *
+gnc_plugin_page_get_summarybar(GncPluginPage *plugin_page)
+{
+    GncPluginPagePrivate *priv = GNC_PLUGIN_PAGE_GET_PRIVATE(plugin_page);
+    return priv->summarybar;
+}
 
 /*  Destroy the display widget that corresponds to this plugin.  This
  *  function will be called by the main/embedded window manipulation
@@ -193,18 +229,20 @@ void
 gnc_plugin_page_show_summarybar (GncPluginPage *page,
                                  gboolean visible)
 {
+    GncPluginPagePrivate *priv;
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
 
-    if (!page->summarybar)
+    priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
+    if (!priv->summarybar)
         return;
 
     if (visible)
     {
-        gtk_widget_show(page->summarybar);
+        gtk_widget_show(priv->summarybar);
     }
     else
     {
-        gtk_widget_hide(page->summarybar);
+        gtk_widget_hide(priv->summarybar);
     }
 }
 
@@ -388,7 +426,7 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
 {
     GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
 
-    parent_class = g_type_class_peek_parent (klass);
+    gnc_plugin_page_parent_class = g_type_class_peek_parent (klass);
     gobject_class->finalize = gnc_plugin_page_finalize;
     gobject_class->set_property = gnc_plugin_page_set_property;
     gobject_class->get_property = gnc_plugin_page_get_property;
@@ -396,7 +434,7 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
     klass->tab_icon    = NULL;
     klass->plugin_name = NULL;
 
-    g_type_class_add_private(klass, sizeof(GncPluginPagePrivate));
+    //g_type_class_add_private(klass, sizeof(GncPluginPagePrivate));
 
     g_object_class_install_property
     (gobject_class,
@@ -471,19 +509,6 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
                           EGG_TYPE_MENU_MANAGER,
                           G_PARAM_READABLE));
 
-    g_object_class_install_property
-    (gobject_class,
-     PROP_ACTION_GROUP,
-     g_param_spec_object ("action-group",
-                          "Action Group",
-                          "A pointer to the GActionGroup object that "
-                          "represents this pages available menu/toolbar "
-                          "actions.",
-                          G_TYPE_ACTION_GROUP,
-                          G_PARAM_READABLE));
-
-
-
 
     signals[INSERTED] = g_signal_new ("inserted",
                                       G_OBJECT_CLASS_TYPE (klass),
@@ -524,12 +549,9 @@ gnc_plugin_page_class_init (GncPluginPageClass *klass)
  *  function initializes the object private storage space, and adds
  *  the object to the tracking system.
  *
- *  @param page The new object instance created by the object system.
- *
- *  @param klass A pointer to the class data structure for this
- *  object. */
+ *  @param page The new object instance created by the object system. */
 static void
-gnc_plugin_page_init (GncPluginPage *page, GncPluginPageClass *klass)
+gnc_plugin_page_init (GncPluginPage *page)
 {
     GncPluginPagePrivate *priv;
 
@@ -537,11 +559,8 @@ gnc_plugin_page_init (GncPluginPage *page, GncPluginPageClass *klass)
     priv->page_name   = NULL;
     priv->page_color  = NULL;
     priv->uri         = NULL;
-
-    page->window      = NULL;
-    page->summarybar  = NULL;
-
-    gnc_gobject_tracking_remember(G_OBJECT(page), G_OBJECT_CLASS(klass));
+    priv->window      = NULL;
+    priv->summarybar  = NULL;
 }
 
 
@@ -576,10 +595,9 @@ gnc_plugin_page_finalize (GObject *object)
         priv->books = NULL;
     }
 
-    page->window = NULL; // Don't need to free it.
+    priv->window = NULL; // Don't need to free it.
 
-    gnc_gobject_tracking_forget(object);
-    G_OBJECT_CLASS (parent_class)->finalize (object);
+    G_OBJECT_CLASS (gnc_plugin_page_parent_class)->finalize (object);
 }
 
 /************************************************************/
@@ -644,9 +662,6 @@ gnc_plugin_page_get_property (GObject     *object,
         break;
     case PROP_UI_MERGE:
         g_value_take_object (value, priv->ui_merge);
-        break;
-    case PROP_ACTION_GROUP:
-        g_value_take_object (value, priv->action_group);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -760,18 +775,6 @@ gnc_plugin_page_has_books (GncPluginPage *page)
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
     return (priv->books != NULL);
 }
-
-
-/*  Retrieve a pointer to the GncMainWindow (GtkWindow) containing
- *  this page. */
-GtkWidget *
-gnc_plugin_page_get_window (GncPluginPage *page)
-{
-    g_return_val_if_fail (GNC_IS_PLUGIN_PAGE (page), NULL);
-
-    return page->window;
-}
-
 
 /*  Retrieve the name of this page.  This is the string used in the
  *  window title, and in the notebook tab and page selection menus. */

@@ -376,7 +376,7 @@ gnc_plugin_page_report_create_widget( GncPluginPage *page )
 
     g_free(id_name);
     g_free(child_name);
-    gnc_window_set_progressbar_window( GNC_WINDOW(page->window) );
+    gnc_window_set_progressbar_window( GNC_WINDOW(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(page))));
     gnc_html_show_url(priv->html, type, url_location, url_label, 0);
     g_free(url_location);
     gnc_window_set_progressbar_window( NULL );
@@ -669,7 +669,7 @@ gnc_plugin_page_report_draw_cb(GtkWidget *unused, cairo_t *unused1, gpointer dat
     }
 
     priv->need_reload = FALSE;
-    gnc_window_set_progressbar_window( GNC_WINDOW(GNC_PLUGIN_PAGE(page)->window) );
+    gnc_window_set_progressbar_window(GNC_WINDOW(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(page))));
     gnc_html_reload(priv->html);
     gnc_window_set_progressbar_window( NULL );
     LEAVE( "reload forced" );
@@ -1466,7 +1466,7 @@ gnc_plugin_page_report_save_as_cb(GSimpleAction *action,
     if (!scm_is_null (rpt_id))
     {
         GncPluginPage *reportPage = GNC_PLUGIN_PAGE (report);
-        GtkWidget *window = reportPage->window;
+        GtkWidget *window = gnc_plugin_page_get_window(reportPage);
 
         if (window)
             g_return_if_fail(GNC_IS_MAIN_WINDOW(window));

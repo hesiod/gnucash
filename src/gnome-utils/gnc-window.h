@@ -46,28 +46,21 @@
 
 G_BEGIN_DECLS
 
-/* type macros */
-#define GNC_TYPE_WINDOW            (gnc_window_get_type ())
-#define GNC_WINDOW(o)            (G_TYPE_CHECK_INSTANCE_CAST ((o), GNC_TYPE_WINDOW, GncWindow))
-#define GNC_IS_WINDOW(o)         (G_TYPE_CHECK_INSTANCE_TYPE ((o), GNC_TYPE_WINDOW))
-#define GNC_WINDOW_GET_IFACE(o)  (G_TYPE_INSTANCE_GET_INTERFACE ((o), GNC_TYPE_WINDOW, GncWindowIface))
+#define GNC_TYPE_WINDOW gnc_window_get_type ()
+G_DECLARE_INTERFACE (GncWindow, gnc_window, GNC, WINDOW, GtkWindow)
 
-/* typedefs & structures */
-typedef struct GncWindow GncWindow; /* dummy typedef */
-
-typedef struct
+struct _GncWindowInterface
 {
-    GTypeInterface parent;
+    GTypeInterface g_iface;
 
     /* Virtual Table */
     GtkWindow * (* get_gtk_window) (GncWindow *window);
     GtkWidget * (* get_statusbar) (GncWindow *window);
     GtkWidget * (* get_progressbar) (GncWindow *window);
     void (* ui_set_sensitive) (GncWindow *window, gboolean sensitive);
-} GncWindowIface;
+};
 
 /* function prototypes */
-GType          gnc_window_get_type (void);
 
 GtkWindow     *gnc_window_get_gtk_window (GncWindow *window);
 

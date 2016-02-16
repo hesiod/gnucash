@@ -36,6 +36,7 @@
 #define __GNC_PLUGIN_PAGE_ACCOUNT_TREE_H
 
 #include <gtk/gtk.h>
+#include <glib-object.h>
 
 #include "gnc-plugin-page.h"
 #include "Account.h"
@@ -44,38 +45,21 @@ G_BEGIN_DECLS
 
 /* type macros */
 #define GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE            (gnc_plugin_page_account_tree_get_type ())
-#define GNC_PLUGIN_PAGE_ACCOUNT_TREE(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE, GncPluginPageAccountTree))
-#define GNC_PLUGIN_PAGE_ACCOUNT_TREE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE, GncPluginPageAccountTreeClass))
-#define GNC_IS_PLUGIN_PAGE_ACCOUNT_TREE(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE))
-#define GNC_IS_PLUGIN_PAGE_ACCOUNT_TREE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE))
-#define GNC_PLUGIN_PAGE_ACCOUNT_TREE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE, GncPluginPageAccountTreeClass))
+G_DECLARE_DERIVABLE_TYPE(GncPluginPageAccountTree, gnc_plugin_page_account_tree, GNC, PLUGIN_PAGE_ACCOUNT_TREE, GncPluginPage)
 
 #define GNC_PLUGIN_PAGE_ACCOUNT_TREE_NAME "GncPluginPageAccountTree"
 
 /* typedefs & structures */
-typedef struct
-{
-    GncPluginPage gnc_plugin_page;
-} GncPluginPageAccountTree;
-
-typedef struct
+struct _GncPluginPageAccountTreeClass
 {
     GncPluginPageClass gnc_plugin_page;
 
     /* callbacks */
     void (*account_selected) (GncPluginPage	 *page,
-                              Account	 *account);
-
-} GncPluginPageAccountTreeClass;
+                              Account        *account);
+};
 
 /* function prototypes */
-
-/** Retrieve the type number for an "account tree" plugin page.
- *
- *  @return The type number.
- */
-GType gnc_plugin_page_account_tree_get_type (void);
-
 
 /** Create a new "account tree" plugin page.
  *

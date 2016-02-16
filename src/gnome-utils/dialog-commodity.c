@@ -624,7 +624,7 @@ gnc_set_fq_sensitivity (GtkWidget *widget, gpointer user_data)
 
     if ((offset < cw->fq_section_top) || (offset >= cw->fq_section_bottom))
         return;
-    g_object_set(widget, "sensitive", FALSE, NULL);
+    gtk_widget_set_sensitive(widget, FALSE);
 }
 
 

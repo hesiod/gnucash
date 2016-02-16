@@ -124,11 +124,10 @@ static void gnc_main_window_finalize (GObject *object);
 static void gnc_main_window_destroy (GtkWidget *object);
 
 static void gnc_main_window_setup_window (GncMainWindow *window);
-static void gnc_window_main_window_init (GncWindowIface *iface);
+static void gnc_window_main_window_init (GncWindowInterface *iface);
 
 static void gnc_main_window_update_all_menu_items (void);
 static void gnc_main_window_update_menubar (GncMainWindow *window);
-
 
 /* Callbacks */
 static void gnc_main_window_switch_page (GtkNotebook *notebook, gpointer *notebook_page, gint pos, GncMainWindow *window);
@@ -166,10 +165,6 @@ static gboolean gnc_main_window_popup_menu_cb (GtkWidget *widget, GncPluginPage 
 static GtkWidget *gnc_main_window_get_statusbar (GncWindow *window_in);
 static void statusbar_notification_lastmodified(void);
 
-struct _GncMainWindow {
-    GtkApplicationWindow parent_instance;
-};
-
 /** The instance private data structure for an embedded window
  *  object. */
 typedef struct GncMainWindowPrivate
@@ -203,7 +198,7 @@ typedef struct GncMainWindowPrivate
      */
     GtkWidget *about_dialog;
 
-    GtkWidget *menu;
+    //GtkWidget *menu;
 
     /** A list of all pages that are installed in this window. */
     GList *installed_pages;
@@ -224,8 +219,9 @@ typedef struct GncMainWindowPrivate
 #define GNC_MAIN_WINDOW_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), GNC_TYPE_MAIN_WINDOW, GncMainWindowPrivate))
 
-G_DEFINE_TYPE_WITH_PRIVATE(GncMainWindow, gnc_main_window, GTK_TYPE_APPLICATION_WINDOW)
-
+G_DEFINE_TYPE_WITH_CODE(GncMainWindow, gnc_main_window, GTK_TYPE_APPLICATION_WINDOW,
+                        G_ADD_PRIVATE(GncMainWindow)
+                        G_IMPLEMENT_INTERFACE(GNC_TYPE_WINDOW, gnc_window_main_window_init))
 
 /** This data structure maintains information about one action groups
  *  that has been installed in this window. */
@@ -484,7 +480,7 @@ gnc_main_window_restore_page (GncMainWindow *window,
         if (page)
         {
             /* Does the page still need to be installed into the window? */
-            if (page->window == NULL)
+            if (gnc_plugin_page_get_window(page) == NULL)
             {
                 gnc_plugin_page_set_use_new_window(page, FALSE);
                 gnc_main_window_open_page(window, page);
@@ -1402,7 +1398,7 @@ gnc_main_window_generate_title (GncMainWindow *window)
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     page = priv->current_page;
-    if (page)
+    if (page != NULL)
     {
         const gchar* name;
         g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), g_strdup("GnuCash"));
@@ -1416,7 +1412,7 @@ gnc_main_window_generate_title (GncMainWindow *window)
                                   immutable_page_actions,
                                   "enabled", !immutable);
         /* Trigger sensitivity updates of other actions such as Save/Revert */
-        //g_signal_emit_by_name (window, "page-changed", page);
+        g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, page);
     }
     else
     {
@@ -1964,14 +1960,14 @@ main_window_find_tab_items (GncMainWindow *window,
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     *label_p = *entry_p = NULL;
 
-    if (!page->notebook_page)
+    if (!gnc_plugin_page_get_notebook_page(page))
     {
         LEAVE("invalid notebook_page");
         return FALSE;
     }
 
     tab_widget = gtk_notebook_get_tab_label(GTK_NOTEBOOK(priv->notebook),
-                                           page->notebook_page);
+                                            gnc_plugin_page_get_notebook_page(page));
     if (GTK_IS_EVENT_BOX (tab_widget))
         tab_hbox = gtk_bin_get_child(GTK_BIN(tab_widget));
     else if (GTK_IS_BOX (tab_widget))
@@ -2012,7 +2008,7 @@ main_window_find_tab_widget (GncMainWindow *window,
           window, page, widget_p);
     *widget_p = NULL;
 
-    if (!page->notebook_page)
+    if (!gnc_plugin_page_get_notebook_page(page))
     {
         LEAVE("invalid notebook_page");
         return FALSE;
@@ -2020,7 +2016,7 @@ main_window_find_tab_widget (GncMainWindow *window,
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     *widget_p = gtk_notebook_get_tab_label(GTK_NOTEBOOK(priv->notebook),
-                                           page->notebook_page);
+                                           gnc_plugin_page_get_notebook_page(page));
 
     LEAVE("widget %p", *widget_p);
     return TRUE;
@@ -2059,7 +2055,7 @@ main_window_update_page_name (GncPluginPage *page,
     gnc_plugin_page_set_page_name(page, name);
 
     /* Update the notebook tab */
-    window = GNC_MAIN_WINDOW(page->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(page));
     if (!window)
     {
         g_free(old_page_name);
@@ -2092,11 +2088,11 @@ main_window_update_page_name (GncPluginPage *page,
     }
 
     /* Update the notebook menu */
-    if (page->notebook_page)
+    if (gnc_plugin_page_get_notebook_page(page))
     {
         priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
         label = gtk_notebook_get_menu_label (GTK_NOTEBOOK(priv->notebook),
-                                             page->notebook_page);
+                                             gnc_plugin_page_get_notebook_page(page));
         gtk_label_set_text(GTK_LABEL(label), name);
     }
 
@@ -2128,7 +2124,7 @@ main_window_update_page_color (GncPluginPage *page,
         want_color = TRUE;
 
     /* Update the plugin */
-    window = GNC_MAIN_WINDOW(page->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(page));
     if (want_color)
         gnc_plugin_page_set_page_color(page, color_string);
     else
@@ -2145,7 +2141,7 @@ main_window_update_page_color (GncPluginPage *page,
             GtkWidget *event_box = gtk_event_box_new ();
             g_object_ref (tab_widget);
             gtk_notebook_set_tab_label (GTK_NOTEBOOK(priv->notebook),
-                                        page->notebook_page, event_box);
+                                        gnc_plugin_page_get_notebook_page(page), event_box);
             gtk_container_add (GTK_CONTAINER(event_box), tab_widget);
             g_object_unref (tab_widget);
             tab_widget = event_box;
@@ -2162,7 +2158,7 @@ main_window_update_page_color (GncPluginPage *page,
             g_object_ref (tab_hbox);
             gtk_container_remove (GTK_CONTAINER(tab_widget), tab_hbox);
             gtk_notebook_set_tab_label (GTK_NOTEBOOK(priv->notebook),
-                                        page->notebook_page, tab_hbox);
+                                        gnc_plugin_page_get_notebook_page(page), tab_hbox);
             g_object_unref (tab_hbox);
         }
     }
@@ -2181,7 +2177,7 @@ gnc_main_window_tab_entry_activate (GtkWidget *entry,
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(page));
 
     ENTER("");
-    if (!main_window_find_tab_items(GNC_MAIN_WINDOW(page->window),
+    if (!main_window_find_tab_items(GNC_MAIN_WINDOW(gnc_plugin_page_get_window(page)),
                                     page, &label, &entry2))
     {
         LEAVE("can't find required widgets");
@@ -2230,7 +2226,7 @@ gnc_main_window_tab_entry_key_press_event (GtkWidget *entry,
         g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), FALSE);
 
         ENTER("");
-        if (!main_window_find_tab_items(GNC_MAIN_WINDOW(page->window),
+        if (!main_window_find_tab_items(GNC_MAIN_WINDOW(gnc_plugin_page_get_window(page)),
                                         page, &label, &entry2))
         {
             LEAVE("can't find required widgets");
@@ -2284,13 +2280,13 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
      */
     main_window_signals[PAGE_ADDED] =
         g_signal_new ("page-added",
-                      G_OBJECT_CLASS_TYPE (object_class),
+                      G_TYPE_FROM_CLASS (object_class),
                       G_SIGNAL_RUN_FIRST,
-                      G_STRUCT_OFFSET (struct _GncMainWindowClass, page_added),
+                      G_STRUCT_OFFSET (GncMainWindowClass, page_added),
                       NULL, NULL,
                       g_cclosure_marshal_VOID__OBJECT,
                       G_TYPE_NONE, 1,
-                      G_TYPE_OBJECT);
+                      GNC_TYPE_PLUGIN_PAGE);
 
     /**
      * GncMainWindow::page-changed:
@@ -2304,13 +2300,13 @@ gnc_main_window_class_init (GncMainWindowClass *klass)
      */
     main_window_signals[PAGE_CHANGED] =
         g_signal_new ("page-changed",
-                      G_OBJECT_CLASS_TYPE (object_class),
+                      G_TYPE_FROM_CLASS (object_class),
                       G_SIGNAL_RUN_FIRST,
-                      G_STRUCT_OFFSET (struct _GncMainWindowClass, page_changed),
+                      G_STRUCT_OFFSET (GncMainWindowClass, page_changed),
                       NULL, NULL,
                       g_cclosure_marshal_VOID__OBJECT,
                       G_TYPE_NONE, 1,
-                      G_TYPE_OBJECT);
+                      GNC_TYPE_PLUGIN_PAGE);
 
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_SHOW_CLOSE_BUTTON,
@@ -2360,9 +2356,9 @@ gnc_main_window_init (GncMainWindow *window)
 
     gnc_main_window_setup_window (window);
     printf("now viewing\n");
-    g_action_group_activate_action (G_ACTION_GROUP(window),
+    /*g_action_group_activate_action (G_ACTION_GROUP(window),
                                     "view.account-tree",
-                                    NULL);
+                                    NULL);*/
 }
 
 
@@ -2529,23 +2525,23 @@ gnc_main_window_connect (GncMainWindow *window,
 
     printf("ADD PLUGIN PAGE\n");
 
-    page->window = GTK_WIDGET(window);
+    gnc_plugin_page_set_window(page, GTK_WIDGET(window));
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     notebook = GTK_NOTEBOOK (priv->notebook);
     priv->installed_pages = g_list_append (priv->installed_pages, page);
     priv->usage_order = g_list_prepend (priv->usage_order, page);
-    gtk_notebook_append_page_menu (notebook, page->notebook_page,
+    gtk_notebook_append_page_menu (notebook, gnc_plugin_page_get_notebook_page(page),
                                    tab_hbox, menu_label);
-    gtk_notebook_set_tab_reorderable (notebook, page->notebook_page, TRUE);
+    gtk_notebook_set_tab_reorderable (notebook, gnc_plugin_page_get_notebook_page(page), TRUE);
     gnc_plugin_page_inserted (page);
     gtk_notebook_set_current_page (notebook, -1);
     if (GNC_PLUGIN_PAGE_GET_CLASS(page)->window_changed)
         (GNC_PLUGIN_PAGE_GET_CLASS(page)->window_changed)(page, GTK_WIDGET(window));
     g_signal_emit (window, main_window_signals[PAGE_ADDED], 0, page);
 
-    g_signal_connect(G_OBJECT(page->notebook_page), "popup-menu",
+    g_signal_connect(G_OBJECT(gnc_plugin_page_get_notebook_page(page)), "popup-menu",
                      G_CALLBACK(gnc_main_window_popup_menu_cb), page);
-    g_signal_connect_after(G_OBJECT(page->notebook_page), "button-press-event",
+    g_signal_connect_after(G_OBJECT(gnc_plugin_page_get_notebook_page(page)), "button-press-event",
                            G_CALLBACK(gnc_main_window_button_press_cb), page);
 }
 
@@ -2573,9 +2569,9 @@ gnc_main_window_disconnect (GncMainWindow *window,
     gint page_num;
 
     /* Disconnect the callbacks */
-    g_signal_handlers_disconnect_by_func(G_OBJECT(page->notebook_page),
+    g_signal_handlers_disconnect_by_func(G_OBJECT(gnc_plugin_page_get_notebook_page(page)),
                                          G_CALLBACK(gnc_main_window_popup_menu_cb), page);
-    g_signal_handlers_disconnect_by_func(G_OBJECT(page->notebook_page),
+    g_signal_handlers_disconnect_by_func(G_OBJECT(gnc_plugin_page_get_notebook_page(page)),
                                          G_CALLBACK(gnc_main_window_button_press_cb), page);
 
     /* Disconnect the page and summarybar from the window */
@@ -2598,7 +2594,7 @@ gnc_main_window_disconnect (GncMainWindow *window,
         new_page = g_list_nth_data (priv->usage_order, 0);
         if (new_page)
         {
-            page_num =  gtk_notebook_page_num(notebook, new_page->notebook_page);
+            page_num =  gtk_notebook_page_num(notebook, gnc_plugin_page_get_notebook_page(new_page));
             gtk_notebook_set_current_page(notebook, page_num);
             /* This may have caused WebKit to schedule  a timer interrupt which it
                sometimes  forgets to cancel before deleting the object.  See
@@ -2610,7 +2606,7 @@ gnc_main_window_disconnect (GncMainWindow *window,
     }
 
     /* Remove the page from the notebook */
-    page_num =  gtk_notebook_page_num(notebook, page->notebook_page);
+    page_num = gtk_notebook_page_num(notebook, gnc_plugin_page_get_notebook_page(page));
     gtk_notebook_remove_page (notebook, page_num);
 
     if ( gtk_notebook_get_current_page(notebook) == -1)
@@ -2620,12 +2616,14 @@ gnc_main_window_disconnect (GncMainWindow *window,
          * for this, therefore the switch_page code in this file
          * never gets called to generate this signal. */
         gnc_main_window_switch_page(notebook, NULL, -1, window);
-        //g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, NULL);
+        g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, NULL);
     }
 
     gnc_plugin_page_removed (page);
 
     gnc_window_set_status (GNC_WINDOW(window), page, NULL);
+
+    gnc_main_window_update_menubar (window);
 }
 
 
@@ -2642,10 +2640,10 @@ gnc_main_window_display_page (GncPluginPage *page)
     GtkNotebook *notebook;
     gint page_num;
 
-    window = GNC_MAIN_WINDOW (page->window);
+    window = GNC_MAIN_WINDOW (gnc_plugin_page_get_window(page));
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    notebook = GTK_NOTEBOOK (priv->notebook);
-    page_num = gtk_notebook_page_num(notebook, page->notebook_page);
+    notebook = GTK_NOTEBOOK (gnc_plugin_page_get_notebook_page(page));
+    page_num = gtk_notebook_page_num(notebook, gnc_plugin_page_get_notebook_page(page));
     gtk_notebook_set_current_page (notebook, page_num);
     gtk_window_present(GTK_WINDOW(window));
 }
@@ -2705,10 +2703,10 @@ gnc_main_window_open_page (GncMainWindow *window,
         window = active_windows->data;
     }
 
-    page->window = GTK_WIDGET(window);
+    gnc_plugin_page_set_window(page, GTK_WIDGET(window));
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    page->notebook_page = gnc_plugin_page_create_widget (page);
-    g_object_set_data (G_OBJECT (page->notebook_page),
+    gnc_plugin_page_set_notebook_page(page, gnc_plugin_page_create_widget (page));
+    g_object_set_data (G_OBJECT (gnc_plugin_page_get_notebook_page(page)),
                        PLUGIN_PAGE_LABEL, page);
 
     /*
@@ -2806,16 +2804,16 @@ gnc_main_window_close_page (GncPluginPage *page)
     GncMainWindow *window;
     GncMainWindowPrivate *priv;
 
-    if (!page || !page->notebook_page)
+    if (!page || !gnc_plugin_page_get_notebook_page(page))
         return;
 
     if (!gnc_plugin_page_finish_pending(page))
         return;
 
-    if (!GNC_IS_MAIN_WINDOW (page->window))
+    if (!GNC_IS_MAIN_WINDOW (gnc_plugin_page_get_window(page) ))
         return;
 
-    window = GNC_MAIN_WINDOW (page->window);
+    window = GNC_MAIN_WINDOW (gnc_plugin_page_get_window(page));
     if (!window)
     {
         g_warning("Page is not in a window.");
@@ -2960,6 +2958,8 @@ gnc_main_window_unmerge_actions (GncMainWindow *window,
     egg_menu_manager_remove (priv->ui_merge, entry->merge_id);
 
     g_hash_table_remove (priv->merged_actions_table, group_name);
+
+    gnc_main_window_update_menubar (window);
 }
 
 GAction *
@@ -3065,7 +3065,7 @@ static void
 gnc_main_window_edit_menu_draw_cb (GtkWidget *menu,
                                    GncMainWindow *window)
 {
-    //gnc_main_window_update_edit_actions_sensitivity (window);
+    gnc_main_window_update_edit_actions_sensitivity (window);
 }
 
 
@@ -3130,7 +3130,7 @@ static void gnc_main_window_update_menubar (GncMainWindow *window)
     g_return_if_fail(priv != NULL);
 
     menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(priv->ui_merge, "menubar"));
-    priv->menu = gtk_menu_new_from_model (menu_model);
+    g_return_if_fail(menu_model != NULL);
     gtk_application_set_menubar (app, menu_model);
 
 #if 0
@@ -3296,7 +3296,7 @@ gnc_main_window_show_summarybar (GncMainWindow *window, GAction *action)
 /** This function is invoked when the GtkNotebook switches pages.  It
  *  is responsible for updating the rest of the window contents
  *  outside of the notebook.  I.E. Updating the user interface, the
- *  summary bar, etc.  This function also emits the "page_changed"
+ *  summary bar, etc.  This function also emits the "page-changed"
  *  signal from the window so that any plugin can also learn about the
  *  fact that the page has changed.
  *
@@ -3310,48 +3310,41 @@ gnc_main_window_switch_page (GtkNotebook *notebook,
 {
     GncMainWindowPrivate *priv;
     GtkWidget *child;
-    GncPluginPage *page;
+    GncPluginPage *old_page, *new_page;
     gboolean immutable, visible;
 
     ENTER("Notebook %p, page, %p, index %d, window %p",
           notebook, notebook_page, pos, window);
     g_return_if_fail (GNC_IS_MAIN_WINDOW (window));
 
-    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    if (priv->current_page != NULL)
-    {
-        page = priv->current_page;
-        gnc_plugin_page_unmerge_actions (page, priv->ui_merge);
-        gnc_plugin_page_unselected (page);
-    }
-
     child = gtk_notebook_get_nth_page (notebook, pos);
-    if (child)
+    g_return_if_fail (child != NULL);
+
+    new_page = g_object_get_data (G_OBJECT (child), PLUGIN_PAGE_LABEL);
+    g_return_if_fail (new_page != NULL);
+
+    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
+    old_page = priv->current_page;
+    if (old_page != NULL)
     {
-        page = g_object_get_data (G_OBJECT (child), PLUGIN_PAGE_LABEL);
-    }
-    else
-    {
-        page = NULL;
+        gnc_plugin_page_unmerge_actions (old_page, priv->ui_merge);
+        gnc_plugin_page_unselected (old_page);
     }
 
-    priv->current_page = page;
+    priv->current_page = new_page;
 
-    if (page != NULL)
-    {
-        /* Update the user interface (e.g. menus and toolbars */
-        gnc_plugin_page_merge_actions (page, priv->ui_merge);
-        visible = gnc_main_window_show_summarybar(window, NULL);
-        gnc_plugin_page_show_summarybar (page, visible);
+    /* Update the user interface (e.g. menus and toolbars */
+    gnc_plugin_page_merge_actions (new_page, priv->ui_merge);
+    visible = gnc_main_window_show_summarybar(window, NULL);
+    gnc_plugin_page_show_summarybar (new_page, visible);
 
-        /* Allow page specific actions */
-        gnc_plugin_page_selected (page);
-        gnc_window_update_status (GNC_WINDOW(window), page);
+    /* Allow page specific actions */
+    gnc_plugin_page_selected (new_page);
+    gnc_window_update_status (GNC_WINDOW(window), new_page);
 
-        /* Update the page reference info */
-        priv->usage_order = g_list_remove (priv->usage_order, page);
-        priv->usage_order = g_list_prepend (priv->usage_order, page);
-    }
+    /* Update the page reference info */
+    priv->usage_order = g_list_remove (priv->usage_order, new_page);
+    priv->usage_order = g_list_prepend (priv->usage_order, new_page);
 
     gnc_plugin_update_actions(G_ACTION_MAP(window),
                               multiple_page_actions,
@@ -3359,12 +3352,11 @@ gnc_main_window_switch_page (GtkNotebook *notebook,
                               g_list_length(priv->installed_pages) > 1);
 
     gnc_main_window_update_title(window);
-
     gnc_main_window_update_menu_item(window);
+    gnc_main_window_update_menubar(window);
 
-    gnc_main_window_update_menubar (window);
+    g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, new_page);
 
-    //g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, page);
     LEAVE(" ");
 }
 
@@ -3764,21 +3756,21 @@ gnc_main_window_cmd_window_move_page (GSimpleAction *action,
         LEAVE("invalid page");
         return;
     }
-    if (!page->notebook_page)
+    if (!gnc_plugin_page_get_notebook_page(page))
     {
         LEAVE("invalid notebook_page");
         return;
     }
 
     notebook = GTK_NOTEBOOK (priv->notebook);
-    tab_widget = gtk_notebook_get_tab_label (notebook, page->notebook_page);
-    menu_widget = gtk_notebook_get_menu_label (notebook, page->notebook_page);
+    tab_widget = gtk_notebook_get_tab_label (notebook, gnc_plugin_page_get_notebook_page(page));
+    menu_widget = gtk_notebook_get_menu_label (notebook, gnc_plugin_page_get_notebook_page(page));
 
     /* Ref the page components, then remove it from its old window */
     g_object_ref(page);
     g_object_ref(tab_widget);
     g_object_ref(menu_widget);
-    g_object_ref(page->notebook_page);
+    g_object_ref(gnc_plugin_page_get_notebook_page(page));
     gnc_main_window_disconnect(window, page);
 
     /* Create the new window */
@@ -3789,7 +3781,7 @@ gnc_main_window_cmd_window_move_page (GSimpleAction *action,
     gnc_main_window_connect (new_window, page, tab_widget, menu_widget);
 
     /* Unref the page components now that we're done */
-    g_object_unref(page->notebook_page);
+    g_object_unref(gnc_plugin_page_get_notebook_page(page));
     g_object_unref(menu_widget);
     g_object_unref(tab_widget);
     g_object_unref(page);
@@ -4101,7 +4093,7 @@ gnc_main_window_all_ui_set_sensitive (GncWindow *unused, gboolean sensitive)
  *  @param iface A pointer to the interface data structure to
  *  populate. */
 static void
-gnc_window_main_window_init (GncWindowIface *iface)
+gnc_window_main_window_init (GncWindowInterface *iface)
 {
     iface->get_gtk_window  = gnc_main_window_get_gtk_window;
     iface->get_statusbar   = gnc_main_window_get_statusbar;

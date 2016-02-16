@@ -32,34 +32,8 @@
 
 static QofLogModule log_module = GNC_MOD_GUI;
 
-GType
-gnc_window_get_type (void)
-{
-    static GType gnc_window_type = 0;
+G_DEFINE_INTERFACE(GncWindow, gnc_window, GTK_TYPE_WINDOW)
 
-    if (gnc_window_type == 0)
-    {
-        static const GTypeInfo our_info =
-        {
-            sizeof (GncWindowIface),
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            0,
-            0,
-            NULL
-        };
-
-        gnc_window_type = g_type_register_static (G_TYPE_INTERFACE,
-                          "GncWindow",
-                          &our_info, 0);
-        g_type_interface_add_prerequisite (gnc_window_type, G_TYPE_OBJECT);
-    }
-
-    return gnc_window_type;
-}
 
 /************************************************************
  *                Interface access functions                *
@@ -206,4 +180,13 @@ gnc_window_show_progress (const char *message, double percentage)
     /* make sure new text is up */
     while (gtk_events_pending ())
         gtk_main_iteration ();
+}
+
+static void
+gnc_window_default_init (GncWindowInterface *iface)
+{
+    iface->get_gtk_window = gnc_window_get_gtk_window;
+    iface->get_statusbar = gnc_window_get_statusbar;
+    iface->get_progressbar = gnc_window_get_progressbar;
+    iface->ui_set_sensitive = NULL;
 }

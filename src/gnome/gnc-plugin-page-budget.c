@@ -603,7 +603,7 @@ gppb_account_activated_cb(GncBudgetView* view, Account* account,
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_BUDGET (page));
 
-    window = GNC_PLUGIN_PAGE(page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
 #ifndef WITH_REGISTER2
     new_page = gnc_plugin_page_register_new(account, FALSE);
 #else
@@ -666,7 +666,7 @@ gnc_plugin_page_budget_cmd_open_account (GSimpleAction *action,
     priv = GNC_PLUGIN_PAGE_BUDGET_GET_PRIVATE(page);
     acct_list = gnc_budget_view_get_selected_accounts(priv->budget_view);
 
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
     for (tmp = acct_list; tmp; tmp = g_list_next(tmp))
     {
         account = tmp->data;
@@ -697,7 +697,7 @@ gnc_plugin_page_budget_cmd_open_subaccounts (GSimpleAction *action,
     priv = GNC_PLUGIN_PAGE_BUDGET_GET_PRIVATE(page);
     acct_list = gnc_budget_view_get_selected_accounts(priv->budget_view);
 
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
     for (tmp = acct_list; tmp; tmp = g_list_next(tmp))
     {
         account = tmp->data;

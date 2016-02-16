@@ -48,38 +48,12 @@ G_BEGIN_DECLS
 
 /* type macros */
 #define GNC_TYPE_PLUGIN_PAGE            (gnc_plugin_page_get_type ())
-#define GNC_PLUGIN_PAGE(o)              (G_TYPE_CHECK_INSTANCE_CAST ((o), GNC_TYPE_PLUGIN_PAGE, GncPluginPage))
-#define GNC_PLUGIN_PAGE_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), GNC_TYPE_PLUGIN_PAGE, GncPluginPageClass))
-#define GNC_IS_PLUGIN_PAGE(o)           (G_TYPE_CHECK_INSTANCE_TYPE ((o), GNC_TYPE_PLUGIN_PAGE))
-#define GNC_IS_PLUGIN_PAGE_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), GNC_TYPE_PLUGIN_PAGE))
-#define GNC_PLUGIN_PAGE_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), GNC_PLUGIN_PAGE, GncPluginPageClass))
+G_DECLARE_DERIVABLE_TYPE(GncPluginPage, gnc_plugin_page, GNC, PLUGIN_PAGE, GObject)
 
 /* typedefs & structures */
 
-/** The instance data structure for a content plugin. */
-typedef struct GncPluginPage
-{
-    GObject gobject;		/**< The parent object data. */
-
-    GtkWidget *window;		/**< The window that contains the
-                             *   display widget for this plugin.
-                             *   This field is private to the
-                             *   gnucash window management
-                             *   code.  */
-    GtkWidget *notebook_page;	/**< The display widget for this
-                                 *   plugin.  This field is private to
-                                 *   the gnucash window management
-                                 *   code.  */
-    GtkWidget *summarybar;		/**< The summary bar widget (if any)
-                                         *   that is associated with this
-                                         *   plugin.  This field is private to
-                                         *   the gnucash window management
-                                         *   code.  */
-} GncPluginPage;
-
-
 /** The class data structure for a content plugin. */
-typedef struct
+struct _GncPluginPageClass
 {
     GObjectClass gobject;
 
@@ -184,15 +158,20 @@ typedef struct
      *  which should cancel the pending operation.  TRUE
      *  otherwise */
     gboolean (* finish_pending) (GncPluginPage *plugin_page);
-} GncPluginPageClass;
+};
 
+void
+gnc_plugin_page_set_window(GncPluginPage *plugin_page, GtkWidget *window);
 
-/** Get the type of a content plugin.
- *
- *  @return A GType.
- */
-GType gnc_plugin_page_get_type (void);
+void
+gnc_plugin_page_set_notebook_page(GncPluginPage *plugin_page, GtkWidget *notebook);
+GtkWidget *
+gnc_plugin_page_get_notebook_page(GncPluginPage *plugin_page);
 
+void
+gnc_plugin_page_set_summarybar(GncPluginPage *plugin_page, GtkWidget *summarybar);
+GtkWidget *
+gnc_plugin_page_get_summarybar(GncPluginPage *plugin_page);
 
 /** Create the display widget that corresponds to this plugin.  This
  *  function will be called by the main/embedded window manipulation

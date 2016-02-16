@@ -38,13 +38,14 @@
 
 #include <gtk/gtk.h>
 #include "gnc-plugin-page.h"
+#include "gnc-window.h"
 
 #define PLUGIN_PAGE_IMMUTABLE    "page-immutable"
 
 G_BEGIN_DECLS
 
 #define GNC_TYPE_MAIN_WINDOW gnc_main_window_get_type ()
-G_DECLARE_FINAL_TYPE (GncMainWindow, gnc_main_window, GNC, MAIN_WINDOW, GtkApplicationWindow)
+G_DECLARE_DERIVABLE_TYPE (GncMainWindow, gnc_main_window, GNC, MAIN_WINDOW, GtkApplicationWindow)
 
 struct _GncMainWindowClass
 {

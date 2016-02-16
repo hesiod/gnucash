@@ -53,7 +53,7 @@ static void gnc_embedded_window_init (GncEmbeddedWindow *window, GncEmbeddedWind
 static void gnc_embedded_window_finalize (GObject *object);
 static void gnc_embedded_window_dispose (GObject *object);
 
-static void gnc_window_embedded_window_init (GncWindowIface *iface);
+static void gnc_window_embedded_window_init (GncWindowInterface *iface);
 
 static void gnc_embedded_window_setup_window (GncEmbeddedWindow *window);
 
@@ -132,6 +132,7 @@ gnc_embedded_window_open_page (GncEmbeddedWindow *window,
                                GncPluginPage *page)
 {
     GncEmbeddedWindowPrivate *priv;
+    GtkWidget *nb;
 
     g_return_if_fail (GNC_IS_EMBEDDED_WINDOW (window));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
@@ -140,10 +141,11 @@ gnc_embedded_window_open_page (GncEmbeddedWindow *window,
 
     ENTER("window %p, page %p", window, page);
     priv->page = page;
-    page->window = GTK_WIDGET(window);
-    page->notebook_page = gnc_plugin_page_create_widget (page);
+    gnc_plugin_page_set_window(page, GTK_WIDGET(window));
+    nb = gnc_plugin_page_create_widget (page);
+    gnc_plugin_page_set_notebook_page(page, nb);
 
-    gtk_box_pack_end(GTK_BOX(window), page->notebook_page, TRUE, TRUE, 2);
+    gtk_box_pack_end(GTK_BOX(window), nb, TRUE, TRUE, 2);
     gnc_plugin_page_inserted (page);
 
     gnc_plugin_page_merge_actions (page, window->ui_merge);
@@ -165,13 +167,13 @@ gnc_embedded_window_close_page (GncEmbeddedWindow *window,
 
     ENTER("window %p, page %p", window, page);
 
-    if (!page->notebook_page)
+    if (!gnc_plugin_page_get_notebook_page(page))
     {
         LEAVE("no displayed widget");
         return;
     }
 
-    gtk_container_remove (GTK_CONTAINER(window), GTK_WIDGET(page->notebook_page));
+    gtk_container_remove (GTK_CONTAINER(window), GTK_WIDGET(gnc_plugin_page_get_notebook_page(page)));
     priv->page = NULL;
     gnc_plugin_page_removed (page);
 
@@ -408,7 +410,7 @@ gnc_embedded_window_get_statusbar (GncWindow *window_in)
  *  @param iface A pointer to the interface data structure to
  *  populate. */
 static void
-gnc_window_embedded_window_init (GncWindowIface *iface)
+gnc_window_embedded_window_init (GncWindowInterface *iface)
 {
     iface->get_gtk_window = gnc_embedded_window_get_gtk_window;
     iface->get_statusbar = gnc_embedded_window_get_statusbar;

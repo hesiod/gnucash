@@ -146,15 +146,13 @@ something_changed( GtkWidget *wid, gpointer d )
     gnc_date_edit_get_gdate(GNC_DATE_EDIT(gr->gde_start), &start);
 
     if (pt == GNCR_MONTH)
-        g_object_set(G_OBJECT(gr->nth_weekday), "visible", TRUE, NULL);
+        gtk_widget_show(GTK_WIDGET(gr->nth_weekday));
     else
     {
-        g_object_set(G_OBJECT(gr->nth_weekday), "visible", FALSE, NULL);
-        gtk_toggle_button_set_active(
-            GTK_TOGGLE_BUTTON(gr->nth_weekday), FALSE);
+        gtk_widget_hide(GTK_WIDGET(gr->nth_weekday));
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gr->nth_weekday), FALSE);
     }
-    use_wd = gtk_toggle_button_get_active(
-                 GTK_TOGGLE_BUTTON(gr->nth_weekday));
+    use_wd = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(gr->nth_weekday));
     //TODO: change label
 
     /* The case under which we show the "end of month" flag is very
@@ -171,7 +169,7 @@ something_changed( GtkWidget *wid, gpointer d )
         show_last = FALSE;
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(gr->gcb_eom), FALSE);
     }
-    g_object_set(G_OBJECT(gr->gcb_eom), "visible", show_last, NULL);
+    gtk_widget_set_visible(GTK_WIDGET(gr->gcb_eom), show_last);
 
     g_signal_emit_by_name(d, "changed");
 }

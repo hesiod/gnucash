@@ -979,7 +979,7 @@ gnc_plugin_page_register2_create_widget (GncPluginPage *plugin_page)
     numRows = priv->lines_default;
     numRows = MIN (numRows, DEFAULT_LINES_AMOUNT);
 
-    gnc_window = GNC_WINDOW (GNC_PLUGIN_PAGE (page)->window);
+    gnc_window = GNC_WINDOW (gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (plugin_page)));
 
     gsr = gnc_split_reg2_new (priv->ledger,
                             gnc_window_get_gtk_window (gnc_window),
@@ -1058,11 +1058,11 @@ gnc_plugin_page_register2_create_widget (GncPluginPage *plugin_page)
     if (!gnc_tree_model_split_reg_get_template (model))
        gnc_tree_view_split_reg_default_selection (view);
 
-    plugin_page->summarybar = gnc_split_reg2_create_summary_bar (priv->gsr);
-    if (plugin_page->summarybar)
+    gnc_plugin_page_set_summarybar(plugin_page, gnc_split_reg2_create_summary_bar (priv->gsr));
+    if (gnc_plugin_page_get_summarybar(plugin_page))
     {
-        gtk_widget_show_all (plugin_page->summarybar);
-        gtk_box_pack_start (GTK_BOX (priv->widget), plugin_page->summarybar,
+        gtk_widget_show_all (gnc_plugin_page_get_summarybar(plugin_page));
+        gtk_box_pack_start (GTK_BOX (priv->widget), gnc_plugin_page_get_summarybar(plugin_page),
                            FALSE, FALSE, 0);
         gnc_plugin_page_register2_summarybar_position_changed (NULL, NULL, page);
         gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
@@ -1715,7 +1715,7 @@ gnc_plugin_page_register2_summarybar_position_changed (gpointer prefs, gchar* pr
         position = GTK_POS_TOP;
 
     gtk_box_reorder_child (GTK_BOX (priv->widget),
-                          plugin_page->summarybar,
+                          gnc_plugin_page_get_summarybar(plugin_page),
                           (position == GTK_POS_TOP ? 0 : -1) );
 }
 
@@ -2904,7 +2904,7 @@ gnc_plugin_page_register2_cmd_view_filter_by (GSimpleAction *action, GVariant *p
     dialog = GTK_WIDGET (gtk_builder_get_object (builder, "Filter By"));
     priv->fd.dialog = dialog;
     gtk_window_set_transient_for (GTK_WINDOW (dialog),
-                                 gnc_window_get_gtk_window (GNC_WINDOW (GNC_PLUGIN_PAGE (page)->window)));
+                                 gnc_window_get_gtk_window (GNC_WINDOW (gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page)))));
 
     /* Translators: The %s is the name of the plugin page */
     title = g_strdup_printf (_("Filter %s by..."),
@@ -3163,7 +3163,7 @@ gnc_plugin_page_register2_cmd_transfer (GSimpleAction *action, GVariant *paramet
     g_return_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER2 (page));
 
     account = gnc_plugin_page_register2_get_account (page);
-    gnc_window = GNC_WINDOW (GNC_PLUGIN_PAGE (page)->window);
+    gnc_window = GNC_WINDOW (gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page)));
     window = GTK_WIDGET (gnc_window_get_gtk_window (gnc_window));
     gnc_xfer_dialog (window, account);
     LEAVE(" ");
@@ -3198,7 +3198,7 @@ gnc_plugin_page_register2_cmd_reconcile (GSimpleAction *action, GVariant *parame
         return;
     }
 
-    window = gnc_window_get_gtk_window (GNC_WINDOW (GNC_PLUGIN_PAGE (page)->window));
+    window = gnc_window_get_gtk_window (GNC_WINDOW (gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page))));
     recnData = recnWindow2 (GTK_WIDGET (window), account);
     gnc_ui_reconcile_window2_raise (recnData);
     LEAVE(" ");
@@ -3218,7 +3218,7 @@ gnc_plugin_page_register2_cmd_autoclear (GSimpleAction *action, GVariant *parame
 
     account = gnc_plugin_page_register2_get_account (page);
 
-    window = gnc_window_get_gtk_window(GNC_WINDOW(GNC_PLUGIN_PAGE (page)->window));
+    window = gnc_window_get_gtk_window(GNC_WINDOW(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page))));
     autoClearData = autoClearWindow (GTK_WIDGET(window), account);
     gnc_ui_autoclear_window_raise (autoClearData);
     LEAVE(" ");
@@ -3417,7 +3417,7 @@ gnc_plugin_page_register2_cmd_jump (GSimpleAction *action, GVariant *parameter, 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_REGISTER2 (plugin_page));
 
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (plugin_page);
-    window = GNC_PLUGIN_PAGE (plugin_page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (plugin_page));
     if (window == NULL)
     {
         LEAVE("no window");
@@ -3677,7 +3677,7 @@ gnc_plugin_page_register2_cmd_account_report (GSimpleAction *action, GVariant *p
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_REGISTER2(plugin_page));
 
-    window = GNC_MAIN_WINDOW(GNC_PLUGIN_PAGE(plugin_page)->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (plugin_page)));
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE(plugin_page);
     id = report_helper (priv->ledger, NULL, NULL);
     if (id >= 0)
@@ -3717,7 +3717,7 @@ gnc_plugin_page_register2_cmd_transaction_report (GSimpleAction *action, GVarian
     xaccQueryAddGUIDMatch (query, xaccSplitGetGUID (split),
                            GNC_ID_SPLIT, QOF_QUERY_AND);
 
-    window = GNC_MAIN_WINDOW(GNC_PLUGIN_PAGE(plugin_page)->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (plugin_page)));
     id = report_helper (priv->ledger, split, query);
     if (id >= 0)
         gnc_main_window_open_report(id, window);
@@ -3785,7 +3785,7 @@ gnc_plugin_page_help_changed_cb (GNCSplitReg2 *gsr, GncPluginPageRegister2 *regi
 
     g_return_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER2 (register_page));
 
-    window = GNC_WINDOW (GNC_PLUGIN_PAGE (register_page)->window);
+    window = GNC_WINDOW (gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (register_page)));
     if (!window)
     {
         // This routine can be called before the page is added to a

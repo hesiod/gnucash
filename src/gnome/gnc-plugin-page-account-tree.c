@@ -99,8 +99,6 @@ typedef struct GncPluginPageAccountTreePrivate
 #define GNC_PLUGIN_PAGE_ACCOUNT_TREE_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE ((o), GNC_TYPE_PLUGIN_PAGE_ACCOUNT_TREE, GncPluginPageAccountTreePrivate))
 
-static GObjectClass *parent_class = NULL;
-
 /************************************************************
  *                        Prototypes                        *
  ************************************************************/
@@ -154,6 +152,7 @@ static void gnc_plugin_page_account_tree_cmd_open2_subaccounts (GSimpleAction *a
 
 static guint plugin_page_signals[LAST_SIGNAL] = { 0 };
 
+G_DEFINE_TYPE_WITH_PRIVATE(GncPluginPageAccountTree, gnc_plugin_page_account_tree, GNC_TYPE_PLUGIN_PAGE)
 
 static GActionEntry gnc_plugin_page_account_tree_actions [] =
 {
@@ -186,7 +185,7 @@ static GActionEntry gnc_plugin_page_account_tree_actions [] =
 
     /* Edit menu */
     {
-        "edit.accout", gnc_plugin_page_account_tree_cmd_edit_account
+        "edit.account", gnc_plugin_page_account_tree_cmd_edit_account
     },
     {
         "edit.account.delete", gnc_plugin_page_account_tree_cmd_delete_account
@@ -269,34 +268,6 @@ static const gchar* readonly_inactive_actions[] =
     NULL
 };
 
-GType
-gnc_plugin_page_account_tree_get_type (void)
-{
-    static GType gnc_plugin_page_account_tree_type = 0;
-
-    if (gnc_plugin_page_account_tree_type == 0)
-    {
-        static const GTypeInfo our_info =
-        {
-            sizeof (GncPluginPageAccountTreeClass),
-            NULL,
-            NULL,
-            (GClassInitFunc) gnc_plugin_page_account_tree_class_init,
-            NULL,
-            NULL,
-            sizeof (GncPluginPageAccountTree),
-            0,
-            (GInstanceInitFunc) gnc_plugin_page_account_tree_init
-        };
-
-        gnc_plugin_page_account_tree_type = g_type_register_static (GNC_TYPE_PLUGIN_PAGE,
-                                            GNC_PLUGIN_PAGE_ACCOUNT_TREE_NAME,
-                                            &our_info, 0);
-    }
-
-    return gnc_plugin_page_account_tree_type;
-}
-
 GncPluginPage *
 gnc_plugin_page_account_tree_new (void)
 {
@@ -316,7 +287,7 @@ gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
     GncPluginPageClass *gnc_plugin_class = GNC_PLUGIN_PAGE_CLASS(klass);
 
-    parent_class = g_type_class_peek_parent (klass);
+    gnc_plugin_page_account_tree_parent_class = g_type_class_peek_parent (klass);
 
     object_class->finalize = gnc_plugin_page_account_tree_finalize;
 
@@ -328,7 +299,7 @@ gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
     gnc_plugin_class->save_page       = gnc_plugin_page_account_tree_save_page;
     gnc_plugin_class->recreate_page   = gnc_plugin_page_account_tree_recreate_page;
 
-    g_type_class_add_private(klass, sizeof(GncPluginPageAccountTreePrivate));
+    //g_type_class_add_private(klass, sizeof(GncPluginPageAccountTreePrivate));
 
     plugin_page_signals[ACCOUNT_SELECTED] =
         g_signal_new ("account_selected",
@@ -341,12 +312,38 @@ gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
                       G_TYPE_POINTER);
 }
 
+
+static void update_inactive_actions(GncPluginPage *plugin_page)
+{
+    GncMainWindow *win;
+    GActionMap *action_map;
+    gboolean is_sensitive = !qof_book_is_readonly(gnc_get_current_book());
+
+    // We are readonly - so we have to switch particular actions to inactive.
+    g_return_if_fail(plugin_page);
+    g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
+    win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
+    g_return_if_fail(win != NULL);
+    g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
+
+    /* Get the action group */
+    action_map = G_ACTION_MAP(win);
+    g_return_if_fail(action_map != NULL);
+    g_return_if_fail(G_IS_ACTION_MAP(action_map));
+
+    /* Set the action's sensitivity */
+    gnc_plugin_update_actions (action_map, readonly_inactive_actions,
+                               "sensitive", is_sensitive);
+}
+
+
 static void
 gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
 {
     GActionMap *action_map;
     GncPluginPageAccountTreePrivate *priv;
     GncPluginPage *parent;
+    GncMainWindow *win;
     const GList *page_list;
 
     ENTER("page %p", plugin_page);
@@ -354,18 +351,18 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
 
     /* Init parent declared variables */
     parent = GNC_PLUGIN_PAGE(plugin_page);
+    g_return_if_fail(GNC_IS_PLUGIN_PAGE(parent));
     g_object_set(G_OBJECT(plugin_page),
                  "page-name",      _("Accounts"),
                  "page-uri",       "default:",
                  "ui-description", "gnc-plugin-page-account-tree-ui.xml",
                  NULL);
-    g_signal_connect (G_OBJECT (plugin_page), "selected",
-                      G_CALLBACK (gnc_plugin_page_account_tree_selected), plugin_page);
 
     /* change me when the system supports multiple books */
     gnc_plugin_page_add_book(parent, gnc_get_current_book());
 
     /* Is this the first accounts page? */
+#if 0
     page_list =
         gnc_gobject_tracking_get_list(GNC_PLUGIN_PAGE_ACCOUNT_TREE_NAME);
     if (plugin_page == page_list->data)
@@ -373,14 +370,24 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
         g_object_set_data(G_OBJECT(plugin_page), PLUGIN_PAGE_IMMUTABLE,
                           GINT_TO_POINTER(1));
     }
+#endif
 
     /* Create menu and toolbar information */
-    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(plugin_page)));
+    win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(parent));
+    g_return_if_fail(win != NULL);
+    g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
+
+    action_map = G_ACTION_MAP(win);
     g_return_if_fail(action_map != NULL);
+    g_return_if_fail(G_IS_ACTION_MAP(action_map));
     g_action_map_add_action_entries(action_map,
-                                 gnc_plugin_page_account_tree_actions,
-                                 gnc_plugin_page_account_tree_n_actions,
-                                 plugin_page);
+                                    gnc_plugin_page_account_tree_actions,
+                                    gnc_plugin_page_account_tree_n_actions,
+                                    plugin_page);
+
+    update_inactive_actions(parent);
+    g_signal_connect (G_OBJECT (plugin_page), "selected",
+                      G_CALLBACK (gnc_plugin_page_account_tree_selected), plugin_page);
 
     /* Visible types */
     priv->fd.visible_types = -1; /* Start with all types */
@@ -404,7 +411,7 @@ gnc_plugin_page_account_tree_finalize (GObject *object)
     priv = GNC_PLUGIN_PAGE_ACCOUNT_TREE_GET_PRIVATE(page);
     g_return_if_fail (priv != NULL);
 
-    G_OBJECT_CLASS (parent_class)->finalize (object);
+    G_OBJECT_CLASS (gnc_plugin_page_account_tree_parent_class)->finalize (object);
     LEAVE(" ");
 }
 
@@ -531,10 +538,10 @@ gnc_plugin_page_account_tree_create_widget (GncPluginPage *plugin_page)
     gnc_gui_component_set_session (priv->component_id,
                                    gnc_get_current_session());
 
-    plugin_page->summarybar = gnc_main_window_summary_new();
-    gtk_box_pack_start (GTK_BOX (priv->widget), plugin_page->summarybar,
+    gnc_plugin_page_set_summarybar(plugin_page, gnc_main_window_summary_new());
+    gtk_box_pack_start (GTK_BOX (priv->widget), gnc_plugin_page_get_summarybar(plugin_page),
                         FALSE, FALSE, 0);
-    gtk_widget_show(plugin_page->summarybar);
+    gtk_widget_show(gnc_plugin_page_get_summarybar(plugin_page));
     gnc_plugin_page_account_tree_summarybar_position_changed(NULL, NULL, page);
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_SUMMARYBAR_POSITION_TOP,
@@ -581,24 +588,6 @@ gnc_plugin_page_account_tree_destroy_widget (GncPluginPage *plugin_page)
     }
 
     LEAVE("widget destroyed");
-}
-
-static void update_inactive_actions(GncPluginPage *plugin_page)
-{
-    GActionMap *action_map;
-    gboolean is_sensitive = !qof_book_is_readonly(gnc_get_current_book());
-
-    // We are readonly - so we have to switch particular actions to inactive.
-    g_return_if_fail(plugin_page);
-    g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
-
-    /* Get the action group */
-    action_map = G_ACTION_MAP(gnc_plugin_page_get_action_group(plugin_page));
-    g_return_if_fail(G_IS_ACTION_MAP (action_map));
-
-    /* Set the action's sensitivity */
-    gnc_plugin_update_actions (action_map, readonly_inactive_actions,
-                               "sensitive", is_sensitive);
 }
 
 /**
@@ -703,7 +692,7 @@ gnc_plugin_page_account_tree_summarybar_position_changed(gpointer prefs, gchar* 
         position = GTK_POS_TOP;
 
     gtk_box_reorder_child(GTK_BOX(priv->widget),
-                          plugin_page->summarybar,
+                          gnc_plugin_page_get_summarybar(plugin_page),
                           (position == GTK_POS_TOP ? 0 : -1) );
 }
 
@@ -763,7 +752,7 @@ gppat_open2_account_common (GncPluginPageAccountTree *page,
     if (account == NULL)
         return;
 
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
     new_page = gnc_plugin_page_register2_new (account, include_subs);
     gnc_main_window_open_page (GNC_MAIN_WINDOW(window), new_page);
 }
@@ -817,6 +806,8 @@ static void
 gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
         GncPluginPageAccountTree *page)
 {
+    GncPluginPage *parent;
+    GncMainWindow *win;
     GActionMap *action_map;
     GAction *action;
     GtkTreeView *view;
@@ -843,23 +834,26 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
         /* Check here for placeholder accounts, etc. */
     }
 
-    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(page)));
+    parent = GNC_PLUGIN_PAGE(page);
+    g_return_if_fail(GNC_IS_PLUGIN_PAGE(parent));
+    win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(parent));
+    g_return_if_fail(win != NULL);
+    g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
+
+    action_map = G_ACTION_MAP(win);
     g_return_if_fail(action_map != NULL);
+    g_return_if_fail(G_IS_ACTION_MAP(action_map));
+
     gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_rw,
-                               "sensitive", is_readwrite && sensitive);
+                               "enabled", is_readwrite && sensitive);
     gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_always,
-                               "sensitive", sensitive);
+                               "enabled", sensitive);
     g_signal_emit (page, plugin_page_signals[ACCOUNT_SELECTED], 0, account);
 
-    action = g_action_map_lookup_action (action_map, "edit.account.renumber-sub");
+    action = g_action_map_lookup_action (action_map, "edit.account.renumber");
     g_return_if_fail(action != NULL);
-    g_object_set (G_OBJECT(action), "sensitive",
-                  is_readwrite && sensitive && subaccounts, NULL);
-
-    gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_rw,
-                               "sensitive", is_readwrite && sensitive);
-    gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_always,
-                               "sensitive", sensitive);
+    g_simple_action_set_enabled (G_SIMPLE_ACTION(action),
+                                 is_readwrite && sensitive && subaccounts);
 }
 
 
@@ -1449,7 +1443,7 @@ gnc_plugin_page_account_tree_cmd_reconcile (GSimpleAction *action,
     account = gnc_plugin_page_account_tree_get_current_account (page);
     g_return_if_fail (account != NULL);
 
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
 #ifndef WITH_REGISTER2
     recnData = recnWindow (window, account);
     gnc_ui_reconcile_window_raise (recnData);
@@ -1472,7 +1466,7 @@ gnc_plugin_page_account_tree_cmd_autoclear (GSimpleAction *action,
     account = gnc_plugin_page_account_tree_get_current_account (page);
     g_return_if_fail (account != NULL);
 
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
     autoClearData = autoClearWindow (window, account);
     gnc_ui_autoclear_window_raise (autoClearData);
 }
@@ -1487,7 +1481,7 @@ gnc_plugin_page_account_tree_cmd_transfer (GSimpleAction *action,
     Account *account;
 
     account = gnc_plugin_page_account_tree_get_current_account (page);
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
     gnc_xfer_dialog (window, account);
 }
 
@@ -1501,7 +1495,7 @@ gnc_plugin_page_account_tree_cmd_stock_split (GSimpleAction *action,
     Account *account;
 
     account = gnc_plugin_page_account_tree_get_current_account (page);
-    window = GNC_PLUGIN_PAGE (page)->window;
+    window = gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page));
     gnc_stock_split_dialog (window, account);
 }
 

@@ -282,9 +282,9 @@ gnc_plugin_basic_commands_add_to_window (GncPlugin *plugin,
         GncMainWindow *window,
         GQuark type)
 {
-    g_signal_connect(window, "page-changed",
+    /*g_signal_connect(window, "page-changed",
                      G_CALLBACK(gnc_plugin_basic_commands_main_window_page_changed),
-                     plugin);
+                     plugin);*/
 }
 
 /** Update the actions sensitivity
@@ -302,7 +302,7 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
     if (!plugin_page || !GNC_IS_PLUGIN_PAGE(plugin_page))
         return;
 
-    window = GNC_MAIN_WINDOW(plugin_page->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
     action_map = G_ACTION_MAP(window);
 

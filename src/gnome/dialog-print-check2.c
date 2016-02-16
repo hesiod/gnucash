@@ -1682,7 +1682,7 @@ gnc_ui_print_check_dialog_create2(GncPluginPageRegister2 *plugin_page,
     pcd->check_rotation = GTK_SPIN_BUTTON(gtk_builder_get_object (builder, "check_rotation_entry"));
     pcd->units_combobox = GTK_WIDGET(gtk_builder_get_object (builder, "units_combobox"));
 
-    window = GTK_WINDOW(GNC_PLUGIN_PAGE(plugin_page)->window);
+    window = GTK_WINDOW(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE(plugin_page)));
     gtk_window_set_transient_for(GTK_WINDOW(pcd->dialog), window);
     pcd->caller_window = GTK_WINDOW(window);
 

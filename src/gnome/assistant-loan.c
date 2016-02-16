@@ -499,9 +499,9 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
     }
     /* Options Page */
     {
-        ldd->optVBox = GTK_VBOX(gtk_builder_get_object(builder, "loan_options_page"));
+        ldd->optVBox = GTK_BOX(gtk_builder_get_object(builder, "loan_options_page"));
         ldd->optEscrowCb = GTK_CHECK_BUTTON(gtk_builder_get_object(builder, "opt_escrow_cb"));
-        ldd->optEscrowHBox = GTK_HBOX(gtk_builder_get_object(builder, "opt_escrow_hbox"));
+        ldd->optEscrowHBox = GTK_BOX(gtk_builder_get_object(builder, "opt_escrow_hbox"));
     }
     /* Payment Page */
     {
@@ -737,7 +737,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
             for ( i = 0; i < ldd->ld.repayOptCount; i++ )
             {
                 rouid = ldd->repayOptsUI[i];
-                vb = GTK_VBOX(gtk_vbox_new( FALSE, 2 ));
+                vb = GTK_BOX(gtk_vbox_new( FALSE, 2 ));
 
                 /* Add payment checkbox. */
 
@@ -797,7 +797,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
 
         {
             GtkBox *hbox;
-            hbox = GTK_HBOX(gtk_builder_get_object(builder, "type_freq_hbox"));
+            hbox = GTK_BOX(gtk_builder_get_object(builder, "type_freq_hbox"));
             ldd->prmVarGncFreq = GNC_FREQUENCY(gnc_frequency_new( NULL, NULL ));
             gtk_box_pack_start( GTK_BOX(hbox) , GTK_WIDGET(ldd->prmVarGncFreq), TRUE, FALSE, 0 );
             g_signal_connect (ldd->prmVarGncFreq, "changed",
@@ -805,7 +805,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
         }
         {
             GtkBox *hbox;
-            hbox = GTK_HBOX(gtk_builder_get_object(builder, "freq_frame_hbox"));
+            hbox = GTK_BOX(gtk_builder_get_object(builder, "freq_frame_hbox"));
             ldd->repGncFreq = GNC_FREQUENCY(gnc_frequency_new( NULL, NULL ));
             gtk_box_pack_start( GTK_BOX(hbox) , GTK_WIDGET(ldd->repGncFreq), TRUE, FALSE, 0 );
             g_signal_connect (ldd->repGncFreq, "changed",

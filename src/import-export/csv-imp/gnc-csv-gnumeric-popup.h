@@ -75,7 +75,6 @@
 typedef struct
 {
     char const *name;
-    char const *pixmap;
     int display_filter;
     int sensitive_filter;
 

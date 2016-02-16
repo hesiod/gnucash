@@ -212,9 +212,9 @@ gnc_plugin_aqbanking_add_to_window(GncPlugin *plugin, GncMainWindow *window,
     g_signal_connect(window, "page-added",
                      G_CALLBACK(gnc_plugin_ab_main_window_page_added),
                      plugin);
-    g_signal_connect(window, "page-changed",
+    /*g_signal_connect(window, "page-changed",
                      G_CALLBACK(gnc_plugin_ab_main_window_page_changed),
-                     plugin);
+                     plugin);*/
 }
 
 static void
@@ -281,7 +281,7 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
     if (!plugin_page || !GNC_IS_PLUGIN_PAGE(plugin_page))
         return;
 
-    window = GNC_MAIN_WINDOW(plugin_page->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
     action_map = G_ACTION_MAP(window);
     g_return_if_fail(G_IS_ACTION_MAP(action_map));
@@ -327,7 +327,7 @@ gnc_plugin_ab_account_selected(GncPluginPage *plugin_page, Account *account,
     const gchar *accountid = NULL;
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
-    window = GNC_MAIN_WINDOW(plugin_page->window);
+    window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
     g_return_if_fail(GNC_IS_MAIN_WINDOW(window));
     action_map = G_ACTION_MAP(window);
     g_return_if_fail(G_IS_ACTION_MAP(action_map));
