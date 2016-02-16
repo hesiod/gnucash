@@ -59,6 +59,8 @@ OPTION (WITH_OFX "compile with ofx support (needs LibOFX)" ON)
 OPTION (WITH_REGISTER2 "compile with register2 enabled" ON)
 OPTION (ENABLE_BINRELOC "compile with binary relocation support" ON)
 OPTION (ENABLE_DEBUG "compile with debugging flags set" OFF)
+OPTION (ENABLE_ADDRESS_SANITIZER "enable the address sanitizer (ASan)" OFF)
+OPTION (ENABLE_UNDEFINED_SANITIZER "enable the undefined behaviour sanitizer (UBSan)" OFF)
 OPTION (DISABLE_NLS "do not use Native Language Support" OFF)
 OPTION (DISABLE_DEPRECATED_GLIB "don't use deprecated glib funcions" OFF)
 OPTION (DISABLE_DEPRECATED_GTK "don't use deprectacted gtk, gdk or gdk-pixbuf functions" OFF)
@@ -374,6 +376,18 @@ ENDIF (APPLE)
 # Also, set the C++ version to c++11
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")  # FIXME: should be -std=c++11
 
+SET(SANITIZERS "")
+IF (ENABLE_ADDRESS_SANITIZER)
+    LIST(APPEND SANITIZERS "address")
+ENDIF (ENABLE_ADDRESS_SANITIZER)
+IF (ENABLE_UNDEFINED_SANITIZER)
+    LIST(APPEND SANITIZERS "undefined")
+ENDIF (ENABLE_UNDEFINED_SANITIZER)
+
+IF (SANITIZERS)
+    LIST(APPEND CMAKE_C_FLAGS "-fsanitize=${SANITIZERS}")
+    LIST(APPEND CMAKE_CXX_FLAGS "-fsanitize=${SANITIZERS}")
+ENDIF (SANITIZERS)
 
 IF (UNIX)
   SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wdeclaration-after-statement -Wno-pointer-sign -D_FORTIFY_SOURCE=2 -Wall -Wunused -Wmissing-prototypes -Wmissing-declarations  -Wno-unused")
