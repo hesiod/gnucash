@@ -237,7 +237,7 @@ gnc_amount_edit_expr_is_valid (GNCAmountEdit *gae, gnc_numeric *amount,
     char *error_loc;
     gboolean ok;
 
-    g_return_val_if_fail(gae != NULL, -1);
+    g_return_val_if_fail(gae, -1);
     g_return_val_if_fail(GNC_IS_AMOUNT_EDIT(gae), -1);
 
     string = gtk_entry_get_text(GTK_ENTRY(gae));
@@ -281,7 +281,7 @@ gnc_amount_edit_evaluate (GNCAmountEdit *gae)
     gint result;
     gnc_numeric amount;
 
-    g_return_val_if_fail(gae != NULL, FALSE);
+    g_return_val_if_fail(gae, FALSE);
     g_return_val_if_fail(GNC_IS_AMOUNT_EDIT(gae), FALSE);
 
 
@@ -325,7 +325,7 @@ gnc_amount_edit_evaluate (GNCAmountEdit *gae)
 gnc_numeric
 gnc_amount_edit_get_amount (GNCAmountEdit *gae)
 {
-    g_return_val_if_fail(gae != NULL, gnc_numeric_zero ());
+    g_return_val_if_fail(gae, gnc_numeric_zero ());
     g_return_val_if_fail(GNC_IS_AMOUNT_EDIT(gae), gnc_numeric_zero ());
 
     gnc_amount_edit_evaluate (gae);
@@ -345,7 +345,7 @@ gnc_amount_edit_get_amount (GNCAmountEdit *gae)
 double
 gnc_amount_edit_get_damount (GNCAmountEdit *gae)
 {
-    g_return_val_if_fail(gae != NULL, 0.0);
+    g_return_val_if_fail(gae, 0.0);
     g_return_val_if_fail(GNC_IS_AMOUNT_EDIT(gae), 0.0);
 
     gnc_amount_edit_evaluate (gae);
@@ -366,7 +366,7 @@ gnc_amount_edit_set_amount (GNCAmountEdit *gae, gnc_numeric amount)
 {
     const char * amount_string;
 
-    g_return_if_fail(gae != NULL);
+    g_return_if_fail(gae);
     g_return_if_fail(GNC_IS_AMOUNT_EDIT(gae));
     g_return_if_fail(!gnc_numeric_check (amount));
 
@@ -391,7 +391,7 @@ gnc_amount_edit_set_damount (GNCAmountEdit *gae, double damount)
     gnc_numeric amount;
     int fraction;
 
-    g_return_if_fail(gae != NULL);
+    g_return_if_fail(gae);
     g_return_if_fail(GNC_IS_AMOUNT_EDIT(gae));
 
     if (gae->fraction > 0)
@@ -415,7 +415,7 @@ void
 gnc_amount_edit_set_print_info (GNCAmountEdit *gae,
                                 GNCPrintAmountInfo print_info)
 {
-    g_return_if_fail(gae != NULL);
+    g_return_if_fail(gae);
     g_return_if_fail(GNC_IS_AMOUNT_EDIT(gae));
 
     gae->print_info = print_info;
@@ -433,7 +433,7 @@ gnc_amount_edit_set_print_info (GNCAmountEdit *gae,
 void
 gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction)
 {
-    g_return_if_fail(gae != NULL);
+    g_return_if_fail(gae);
     g_return_if_fail(GNC_IS_AMOUNT_EDIT(gae));
 
     fraction = MAX (0, fraction);
@@ -451,7 +451,7 @@ gnc_amount_edit_set_fraction (GNCAmountEdit *gae, int fraction)
 GtkWidget *
 gnc_amount_edit_gtk_entry (GNCAmountEdit *gae)
 {
-    g_return_val_if_fail(gae != NULL, NULL);
+    g_return_val_if_fail(gae, NULL);
     g_return_val_if_fail(GNC_IS_AMOUNT_EDIT(gae), NULL);
 
     return (GtkWidget *)gae;
@@ -469,7 +469,7 @@ void
 gnc_amount_edit_set_evaluate_on_enter (GNCAmountEdit *gae,
                                        gboolean evaluate_on_enter)
 {
-    g_return_if_fail(gae != NULL);
+    g_return_if_fail(gae);
     g_return_if_fail(GNC_IS_AMOUNT_EDIT(gae));
 
     gae->evaluate_on_enter = evaluate_on_enter;

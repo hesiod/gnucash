@@ -243,7 +243,7 @@ gnc_plugin_page_sx_list_dispose(GObject *object)
     page = GNC_PLUGIN_PAGE_SX_LIST (object);
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_SX_LIST (page));
     priv = GNC_PLUGIN_PAGE_SX_LIST_GET_PRIVATE(page);
-    g_return_if_fail(priv != NULL);
+    g_return_if_fail(priv);
 
     g_return_if_fail(!priv->disposed);
     priv->disposed = TRUE;
@@ -268,7 +268,7 @@ gnc_plugin_page_sx_list_finalize (GObject *object)
     page = GNC_PLUGIN_PAGE_SX_LIST (object);
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_SX_LIST (page));
     priv = GNC_PLUGIN_PAGE_SX_LIST_GET_PRIVATE(page);
-    g_return_if_fail(priv != NULL);
+    g_return_if_fail(priv);
 
     G_OBJECT_CLASS (parent_class)->finalize (object);
 }

@@ -257,7 +257,7 @@ static void
 gnc_sx_instance_dense_cal_adapter_dispose(GObject *obj)
 {
     GncSxInstanceDenseCalAdapter *adapter;
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
     adapter = GNC_SX_INSTANCE_DENSE_CAL_ADAPTER(obj);
     // g_return_if_fail(!adapter->disposed);
     if (adapter->disposed) return;
@@ -271,7 +271,7 @@ gnc_sx_instance_dense_cal_adapter_dispose(GObject *obj)
 
 static void gnc_sx_instance_dense_cal_adapter_finalize(GObject *obj)
 {
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
     // nop
     G_OBJECT_CLASS(parent_class)->finalize(obj);
 }

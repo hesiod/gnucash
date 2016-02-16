@@ -269,7 +269,7 @@ impl_refers_to_object(const QofInstance* inst, const QofInstance* ref)
 {
     GncVendor* v;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_VENDOR(inst), FALSE);
 
     v = GNC_VENDOR(inst);

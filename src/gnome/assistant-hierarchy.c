@@ -327,8 +327,8 @@ add_one_category (GncExampleAccount *acc,
     GtkTreePath* path;
     gboolean use_defaults;
 
-    g_return_if_fail(acc != NULL);
-    g_return_if_fail(data != NULL);
+    g_return_if_fail(acc);
+    g_return_if_fail(data);
 
     view = data->categories_tree;
     store = GTK_LIST_STORE(gtk_tree_view_get_model(view));
@@ -775,7 +775,7 @@ balance_cell_edited (GtkCellRendererText *cell,
     gnc_numeric amount;
     hierarchy_data *data = (hierarchy_data *)user_data;
 
-    g_return_if_fail(data != NULL);
+    g_return_if_fail(data);
 
     account = gnc_tree_view_account_get_selected_account(data->final_account_tree);
     if (account == NULL)

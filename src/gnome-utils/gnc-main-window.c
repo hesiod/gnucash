@@ -1403,7 +1403,7 @@ gnc_main_window_generate_title (GncMainWindow *window)
         const gchar* name;
         g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), g_strdup("GnuCash"));
         name = gnc_plugin_page_get_page_name(page);
-        g_return_val_if_fail(name != NULL, g_strdup("GnuCash"));
+        g_return_val_if_fail(name, g_strdup("GnuCash"));
         middle = g_strdup_printf(" - %s", name);
         /* Update the menus based upon whether this is an "immutable" page. */
         immutable = page &&
@@ -1643,7 +1643,7 @@ gnc_main_window_update_one_menu_action (GncMainWindow *window,
           data->action_name, data->enabled);
     g_return_if_fail(data->action_name != NULL);
     action = g_action_map_lookup_action(G_ACTION_MAP(window), data->action_name);
-    g_return_if_fail(action != NULL);
+    g_return_if_fail(action);
     g_simple_action_set_enabled (G_SIMPLE_ACTION(action), data->enabled);
     LEAVE(" ");
 }
@@ -3080,10 +3080,10 @@ gnc_main_window_init_menu_updaters (GncMainWindow *window)
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     children = gtk_container_get_children(GTK_CONTAINER(priv->menu));
-    g_return_if_fail(children != NULL);
+    g_return_if_fail(children);
 
     elem = g_list_find(children, "menubar-edit");
-    g_return_if_fail(elem != NULL);
+    g_return_if_fail(elem);
 
     edit_menu_item = GTK_WIDGET(elem->data);
     g_return_if_fail(GTK_IS_WIDGET(edit_menu_item));
@@ -3125,9 +3125,9 @@ static void gnc_main_window_update_menubar (GncMainWindow *window)
     GtkApplication *app;
 
     app = GTK_APPLICATION (g_application_get_default());
-    g_return_if_fail(app != NULL);
+    g_return_if_fail(app);
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-    g_return_if_fail(priv != NULL);
+    g_return_if_fail(priv);
 
     menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(priv->ui_merge, "menubar"));
     g_return_if_fail(menu_model != NULL);
@@ -4140,14 +4140,14 @@ do_popup_menu(GncPluginPage *page, GdkEventButton *event)
 
     ENTER("page %p, event %p", page, event);
     win = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
-    g_return_if_fail(win != NULL);
+    g_return_if_fail(win);
     ui_merge = gnc_main_window_get_uimanager (win);
     g_return_if_fail(ui_merge != NULL);
 
     menu_model = G_MENU_MODEL(egg_menu_manager_get_menu_by_id(ui_merge, "/popup"));
     g_return_if_fail(menu_model != NULL);
     menu = GTK_MENU(gtk_menu_new_from_model(menu_model));
-    g_return_if_fail(menu != NULL);
+    g_return_if_fail(menu);
 
     if (event)
     {

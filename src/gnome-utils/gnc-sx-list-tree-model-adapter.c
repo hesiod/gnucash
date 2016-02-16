@@ -606,7 +606,7 @@ gnc_sx_list_tree_model_adapter_dispose(GObject *obj)
 {
     GncSxListTreeModelAdapter *adapter;
 
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
     adapter = GNC_SX_LIST_TREE_MODEL_ADAPTER(obj);
 
     if (adapter->disposed) return;
@@ -625,6 +625,6 @@ gnc_sx_list_tree_model_adapter_dispose(GObject *obj)
 static void
 gnc_sx_list_tree_model_adapter_finalize(GObject *obj)
 {
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
     G_OBJECT_CLASS(parent_class)->finalize(obj);
 }

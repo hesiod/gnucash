@@ -1267,9 +1267,9 @@ gnucash_motion_event (GtkWidget *widget, GdkEventMotion *event)
     GnucashSheet *sheet;
     VirtualLocation virt_loc;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET(widget);
 
@@ -1301,9 +1301,9 @@ gnucash_button_release_event (GtkWidget *widget, GdkEventButton *event)
 {
     GnucashSheet *sheet;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET (widget);
 
@@ -1329,9 +1329,9 @@ gnucash_scroll_event (GtkWidget *widget, GdkEventScroll *event)
     GtkAdjustment *vadj;
     gfloat v_value;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET (widget);
     vadj = sheet->vadj;
@@ -1393,9 +1393,9 @@ gnucash_button_press_event (GtkWidget *widget, GdkEventButton *event)
     gboolean button_1;
     gboolean do_popup;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET (widget);
     table = sheet->table;
@@ -1529,7 +1529,7 @@ gnucash_register_cut_clipboard (GnucashRegister *reg)
     GnucashSheet *sheet;
     GncItemEdit *item_edit;
 
-    g_return_if_fail(reg != NULL);
+    g_return_if_fail(reg);
     g_return_if_fail(GNUCASH_IS_REGISTER(reg));
 
     sheet = GNUCASH_SHEET(reg->sheet);
@@ -1544,7 +1544,7 @@ gnucash_register_copy_clipboard (GnucashRegister *reg)
     GnucashSheet *sheet;
     GncItemEdit *item_edit;
 
-    g_return_if_fail(reg != NULL);
+    g_return_if_fail(reg);
     g_return_if_fail(GNUCASH_IS_REGISTER(reg));
 
     sheet = GNUCASH_SHEET(reg->sheet);
@@ -1559,7 +1559,7 @@ gnucash_register_paste_clipboard (GnucashRegister *reg)
     GnucashSheet *sheet;
     GncItemEdit *item_edit;
 
-    g_return_if_fail(reg != NULL);
+    g_return_if_fail(reg);
     g_return_if_fail(GNUCASH_IS_REGISTER(reg));
 
     sheet = GNUCASH_SHEET(reg->sheet);
@@ -1572,7 +1572,7 @@ gnucash_register_paste_clipboard (GnucashRegister *reg)
 static void
 gnucash_sheet_refresh_from_prefs (GnucashSheet *sheet)
 {
-    g_return_if_fail(sheet != NULL);
+    g_return_if_fail(sheet);
     g_return_if_fail(GNUCASH_IS_SHEET(sheet));
 
     sheet->use_theme_colors = gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL_REGISTER,
@@ -1588,7 +1588,7 @@ gnucash_register_refresh_from_prefs (GnucashRegister *reg)
 {
     GnucashSheet *sheet;
 
-    g_return_if_fail(reg != NULL);
+    g_return_if_fail(reg);
     g_return_if_fail(GNUCASH_IS_REGISTER(reg));
 
     sheet = GNUCASH_SHEET(reg->sheet);
@@ -1736,9 +1736,9 @@ gnucash_sheet_key_press_event_internal (GtkWidget *widget, GdkEventKey *event)
     gncTableTraversalDir direction = 0;
     int distance;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET (widget);
     table = sheet->table;
@@ -1884,9 +1884,9 @@ gnucash_sheet_key_press_event (GtkWidget *widget, GdkEventKey *event)
 {
     GnucashSheet *sheet;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET (widget);
 
@@ -1924,9 +1924,9 @@ gnucash_sheet_key_release_event(GtkWidget *widget, GdkEventKey *event)
 {
     GnucashSheet *sheet;
 
-    g_return_val_if_fail(widget != NULL, TRUE);
+    g_return_val_if_fail(widget, TRUE);
     g_return_val_if_fail(GNUCASH_IS_SHEET(widget), TRUE);
-    g_return_val_if_fail(event != NULL, TRUE);
+    g_return_val_if_fail(event, TRUE);
 
     sheet = GNUCASH_SHEET (widget);
 
@@ -2042,7 +2042,7 @@ gnucash_sheet_preedit_changed_cb (GtkIMContext *context, GnucashSheet *sheet)
     gchar *preedit_string;
     GtkEditable *editable;
 
-    g_return_if_fail(context != NULL);
+    g_return_if_fail(context);
     g_return_if_fail(sheet->editing == TRUE);
 
     editable = GTK_EDITABLE (sheet->entry);
@@ -2191,7 +2191,7 @@ gnucash_register_goto_virt_cell (GnucashRegister *reg,
     GnucashSheet *sheet;
     VirtualLocation virt_loc;
 
-    g_return_if_fail(reg != NULL);
+    g_return_if_fail(reg);
     g_return_if_fail(GNUCASH_IS_REGISTER(reg));
 
     sheet = GNUCASH_SHEET(reg->sheet);
@@ -2209,7 +2209,7 @@ gnucash_register_goto_virt_loc (GnucashRegister *reg,
 {
     GnucashSheet *sheet;
 
-    g_return_if_fail(reg != NULL);
+    g_return_if_fail(reg);
     g_return_if_fail(GNUCASH_IS_REGISTER(reg));
 
     sheet = GNUCASH_SHEET(reg->sheet);

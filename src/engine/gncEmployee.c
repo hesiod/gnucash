@@ -253,7 +253,7 @@ impl_refers_to_object(const QofInstance* inst, const QofInstance* ref)
 {
     GncEmployee* emp;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_EMPLOYEE(inst), FALSE);
 
     emp = GNC_EMPLOYEE(inst);

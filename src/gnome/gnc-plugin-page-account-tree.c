@@ -324,7 +324,7 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(plugin_page));
     //win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(plugin_page));
     win = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
-    g_return_if_fail(win != NULL);
+    g_return_if_fail(win);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
 
     /* Get the action group */
@@ -376,7 +376,7 @@ gnc_plugin_page_account_tree_init (GncPluginPageAccountTree *plugin_page)
     /* Create menu and toolbar information */
     //win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(parent));
     win = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
-    g_return_if_fail(win != NULL);
+    g_return_if_fail(win);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
 
     action_map = G_ACTION_MAP(win);
@@ -839,7 +839,7 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
     parent = GNC_PLUGIN_PAGE(page);
     g_return_if_fail(GNC_IS_PLUGIN_PAGE(parent));
     win = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(parent));
-    g_return_if_fail(win != NULL);
+    g_return_if_fail(win);
     g_return_if_fail(GNC_IS_MAIN_WINDOW(win));
 
     action_map = G_ACTION_MAP(win);
@@ -853,7 +853,7 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
     g_signal_emit (page, plugin_page_signals[ACCOUNT_SELECTED], 0, account);
 
     action = g_action_map_lookup_action (action_map, "account.renumber");
-    g_return_if_fail(action != NULL);
+    g_return_if_fail(action);
     g_simple_action_set_enabled (G_SIMPLE_ACTION(action),
                                  is_readwrite && sensitive && subaccounts);
 }

@@ -379,7 +379,7 @@ refresh_handler (GHashTable *changes, gpointer user_data)
 {
     CommoditiesDialog *cd = user_data;
 
-    g_return_if_fail(cd != NULL);
+    g_return_if_fail(cd);
 
     gnc_tree_view_commodity_refilter (cd->commodity_tree);
 }

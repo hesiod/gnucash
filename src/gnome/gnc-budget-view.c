@@ -434,7 +434,7 @@ gnc_budget_view_save(GncBudgetView *view, GKeyFile *key_file, const gchar *group
     GncBudgetViewPrivate *priv;
     char guid_str[GUID_ENCODING_LENGTH+1];
 
-    g_return_if_fail(view != NULL);
+    g_return_if_fail(view);
     g_return_if_fail(key_file != NULL);
     g_return_if_fail(group_name != NULL);
 
@@ -522,7 +522,7 @@ gnc_budget_view_delete_budget(GncBudgetView *view)
     GncBudgetViewPrivate *priv;
     gchar guidstr[GUID_ENCODING_LENGTH+1];
 
-    g_return_if_fail(view != NULL);
+    g_return_if_fail(view);
 
     ENTER("view %p", view);
 
@@ -553,7 +553,7 @@ gbv_button_press_cb(GtkWidget *widget, GdkEventButton *event,
 {
     gboolean result;
 
-    g_return_val_if_fail(view != NULL, FALSE);
+    g_return_val_if_fail(view, FALSE);
 
     ENTER("widget %p, event %p, page %p", widget, event, page);
     result = gnc_main_window_button_press_cb(widget, event, page);
@@ -1004,7 +1004,7 @@ gbv_refresh_col_titles(GncBudgetView *view)
     GList *col_list;
     gint i;
 
-    g_return_if_fail(view != NULL);
+    g_return_if_fail(view);
     priv = GNC_BUDGET_VIEW_GET_PRIVATE(view);
 
     col_list = priv->period_col_list;
@@ -1035,7 +1035,7 @@ gbv_create_totals_column(GncBudgetView* view, gint period_num)
     GtkTreeViewColumn *col;
     GtkCellRenderer* renderer;
 
-    g_return_val_if_fail(view != NULL, NULL);
+    g_return_val_if_fail(view, NULL);
     priv = GNC_BUDGET_VIEW_GET_PRIVATE(view);
 
     renderer = gtk_cell_renderer_text_new();
@@ -1082,7 +1082,7 @@ gnc_budget_view_refresh(GncBudgetView *view)
     GList *totals_col_list;
     ENTER("view %p", view);
 
-    g_return_if_fail(view != NULL);
+    g_return_if_fail(view);
     priv = GNC_BUDGET_VIEW_GET_PRIVATE(view);
 
     num_periods = gnc_budget_get_num_periods(priv->budget);

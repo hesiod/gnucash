@@ -1051,7 +1051,7 @@ gnc_sx_create_temporal_state(const SchedXaction *sx )
 void
 gnc_sx_incr_temporal_state(const SchedXaction *sx, SXTmpStateData *tsd )
 {
-    g_return_if_fail(tsd != NULL);
+    g_return_if_fail(tsd);
     tsd->last_date = xaccSchedXactionGetNextInstance (sx, tsd);
     if (xaccSchedXactionHasOccurDef (sx))
     {

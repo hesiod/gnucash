@@ -407,9 +407,9 @@ gnc_currency_edit_set_currency (GNCCurrencyEdit *gce,
 {
     const gchar *printname;
 
-    g_return_if_fail(gce != NULL);
+    g_return_if_fail(gce);
     g_return_if_fail(GNC_IS_CURRENCY_EDIT(gce));
-    g_return_if_fail(currency != NULL);
+    g_return_if_fail(currency);
 
     printname = gnc_commodity_get_printname(currency);
     gnc_cbwe_set_by_string(GTK_COMBO_BOX(gce), printname);
@@ -433,7 +433,7 @@ gnc_currency_edit_get_currency (GNCCurrencyEdit *gce)
     GtkTreeIter iter;
     GValue value = { 0 };
 
-    g_return_val_if_fail(gce != NULL, NULL);
+    g_return_val_if_fail(gce, NULL);
     g_return_val_if_fail(GNC_IS_CURRENCY_EDIT(gce), NULL);
 
     if (gtk_combo_box_get_active_iter(GTK_COMBO_BOX(gce), &iter))

@@ -55,9 +55,9 @@ gnc_hook_create (const gchar *name, gint num_args, const gchar *desc)
 {
     GncHook *hook_list;
 
-    g_return_val_if_fail(name != NULL, NULL);
+    g_return_val_if_fail(name, NULL);
     g_return_val_if_fail(num_args <= 1, NULL);
-    g_return_val_if_fail(desc != NULL, NULL);
+    g_return_val_if_fail(desc, NULL);
 
     ENTER("name %s", name);
     if (gnc_hooks_list == NULL)

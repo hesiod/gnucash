@@ -594,7 +594,7 @@ gnc_tree_view_owner_get_iter_from_owner (GncTreeViewOwner *view,
     GtkTreeIter iter, f_iter;
 
     g_return_val_if_fail(GNC_IS_TREE_VIEW_OWNER(view), FALSE);
-    g_return_val_if_fail(owner != NULL, FALSE);
+    g_return_val_if_fail(owner, FALSE);
     g_return_val_if_fail(s_iter != NULL, FALSE);
 
     ENTER("view %p, owner %p (%s)", view, owner, gncOwnerGetName(owner));
@@ -1375,7 +1375,7 @@ gtvo_set_column_editor(GncTreeViewOwner *view,
             renderers = renderers->next);
     renderer = GTK_CELL_RENDERER(renderers->data);
     g_list_free(renderers_orig);
-    g_return_if_fail(renderer != NULL);
+    g_return_if_fail(renderer);
     gtvo_setup_column_renderer_edited_cb(GNC_TREE_VIEW_OWNER(view), column, renderer, edited_cb);
 }
 #endif /* Not Used */

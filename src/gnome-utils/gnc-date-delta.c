@@ -313,7 +313,7 @@ gnc_date_delta_new (gboolean show_polarity)
 void
 gnc_date_delta_set_value (GNCDateDelta *gdd, int value)
 {
-    g_return_if_fail(gdd != NULL);
+    g_return_if_fail(gdd);
     g_return_if_fail(GNC_IS_DATE_DELTA(gdd));
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(gdd->value_spin), value);
@@ -328,7 +328,7 @@ gnc_date_delta_set_value (GNCDateDelta *gdd, int value)
 int
 gnc_date_delta_get_value (GNCDateDelta *gdd)
 {
-    g_return_val_if_fail(gdd != NULL, 0);
+    g_return_val_if_fail(gdd, 0);
     g_return_val_if_fail(GNC_IS_DATE_DELTA(gdd), 0);
 
     return gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(gdd->value_spin));
@@ -344,7 +344,7 @@ gnc_date_delta_get_value (GNCDateDelta *gdd)
 void
 gnc_date_delta_set_units (GNCDateDelta *gdd, GNCDateDeltaUnits units)
 {
-    g_return_if_fail(gdd != NULL);
+    g_return_if_fail(gdd);
     g_return_if_fail(GNC_IS_DATE_DELTA(gdd));
     g_return_if_fail((units >= 0) && (units < GNC_DATE_DELTA_NUM_UNITS));
 
@@ -362,7 +362,7 @@ gnc_date_delta_set_units (GNCDateDelta *gdd, GNCDateDeltaUnits units)
 GNCDateDeltaUnits
 gnc_date_delta_get_units (GNCDateDelta *gdd)
 {
-    g_return_val_if_fail(gdd != NULL, GNC_DATE_DELTA_DAYS);
+    g_return_val_if_fail(gdd, GNC_DATE_DELTA_DAYS);
     g_return_val_if_fail(GNC_IS_DATE_DELTA(gdd), GNC_DATE_DELTA_DAYS);
 
     return gdd->units;
@@ -378,7 +378,7 @@ gnc_date_delta_get_units (GNCDateDelta *gdd)
 void
 gnc_date_delta_set_polarity (GNCDateDelta *gdd, GNCDateDeltaPolarity polarity)
 {
-    g_return_if_fail(gdd != NULL);
+    g_return_if_fail(gdd);
     g_return_if_fail(GNC_IS_DATE_DELTA(gdd));
     g_return_if_fail((polarity >= 0) &&
                      (polarity < GNC_DATE_DELTA_NUM_POLARITY));
@@ -397,7 +397,7 @@ gnc_date_delta_set_polarity (GNCDateDelta *gdd, GNCDateDeltaPolarity polarity)
 GNCDateDeltaPolarity
 gnc_date_delta_get_polarity (GNCDateDelta *gdd)
 {
-    g_return_val_if_fail(gdd != NULL, GNC_DATE_DELTA_PAST);
+    g_return_val_if_fail(gdd, GNC_DATE_DELTA_PAST);
     g_return_val_if_fail(GNC_IS_DATE_DELTA(gdd), GNC_DATE_DELTA_PAST);
 
     return gdd->polarity;
@@ -413,7 +413,7 @@ gnc_date_delta_get_polarity (GNCDateDelta *gdd)
 void
 gnc_date_delta_show_polarity (GNCDateDelta *gdd, gboolean show_polarity)
 {
-    g_return_if_fail(gdd != NULL);
+    g_return_if_fail(gdd);
     g_return_if_fail(GNC_IS_DATE_DELTA(gdd));
 
     gdd->show_polarity = show_polarity;

@@ -204,7 +204,7 @@ impl_get_display_name(const QofInstance* inst)
     QofInstance* owner;
     gchar* s;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_INVOICE(inst), FALSE);
 
     inv = GNC_INVOICE(inst);
@@ -231,7 +231,7 @@ impl_refers_to_object(const QofInstance* inst, const QofInstance* ref)
 {
     GncInvoice* inv;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_INVOICE(inst), FALSE);
 
     inv = GNC_INVOICE(inst);

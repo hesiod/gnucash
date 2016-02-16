@@ -1863,7 +1863,7 @@ gnc_ui_edit_account_window(Account *account)
 void
 gnc_ui_new_account_window(QofBook *book, Account *parent)
 {
-    g_return_if_fail(book != NULL);
+    g_return_if_fail(book);
     if (parent && book)
         g_return_if_fail(gnc_account_get_book(parent) == book);
 

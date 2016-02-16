@@ -757,7 +757,7 @@ static void
 gnc_sx_slr_tree_model_adapter_dispose(GObject *obj)
 {
     GncSxSlrTreeModelAdapter *adapter;
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
     adapter = GNC_SX_SLR_TREE_MODEL_ADAPTER(obj);
     g_return_if_fail(!adapter->disposed);
     adapter->disposed = TRUE;
@@ -773,7 +773,7 @@ gnc_sx_slr_tree_model_adapter_dispose(GObject *obj)
 static void
 gnc_sx_slr_tree_model_adapter_finalize(GObject *obj)
 {
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
     G_OBJECT_CLASS(parent_class)->finalize(obj);
 }
 

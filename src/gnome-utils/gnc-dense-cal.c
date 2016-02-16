@@ -645,7 +645,7 @@ static void
 gnc_dense_cal_dispose (GObject *object)
 {
     GncDenseCal *dcal;
-    g_return_if_fail(object != NULL);
+    g_return_if_fail(object);
     g_return_if_fail(GNC_IS_DENSE_CAL(object));
 
     dcal = GNC_DENSE_CAL(object);
@@ -705,7 +705,7 @@ gnc_dense_cal_realize (GtkWidget *widget, gpointer user_data)
 {
     GncDenseCal *dcal;
 
-    g_return_if_fail(widget != NULL);
+    g_return_if_fail(widget);
     g_return_if_fail(GNC_IS_DENSE_CAL (user_data));
     dcal = GNC_DENSE_CAL(user_data);
 
@@ -879,9 +879,9 @@ gnc_dense_cal_draw(GtkWidget *widget,
     GncDenseCal *dcal;
     cairo_t *cr;
 
-    g_return_val_if_fail(widget != NULL, FALSE);
+    g_return_val_if_fail(widget, FALSE);
     g_return_val_if_fail(GNC_IS_DENSE_CAL(user_data), FALSE);
-    g_return_val_if_fail(event != NULL, FALSE);
+    g_return_val_if_fail(event, FALSE);
 
     dcal = GNC_DENSE_CAL(user_data);
     cr = gdk_cairo_create (gtk_widget_get_window (GTK_WIDGET(dcal->cal_drawing_area)));

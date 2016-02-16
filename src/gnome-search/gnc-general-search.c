@@ -526,7 +526,7 @@ gnc_general_search_set_selected (GNCGeneralSearch *gsl, gpointer selection)
 {
     GNCGeneralSearchPrivate *priv;
 
-    g_return_if_fail(gsl != NULL);
+    g_return_if_fail(gsl);
     g_return_if_fail(GNC_IS_GENERAL_SEARCH(gsl));
 
     priv = _PRIVATE(gsl);
@@ -562,7 +562,7 @@ gnc_general_search_set_selected (GNCGeneralSearch *gsl, gpointer selection)
 gpointer
 gnc_general_search_get_selected (GNCGeneralSearch *gsl)
 {
-    g_return_val_if_fail(gsl != NULL, NULL);
+    g_return_val_if_fail(gsl, NULL);
     g_return_val_if_fail(GNC_IS_GENERAL_SEARCH(gsl), NULL);
 
     return gsl->selected_item;

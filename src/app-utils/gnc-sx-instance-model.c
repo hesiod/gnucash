@@ -497,7 +497,7 @@ static void
 gnc_sx_instance_model_dispose(GObject *object)
 {
     GncSxInstanceModel *model;
-    g_return_if_fail(object != NULL);
+    g_return_if_fail(object);
     model = GNC_SX_INSTANCE_MODEL(object);
 
     g_return_if_fail(!model->disposed);
@@ -552,7 +552,7 @@ gnc_sx_instance_model_finalize (GObject *object)
     GncSxInstanceModel *model;
     GList *sx_list_iter;
 
-    g_return_if_fail(object != NULL);
+    g_return_if_fail(object);
 
     model = GNC_SX_INSTANCE_MODEL(object);
     for (sx_list_iter = model->sx_instance_list; sx_list_iter != NULL; sx_list_iter = sx_list_iter->next)
@@ -1448,8 +1448,8 @@ gnc_sx_instance_model_summarize(GncSxInstanceModel *model, GncSxSummary *summary
 {
     GList *sx_iter, *inst_iter;
 
-    g_return_if_fail(model != NULL);
-    g_return_if_fail(summary != NULL);
+    g_return_if_fail(model);
+    g_return_if_fail(summary);
 
     summary->need_dialog = FALSE;
     summary->num_instances = 0;

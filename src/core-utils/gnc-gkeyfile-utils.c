@@ -75,7 +75,7 @@ gnc_key_file_load_from_file (const gchar *filename,
     GKeyFile *key_file;
     GError *error = NULL;
 
-    g_return_val_if_fail(filename != NULL, NULL);
+    g_return_val_if_fail(filename, NULL);
 
     if (!g_file_test(filename, G_FILE_TEST_EXISTS))
         return NULL;
@@ -113,7 +113,7 @@ gnc_key_file_save_to_file (const gchar *filename,
     ssize_t written;
     gboolean success = TRUE;
 
-    g_return_val_if_fail(filename != NULL, FALSE);
+    g_return_val_if_fail(filename, FALSE);
     g_return_val_if_fail(key_file != NULL, FALSE);
     if (error)
         g_return_val_if_fail(*error == NULL, FALSE);

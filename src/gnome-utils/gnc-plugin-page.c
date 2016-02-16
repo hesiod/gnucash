@@ -353,11 +353,11 @@ gnc_plugin_page_get_action (GncPluginPage *page, const gchar *name)
     GncMainWindow *win;
 
     g_return_val_if_fail(GNC_IS_PLUGIN_PAGE(page), NULL);
-    g_return_val_if_fail(name != NULL, NULL);
+    g_return_val_if_fail(name, NULL);
 
     priv = GNC_PLUGIN_PAGE_GET_PRIVATE(page);
     win = GNC_MAIN_WINDOW(priv->window);
-    g_return_val_if_fail(win != NULL, NULL);
+    g_return_val_if_fail(win, NULL);
     g_return_val_if_fail(GNC_IS_MAIN_WINDOW(win), NULL);
     return g_action_map_lookup_action (G_ACTION_MAP(win), name);
 }

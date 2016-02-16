@@ -821,8 +821,8 @@ recurrenceCmp(Recurrence *a, Recurrence *b)
     int a_mult, b_mult;
 
     g_return_val_if_fail(a != NULL && b != NULL, 0);
-    g_return_val_if_fail(a != NULL, 1);
-    g_return_val_if_fail(b != NULL, -1);
+    g_return_val_if_fail(a, 1);
+    g_return_val_if_fail(b, -1);
 
     period_a = recurrenceGetPeriodType(a);
     period_b = recurrenceGetPeriodType(b);

@@ -281,7 +281,7 @@ gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection)
 {
     const char *text;
 
-    g_return_if_fail(gsl != NULL);
+    g_return_if_fail(gsl);
     g_return_if_fail(GNC_IS_GENERAL_SELECT(gsl));
 
     gsl->selected_item = selection;
@@ -305,7 +305,7 @@ gnc_general_select_set_selected (GNCGeneralSelect *gsl, gpointer selection)
 gpointer
 gnc_general_select_get_selected (GNCGeneralSelect *gsl)
 {
-    g_return_val_if_fail(gsl != NULL, NULL);
+    g_return_val_if_fail(gsl, NULL);
     g_return_val_if_fail(GNC_IS_GENERAL_SELECT(gsl), NULL);
 
     return gsl->selected_item;

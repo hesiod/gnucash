@@ -279,7 +279,7 @@ gnc_dense_cal_store_finalize(GObject *obj)
 {
     int i;
     GncDenseCalStore *store;
-    g_return_if_fail(obj != NULL);
+    g_return_if_fail(obj);
 
     store = GNC_DENSE_CAL_STORE(obj);
 

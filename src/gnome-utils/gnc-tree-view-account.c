@@ -1011,7 +1011,7 @@ gnc_tree_view_account_get_iter_from_account (GncTreeViewAccount *view,
     GtkTreeIter iter, f_iter;
 
     g_return_val_if_fail(GNC_IS_TREE_VIEW_ACCOUNT(view), FALSE);
-    g_return_val_if_fail(account != NULL, FALSE);
+    g_return_val_if_fail(account, FALSE);
     g_return_val_if_fail(s_iter != NULL, FALSE);
 
     ENTER("view %p, account %p (%s)", view, account, xaccAccountGetName(account));
@@ -1081,7 +1081,7 @@ gnc_tree_view_account_get_view_info (GncTreeViewAccount *account_view,
     GncTreeViewAccountPrivate *priv;
 
     g_return_if_fail(GNC_IS_TREE_VIEW_ACCOUNT(account_view));
-    g_return_if_fail(avi != NULL);
+    g_return_if_fail(avi);
 
     priv = GNC_TREE_VIEW_ACCOUNT_GET_PRIVATE(account_view);
 
@@ -1112,7 +1112,7 @@ gnc_tree_view_account_set_view_info (GncTreeViewAccount *account_view,
 
     ENTER("%p", account_view);
     g_return_if_fail(GNC_IS_TREE_VIEW_ACCOUNT(account_view));
-    g_return_if_fail(avi != NULL);
+    g_return_if_fail(avi);
 
     priv = GNC_TREE_VIEW_ACCOUNT_GET_PRIVATE(account_view);
     priv->avi = *avi;
@@ -1632,7 +1632,7 @@ gnc_tree_view_account_expand_to_account (GncTreeViewAccount *view,
 {
     GtkTreePath *path;
 
-    g_return_if_fail(view != NULL);
+    g_return_if_fail(view);
     g_return_if_fail(GNC_IS_TREE_VIEW_ACCOUNT(view));
     ENTER("view %p, account %p", view, account);
 
@@ -2544,7 +2544,7 @@ gtva_set_column_editor(GncTreeViewAccount *view,
             renderers = renderers->next);
     renderer = GTK_CELL_RENDERER(renderers->data);
     g_list_free(renderers_orig);
-    g_return_if_fail(renderer != NULL);
+    g_return_if_fail(renderer);
     gtva_setup_column_renderer_edited_cb(GNC_TREE_VIEW_ACCOUNT(view), column, renderer, edited_cb);
 }
 

@@ -248,7 +248,7 @@ gnc_image_option_update_preview_cb (GtkFileChooser *chooser,
     GdkPixbuf *pixbuf;
     gboolean have_preview;
 
-    g_return_if_fail(chooser != NULL);
+    g_return_if_fail(chooser);
 
     ENTER("chooser %p, option %p", chooser, option);
     filename = gtk_file_chooser_get_preview_filename(chooser);

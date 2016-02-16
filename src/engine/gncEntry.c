@@ -314,7 +314,7 @@ impl_get_display_name(const QofInstance* inst)
     gchar* display_name;
     gchar* s;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_ENTRY(inst), FALSE);
 
     entry = GNC_ENTRY(inst);
@@ -349,7 +349,7 @@ impl_refers_to_object(const QofInstance* inst, const QofInstance* ref)
 {
     GncEntry* entry;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_ENTRY(inst), FALSE);
 
     entry = GNC_ENTRY(inst);

@@ -499,7 +499,7 @@ gnc_tree_view_price_get_iter_from_price (GncTreeViewPrice *view,
     GtkTreeIter iter, f_iter;
 
     g_return_val_if_fail(GNC_IS_TREE_VIEW_PRICE(view), FALSE);
-    g_return_val_if_fail(price != NULL, FALSE);
+    g_return_val_if_fail(price, FALSE);
     g_return_val_if_fail(s_iter != NULL, FALSE);
 
     ENTER("view %p, price %p", view, price);

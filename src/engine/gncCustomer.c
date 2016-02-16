@@ -200,7 +200,7 @@ impl_get_display_name(const QofInstance* inst)
 {
     GncCustomer* cust;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_CUSTOMER(inst), FALSE);
 
     cust = GNC_CUSTOMER(inst);
@@ -214,7 +214,7 @@ impl_refers_to_object(const QofInstance* inst, const QofInstance* ref)
 {
     GncCustomer* cust;
 
-    g_return_val_if_fail(inst != NULL, FALSE);
+    g_return_val_if_fail(inst, FALSE);
     g_return_val_if_fail(GNC_IS_CUSTOMER(inst), FALSE);
 
     cust = GNC_CUSTOMER(inst);

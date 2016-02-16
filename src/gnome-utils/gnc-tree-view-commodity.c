@@ -492,7 +492,7 @@ gnc_tree_view_commodity_get_iter_from_commodity (GncTreeViewCommodity *view,
     GtkTreeIter iter, f_iter;
 
     g_return_val_if_fail(GNC_IS_TREE_VIEW_COMMODITY(view), FALSE);
-    g_return_val_if_fail(commodity != NULL, FALSE);
+    g_return_val_if_fail(commodity, FALSE);
     g_return_val_if_fail(s_iter != NULL, FALSE);
 
     ENTER("view %p, commodity %p (%s)", view, commodity, gnc_commodity_get_mnemonic(commodity));

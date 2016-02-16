@@ -222,7 +222,7 @@ gnc_period_select_set_active_internal (GncPeriodSelect *period,
 {
     GncPeriodSelectPrivate *priv;
 
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
     g_return_if_fail(which >= 0);
     g_return_if_fail(which <  GNC_ACCOUNTING_PERIOD_LAST);
@@ -256,7 +256,7 @@ gnc_period_select_get_fy_end (GncPeriodSelect *period)
     GncPeriodSelectPrivate *priv;
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);
 
-    g_return_val_if_fail(period != NULL, NULL);
+    g_return_val_if_fail(period, NULL);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), NULL);
 
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);
@@ -279,7 +279,7 @@ gnc_period_select_set_fy_end (GncPeriodSelect *period, const GDate *fy_end)
     const gchar *label;
     gint i;
 
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
 
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);
@@ -360,7 +360,7 @@ gnc_period_select_get_show_date (GncPeriodSelect *period)
 {
     GncPeriodSelectPrivate *priv;
 
-    g_return_val_if_fail(period != NULL, FALSE);
+    g_return_val_if_fail(period, FALSE);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), FALSE);
 
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);
@@ -376,7 +376,7 @@ gnc_period_select_set_show_date (GncPeriodSelect *period, const gboolean show_da
 {
     GDate date;
 
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
 
     if (show_date)
@@ -397,7 +397,7 @@ gnc_period_select_get_date_base (GncPeriodSelect *period)
 {
     GncPeriodSelectPrivate *priv;
 
-    g_return_val_if_fail(period != NULL, NULL);
+    g_return_val_if_fail(period, NULL);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), NULL);
 
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);
@@ -415,7 +415,7 @@ gnc_period_select_get_date_base (GncPeriodSelect *period)
 void
 gnc_period_select_set_date_base (GncPeriodSelect *period, const GDate *date_base)
 {
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
 
     gnc_period_select_set_date_common(period, date_base);
@@ -739,7 +739,7 @@ void
 gnc_period_select_set_active (GncPeriodSelect *period,
                               GncAccountingPeriod which)
 {
-    g_return_if_fail(period != NULL);
+    g_return_if_fail(period);
     g_return_if_fail(GNC_IS_PERIOD_SELECT(period));
     g_return_if_fail(which >= 0);
     g_return_if_fail(which <  GNC_ACCOUNTING_PERIOD_LAST);
@@ -757,7 +757,7 @@ gnc_period_select_get_active (GncPeriodSelect *period)
 {
     GncPeriodSelectPrivate *priv;
 
-    g_return_val_if_fail(period != NULL, -1);
+    g_return_val_if_fail(period, -1);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), -1);
 
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);
@@ -775,7 +775,7 @@ gnc_period_select_get_date (GncPeriodSelect *period)
     GncPeriodSelectPrivate *priv;
     GncAccountingPeriod which;
 
-    g_return_val_if_fail(period != NULL, 0);
+    g_return_val_if_fail(period, 0);
     g_return_val_if_fail(GNC_IS_PERIOD_SELECT(period), 0);
 
     priv = GNC_PERIOD_SELECT_GET_PRIVATE(period);

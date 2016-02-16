@@ -130,8 +130,8 @@ gnc_restore_window_size(const char *group, GtkWindow *window)
 
     ENTER("");
 
-    g_return_if_fail(group != NULL);
-    g_return_if_fail(window != NULL);
+    g_return_if_fail(group);
+    g_return_if_fail(window);
 
     if (!gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_SAVE_GEOMETRY))
         return;
@@ -188,8 +188,8 @@ gnc_save_window_size(const char *group, GtkWindow *window)
     gint wpos[2], wsize[2];
     GVariant *geometry;
 
-    g_return_if_fail(group != NULL);
-    g_return_if_fail(window != NULL);
+    g_return_if_fail(group);
+    g_return_if_fail(window);
 
     if (!gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_SAVE_GEOMETRY))
         return;

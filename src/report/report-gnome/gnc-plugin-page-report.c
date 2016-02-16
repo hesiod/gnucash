@@ -900,7 +900,7 @@ gnc_plugin_page_report_name_changed (GncPluginPage *page, const gchar *name)
     const gchar *old_name;
 
     g_return_if_fail(GNC_IS_PLUGIN_PAGE_REPORT(page));
-    g_return_if_fail(name != NULL);
+    g_return_if_fail(name);
 
     ENTER("page %p, name %s", page, name);
     priv = GNC_PLUGIN_PAGE_REPORT_GET_PRIVATE(page);

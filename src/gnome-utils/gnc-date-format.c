@@ -205,7 +205,7 @@ gnc_date_format_init (GNCDateFormat *gdf)
 static void
 gnc_date_format_finalize (GObject *object)
 {
-    g_return_if_fail(object != NULL);
+    g_return_if_fail(object);
     g_return_if_fail(GNC_IS_DATE_FORMAT(object));
 
     if (G_OBJECT_CLASS(parent_class)->finalize)

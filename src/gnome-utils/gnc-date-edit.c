@@ -508,7 +508,7 @@ gnc_date_edit_set_time_internal (GNCDateEdit *gde, time64 the_time)
     char buffer [40];
     struct tm *mytm = gnc_localtime (&the_time);
 
-    g_return_if_fail(mytm != NULL);
+    g_return_if_fail(mytm);
 
     /* Update the date text. */
     qof_print_date_dmy_buff(buffer, 40,

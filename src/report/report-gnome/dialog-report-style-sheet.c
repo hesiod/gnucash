@@ -386,8 +386,8 @@ gnc_style_sheet_select_dialog_event_cb (GtkWidget *widget,
 {
     StyleSheetDialog  * ss = user_data;
 
-    g_return_if_fail(event != NULL);
-    g_return_if_fail(ss != NULL);
+    g_return_if_fail(event);
+    g_return_if_fail(ss);
 
     if (event->type != GDK_2BUTTON_PRESS)
         return;
