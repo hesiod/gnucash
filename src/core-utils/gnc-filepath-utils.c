@@ -406,6 +406,7 @@ gnc_validate_directory (const gchar *dirname, gboolean create, gchar **msg)
     return TRUE;
 }
 
+#define DOTDIR ".gnucash"
 /** @fn const gchar * gnc_dotgnucash_dir ()
  *  @brief Ensure that the user's configuration directory exists and is minimally populated.
  *
@@ -437,7 +438,7 @@ gnc_dotgnucash_dir (void)
         }
         g_assert(home);
 
-        dotgnucash = g_build_filename(home, ".gnucash", (gchar *)NULL);
+        dotgnucash = g_build_filename(home, DOTDIR, (gchar *)NULL);
     }
     if (!gnc_validate_directory(dotgnucash, TRUE, &errmsg))
     {
@@ -447,7 +448,7 @@ gnc_dotgnucash_dir (void)
         g_warning("Cannot find suitable .gnucash directory in home directory. Using tmp directory instead.");
         g_assert(tmp);
 
-        dotgnucash = g_build_filename(tmp, ".gnucash", (gchar *)NULL);
+        dotgnucash = g_build_filename(tmp, DOTDIR, (gchar *)NULL);
         
         if (!gnc_validate_directory(dotgnucash, TRUE, &errmsg))
             exit(1);
@@ -462,8 +463,8 @@ gnc_dotgnucash_dir (void)
     if (!gnc_validate_directory(tmp_dir, TRUE, &errmsg))
         exit(1);
     g_free(tmp_dir);
-    tmp_dir = g_build_filename(tmp_dir, "translog", (gchar *)NULL);
-    if (!gnc_validate_directory(dotgnucash, TRUE, &errmsg))
+    tmp_dir = g_build_filename(dotgnucash, "translog", (gchar *)NULL);
+    if (!gnc_validate_directory(tmp_dir, TRUE, &errmsg))
         exit(1);
     g_free(tmp_dir);
 
