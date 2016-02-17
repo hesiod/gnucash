@@ -593,7 +593,7 @@ generic_guid_end_handler(gpointer data_for_children,
     if (!ok)
     {
         PERR ("couldn't parse GncGUID");
-        g_free(gid);
+        guid_free(gid);
         return(FALSE);
     }
 

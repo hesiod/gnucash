@@ -216,7 +216,7 @@ invoice_guid_handler (xmlNodePtr node, gpointer invoice_pdata)
         gncInvoiceSetGUID(pdata->invoice, guid);
     }
 
-    g_free(guid);
+    guid_free(guid);
 
     return TRUE;
 }

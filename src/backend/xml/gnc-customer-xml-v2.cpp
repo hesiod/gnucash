@@ -205,7 +205,7 @@ customer_guid_handler (xmlNodePtr node, gpointer cust_pdata)
         gncCustomerSetGUID(pdata->customer, guid);
     }
 
-    g_free(guid);
+    guid_free(guid);
 
     return TRUE;
 }
@@ -353,7 +353,7 @@ customer_taxtable_handler (xmlNodePtr node, gpointer cust_pdata)
         gncTaxTableDecRef (taxtable);
 
     gncCustomerSetTaxTable (pdata->customer, taxtable);
-    g_free(guid);
+    guid_free(guid);
     return TRUE;
 }
 

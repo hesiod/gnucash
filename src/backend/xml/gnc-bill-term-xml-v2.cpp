@@ -318,7 +318,7 @@ billterm_guid_handler (xmlNodePtr node, gpointer billterm_pdata)
         gncBillTermSetGUID(pdata->term, guid);
     }
 
-    g_free(guid);
+    guid_free(guid);
 
     return TRUE;
 }

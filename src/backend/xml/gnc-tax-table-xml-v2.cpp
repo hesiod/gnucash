@@ -285,7 +285,7 @@ taxtable_guid_handler (xmlNodePtr node, gpointer taxtable_pdata)
         gncTaxTableSetGUID(pdata->table, guid);
     }
 
-    g_free(guid);
+    guid_free(guid);
 
     return TRUE;
 }

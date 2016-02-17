@@ -207,7 +207,7 @@ account_id_handler (xmlNodePtr node, gpointer act_pdata)
 
     xaccAccountSetGUID(pdata->account, guid);
 
-    g_free(guid);
+    guid_free(guid);
 
     return TRUE;
 }
@@ -370,21 +370,21 @@ account_parent_handler (xmlNodePtr node, gpointer act_pdata)
 {
     struct account_pdata *pdata = static_cast<decltype(pdata)>(act_pdata);
     Account *parent;
-    GncGUID *gid;
+    GncGUID *guid;
 
-    gid = dom_tree_to_guid(node);
-    g_return_val_if_fail(gid, FALSE);
+    guid = dom_tree_to_guid(node);
+    g_return_val_if_fail(guid, FALSE);
 
-    parent = xaccAccountLookup(gid, pdata->book);
+    parent = xaccAccountLookup(guid, pdata->book);
     if (!parent)
     {
-        g_free (gid);
+        g_free (guid);
         g_return_val_if_fail(parent, FALSE);
     }
 
     gnc_account_append_child(parent, pdata->account);
 
-    g_free (gid);
+    guid_free (guid);
 
     return TRUE;
 }

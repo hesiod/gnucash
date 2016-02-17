@@ -190,7 +190,7 @@ vendor_guid_handler (xmlNodePtr node, gpointer vendor_pdata)
         gncVendorSetGUID(pdata->vendor, guid);
     }
 
-    g_free(guid);
+    guid_free(guid);
 
     return TRUE;
 }
@@ -298,7 +298,7 @@ vendor_taxtable_handler (xmlNodePtr node, gpointer vendor_pdata)
         gncTaxTableDecRef (taxtable);
 
     gncVendorSetTaxTable (pdata->vendor, taxtable);
-    g_free(guid);
+    guid_free(guid);
     return TRUE;
 }
 
