@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns:gnome="http://api.gnome.org/doap-extensions#"
+         xmlns="http://usefulinc.com/ns/doap#">
+  <name xml:lang="en">GnuCash - Manage your finances, accounts, and investments</name>
+  <shortname xml:lang="en">GnuCash</shortname>
+
+  <description xml:lang="en">Designed to be easy to use, yet powerful and flexible, GnuCash allows you to track bank accounts, stocks, income and expenses. As quick and intuitive to use as a checkbook register, it is based on professional accounting principles like double-entry accounting to ensure balanced books and accurate reports.</description>
+  <shortdesc xml:lang="en">GnuCash is a program for personal and small-business financial-accounting.</shortdesc>
+
+  <homepage rdf:resource="http://gnucash.org"/>
+  <wiki rdf:resource="http://wiki.gnucash.org/wiki/GnuCash"/>
+  <download-page rdf:resource="http://gnucash.org/download.phtml"/>
+  <bug-database rdf:resource="https://bugzilla.gnome.org/browse.cgi?product=gnucash"/>
+  <license rdf:resource="http://usefulinc.com/doap/licenses/gpl"/>
+  <category rdf:resource="http://api.gnome.org/doap-extensions#apps" />
+
+  <programming-language>C</programming-language>
+  <programming-language>C++</programming-language>
+  <programming-language>Scheme</programming-language>
+
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Geert Janssens</foaf:name>
+      <foaf:mbox rdf:resource="mailto:gjanssens@code.gnucash.org" />
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Linas Vepstas</foaf:name>
+      <foaf:mbox rdf:resource="mailto:linas@code.gnucash.org" />
+      <gnome:userid>linas</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Frank H. Ellenberger</foaf:name>
+      <foaf:mbox rdf:resource="mailto:fell@code.gnucash.org" />
+      <gnome:userid>fell</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>John Ralls</foaf:name>
+      <foaf:mbox rdf:resource="mailto:jralls@code.gnucash.org" />
+      <gnome:userid>jralls</gnome:userid>
+    </foaf:Person>
+  </maintainer>
+  <repository>
+    <GitRepository>
+        <browse rdf:resource="http://github.com/Gnucash/gnucash.git"/>
+      <location rdf:resource="http://github.com/Gnucash/gnucash.git"/>
+    </GitRepository>
+  </repository>
+</Project>
