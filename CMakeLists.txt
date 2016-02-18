@@ -58,16 +58,17 @@ OPTION (WITH_CUTECASH "Also build cutecash" OFF)
 OPTION (WITH_OFX "compile with ofx support (needs LibOFX)" ON)
 OPTION (WITH_REGISTER2 "compile with register2 enabled" ON)
 OPTION (ENABLE_BINRELOC "compile with binary relocation support" ON)
-OPTION (ENABLE_DEBUG "compile with debugging flags set" OFF)
 OPTION (ENABLE_ADDRESS_SANITIZER "enable the address sanitizer (ASan)" OFF)
-OPTION (ENABLE_UNDEFINED_SANITIZER "enable the undefined behaviour sanitizer (UBSan)" OFF)
+OPTION (ENABLE_UNDEFINED_SANITIZER "enable the undefined behaviour sanitizer (UBSan)" ON)
 OPTION (ENABLE_NLS "do not use Native Language Support" ON)
-OPTION (DISABLE_DEPRECATED_GLIB "don't use deprecated glib funcions" OFF)
+OPTION (DISABLE_DEPRECATED_GLIB "don't use deprecated glib funcions" ON)
 OPTION (DISABLE_DEPRECATED_GTK "don't use deprectacted gtk, gdk or gdk-pixbuf functions" OFF)
-OPTION (DISABLE_DEPRECATED_GNOME "don't use deprecated gnome functions" OFF)
+OPTION (DISABLE_DEPRECATED_GNOME "don't use deprecated gnome functions" ON)
 OPTION (ENFORCE_SINGLE_INCLUDES "enforce usage of toplevel GLib/GDK/GTK headers" ON)
 OPTION (GNC_BUILD_AS_INSTALL "Make build directory structure mirror install" ON)
 # ############################################################
+
+SET (CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Enable/Disable output of compile commands during generation." FORCE)
 
 # These are also settable from the command line in a similar way.
 
@@ -371,10 +372,14 @@ ELSE (Boost_FOUND)
 ENDIF (Boost_FOUND)
 
 # Compiler flags
-# Also, set the C++ version to c++11
-# FIXME: should be -std=c++11
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 11)
+
+#IF (NOT APPLE) #-Wno-pointer-sign
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wdeclaration-after-statement -Wmissing-prototypes")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++ -Wno-error=effc++")
+add_compile_options(-Wall -Wextra -Wmissing-declarations -Wno-unused -Wno-unused-parameter -Wno-missing-field-initializers)
+#ENDIF ()
 
 IF (ENABLE_ADDRESS_SANITIZER AND ENABLE_UNDEFINED_SANITIZER)
     SET(SANITIZERS "address,undefined")
@@ -386,23 +391,21 @@ ELSE ()
     SET(SANITIZERS "disable")
 ENDIF (ENABLE_ADDRESS_SANITIZER AND ENABLE_UNDEFINED_SANITIZER)
 
-IF (NOT "${SANITIZERS}" STREQUAL "disable")
-    SET(SANITIZERS "-fsanitize=${SANITIZERS} -fno-omit-frame-pointer")
-    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${SANITIZERS}")
-    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${SANITIZERS}")
-ENDIF (NOT "${SANITIZERS}" STREQUAL "disable")
-IF ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    SET(CMAKE_LINKER "${CMAKE_C_COMPILER}")
-    #SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZERS}")
-    #SET(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZERS}")
-    #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZERS}")
-ENDIF ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+#SET(CMAKE_LINKER "${CMAKE_C_COMPILER}")
 
-#IF (NOT APPLE) #-Wno-pointer-sign
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wdeclaration-after-statement -Wmissing-prototypes")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++ -Wno-error=effc++")
-add_compile_options(-Wall -Wextra -Wmissing-declarations -Wno-unused -Wno-unused-parameter -Wno-missing-field-initializers)
-#ENDIF ()
+IF ("${SANITIZERS}" STREQUAL "disable")
+    SET(SANITIZER_FLAGS "")
+    SET(SANITIZER_FLAGS_COMP "")
+ELSE ()
+    SET(SANITIZER_FLAGS "-fsanitize=${SANITIZERS}")
+    SET(SANITIZER_FLAGS_COMP "${SANITIZER_FLAGS} -fno-omit-frame-pointer")
+ENDIF ("${SANITIZERS}" STREQUAL "disable")
+
+SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${SANITIZER_FLAGS_COMP}")
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${SANITIZER_FLAGS_COMP}")
+#SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} ${SANITIZER_FLAGS}")
+#SET(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} ${SANITIZER_FLAGS}")
+#SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS_DEBUG} ${SANITIZER_FLAGS}")
 
 IF (UNIX)
   #add_definitions(-D_FORTIFY_SOURCE=2)
