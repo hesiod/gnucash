@@ -686,7 +686,7 @@ gnc_split_reg2_sort_changed_cb (GtkTreeSortable *sortable, gpointer user_data)
     state_section = gnc_tree_view_get_state_section (GNC_TREE_VIEW (view));
     g_key_file_set_integer (state_file, state_section, "sort_depth", model->sort_depth);
 
-    LEAVE("m_sort_col %d, m_sort_direction is %d  m_sort_depth is %d", model->sort_col, model->sort_direction, model->sort_depth);
+    LEAVE("m_sort_col %d, m_sort_direction is %d  m_sort_depth is %zd", model->sort_col, model->sort_direction, model->sort_depth);
 
     if (sortcol != -1)
         gnc_ledger_display2_refresh (gsr->ledger);
@@ -705,39 +705,6 @@ gnc_split_reg2_change_style (GNCSplitReg2 *gsr, SplitRegisterStyle2 style)
 
     // This will re-display the view.
     gnc_tree_view_split_reg_set_format (gnc_ledger_display2_get_split_view_register (gsr->ledger));
-}
-
-void
-gnc_split_reg2_style_ledger_cb (GtkWidget *w, gpointer data)
-{
-    GNCSplitReg2 *gsr = data;
-
-    if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (w)))
-        return;
-
-    gnc_split_reg2_change_style (gsr, REG2_STYLE_LEDGER);
-}
-
-void
-gnc_split_reg2_style_auto_ledger_cb (GtkWidget *w, gpointer data)
-{
-    GNCSplitReg2 *gsr = data;
-
-    if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (w)))
-        return;
-
-    gnc_split_reg2_change_style (gsr, REG2_STYLE_AUTO_LEDGER);
-}
-
-void
-gnc_split_reg2_style_journal_cb (GtkWidget *w, gpointer data)
-{
-    GNCSplitReg2 *gsr = data;
-
-    if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (w)))
-        return;
-
-    gnc_split_reg2_change_style (gsr, REG2_STYLE_JOURNAL);
 }
 
 void

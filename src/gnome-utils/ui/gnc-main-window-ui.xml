@@ -1,4 +1,32 @@
 <interface>
+  <menu id="app-menu">
+    <section id="app-menu-preferences-section">
+      <item>
+        <attribute name="label" translatable="yes">Preferences</attribute>
+        <attribute name="action">app.edit.preferences</attribute>
+      </item>
+    </section>
+    <section id="app-menu-help-section">
+      <item>
+        <attribute name="label" translatable="yes">Tutorial</attribute>
+        <attribute name="action">app.help.tutorial</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Contents</attribute>
+        <attribute name="action">app.help.contents</attribute>
+      </item>
+    </section>
+    <section id="app-menu-about-section">
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.help.about</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+      </item>
+    </section>
+  </menu>
   <menu id="menubar">
     <section id="menubar-main-section">
       <submenu id="menubar-file">
@@ -61,7 +89,7 @@
         <section id="menubar-edit-preferences-section">
           <item>
             <attribute name="label" translatable="yes">Preferences</attribute>
-            <attribute name="action">app.preferences</attribute>
+            <attribute name="action">app.edit.preferences</attribute>
           </item>
         </section>
         <section id="menubar-edit-style-sheets-section"></section>
@@ -188,7 +216,7 @@
       <section id="popup-rename-section">
         <item>
           <attribute name="label" translatable="yes">Rename Page</attribute>
-          <attribute name="action">window.rename-page</attribute>
+          <attribute name="action">win.window.rename-page</attribute>
         </item>
       </section>
       <section id="popup-account-section"></section>
@@ -202,7 +230,7 @@
         <section id="toolbar-save-section"></section>
         <item>
           <attribute name="label" translatable="yes">Close</attribute>
-          <attribute name="action">file.close</attribute>
+          <attribute name="action">win.file.close</attribute>
         </item>
       </section>
       <section id="toolbar-account-section"></section>

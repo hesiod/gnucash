@@ -340,7 +340,7 @@ gnc_plugin_page_unmerge_actions (GncPluginPage *page,
     g_return_if_fail (GNC_IS_PLUGIN_PAGE (page));
     g_return_if_fail (ui_merge != 0);
 
-    egg_menu_manager_remove (ui_merge, priv->merge_id);
+    //egg_menu_manager_remove (ui_merge, priv->merge_id);
 
     priv->merge_id = 0;
 }
@@ -547,8 +547,8 @@ gnc_plugin_page_init (GncPluginPage *page)
     priv->page_name   = NULL;
     priv->page_color  = NULL;
     priv->uri         = NULL;
-    priv->window      = NULL;
     priv->summarybar  = NULL;
+    priv->window      = GTK_WIDGET(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
 }
 
 

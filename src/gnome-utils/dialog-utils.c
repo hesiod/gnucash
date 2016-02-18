@@ -502,6 +502,7 @@ gnc_gtk_dialog_add_button (GtkWidget *dialog, const gchar *label, const gchar *s
           button = gtk_button_new();
     }
     gtk_button_set_label(GTK_BUTTON(button), label);
+    gtk_button_set_use_underline(GTK_BUTTON(button), TRUE);
 
     gtk_widget_show_all(button);
     gtk_dialog_add_action_widget(GTK_DIALOG(dialog), button, response);

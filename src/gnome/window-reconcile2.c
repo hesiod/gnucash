@@ -310,11 +310,11 @@ recnRecalculateBalance (RecnWindow2 *recnData)
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action (recnData->action_map,
                                           "RecnFinishAction"));
-    g_simple_action_set_enabled (action, gnc_numeric_zero_p (diff));
+    g_action_change_state (action, gnc_numeric_zero_p (diff));
 
     action = G_SIMPLE_ACTION(g_action_map_lookup_action (recnData->action_map,
                                           "TransBalanceAction"));
-    g_simple_action_set_enabled (action, !gnc_numeric_zero_p (diff));
+    g_action_change_state (action, !gnc_numeric_zero_p (diff));
 
     return diff;
 }
@@ -888,7 +888,7 @@ do_popup_menu (RecnWindow2 *recnData, GdkEventButton *event)
     GMenu *menu;
     int button, event_time;
 
-    menu = egg_menu_manager_get_menu_by_id (recnData->ui_merge, "/popup");
+    menu = egg_menu_manager_get_menu_by_id (recnData->ui_merge, "popup");
     if (!menu)
     {
         return;

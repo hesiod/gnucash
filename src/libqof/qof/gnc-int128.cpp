@@ -259,7 +259,7 @@ GncInt128::operator++ () noexcept
     return operator+=(UINT64_C(1));
 }
 
-GncInt128&
+GncInt128
 GncInt128::operator++ (int) noexcept
 {
     return operator+=(UINT64_C(1));
@@ -271,7 +271,7 @@ GncInt128::operator-- () noexcept
     return operator-=(UINT64_C(1));
 }
 
-GncInt128&
+GncInt128
 GncInt128::operator-- (int) noexcept
 {
     return operator-=(UINT64_C(1));
@@ -302,11 +302,13 @@ GncInt128::operator+= (const GncInt128& b) noexcept
 GncInt128&
 GncInt128::operator<<= (unsigned int i) noexcept
 {
-    if (i > maxbits)
+    if (i >= maxbits)
     {
         m_flags &= 0xfe;
         m_hi = 0;
         m_lo = 0;
+        return *this;
+    } else if (i == 0) {
         return *this;
     }
     uint64_t carry {(m_lo & (((UINT64_C(1) << i) - 1) << (legbits - i)))};
@@ -319,11 +321,13 @@ GncInt128::operator<<= (unsigned int i) noexcept
 GncInt128&
 GncInt128::operator>>= (unsigned int i) noexcept
 {
-    if (i > maxbits)
+    if (i >= maxbits)
     {
         m_flags &= 0xfe;
         m_hi = 0;
         m_lo = 0;
+        return *this;
+    } else if (i == 0) {
         return *this;
     }
     uint64_t carry {(m_hi & ((UINT64_C(1) << i) - 1))};

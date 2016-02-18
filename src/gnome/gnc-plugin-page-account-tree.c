@@ -299,7 +299,7 @@ gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
     gnc_plugin_class->save_page       = gnc_plugin_page_account_tree_save_page;
     gnc_plugin_class->recreate_page   = gnc_plugin_page_account_tree_recreate_page;
 
-    //g_type_class_add_private(klass, sizeof(GncPluginPageAccountTreePrivate));
+    g_type_class_add_private(klass, sizeof(GncPluginPageAccountTreePrivate));
 
     plugin_page_signals[ACCOUNT_SELECTED] =
         g_signal_new ("account_selected",
@@ -846,16 +846,16 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
     g_return_if_fail(action_map != NULL);
     g_return_if_fail(G_IS_ACTION_MAP(action_map));
 
+    const gboolean is_rws = is_readwrite && sensitive;
     gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_rw,
-                               "enabled", is_readwrite && sensitive);
+                               "enabled", is_rws);
     gnc_plugin_update_actions (G_ACTION_MAP(action_map), actions_requiring_account_always,
                                "enabled", sensitive);
     g_signal_emit (page, plugin_page_signals[ACCOUNT_SELECTED], 0, account);
 
     action = g_action_map_lookup_action (action_map, "account.renumber");
     g_return_if_fail(action);
-    g_simple_action_set_enabled (G_SIMPLE_ACTION(action),
-                                 is_readwrite && sensitive && subaccounts);
+    g_action_change_state (action, g_variant_new_boolean(is_rws && subaccounts));
 }
 
 

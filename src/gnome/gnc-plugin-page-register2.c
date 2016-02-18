@@ -207,8 +207,8 @@ static void gnc_plugin_page_register2_event_handler (QofInstance *entity,
 #define DUPLICATE_SPLIT_TIP           N_("Make a copy of the current split")
 #define DELETE_SPLIT_TIP              N_("Delete the current split")
 
-#define TRANSACTION_UP_ACTION "TransactionUpAction"
-#define TRANSACTION_DOWN_ACTION "TransactionDownAction"
+#define TRANSACTION_UP_ACTION "transaction.up"
+#define TRANSACTION_DOWN_ACTION "transaction.down"
 
 static GActionEntry gnc_plugin_page_register2_actions [] =
 {
@@ -305,16 +305,16 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
         "account.view-lots", gnc_plugin_page_register2_cmd_lots
     },
     {
-        "actions.transaction.blank", gnc_plugin_page_register2_cmd_blank_transaction
+        "transaction.blank", gnc_plugin_page_register2_cmd_blank_transaction
     },
     {
-        "actions.transaction.edit-xchg-rate", gnc_plugin_page_register2_cmd_exchange_rate
+        "transaction.edit-xchg-rate", gnc_plugin_page_register2_cmd_exchange_rate
     },
     {
-        "actions.transaction.jump", gnc_plugin_page_register2_cmd_jump
+        "transaction.jump", gnc_plugin_page_register2_cmd_jump
     },
     {
-        "actions.transaction.schedule", gnc_plugin_page_register2_cmd_schedule
+        "transaction.schedule", gnc_plugin_page_register2_cmd_schedule
     },
     {
         "account.scrub-all", gnc_plugin_page_register2_cmd_scrub_all
@@ -334,21 +334,21 @@ static GActionEntry gnc_plugin_page_register2_actions [] =
 
     /* Toggle Actions */
     {
-        "view.double-line", gnc_plugin_page_register2_cmd_style_double_line, "b", "false"
+        "view.double-line", NULL, "b", "false", gnc_plugin_page_register2_cmd_style_double_line
     },
 
-    /*{
-        "view.extra-dates", gnc_plugin_page_register2_cmd_style_extra_dates, "b", "false"
-    },*/
+    {
+        "view.extra-dates", NULL, "b", "false", gnc_plugin_page_register2_cmd_style_extra_dates
+    },
 
     {
-        "actions.transaction.split", gnc_plugin_page_register2_cmd_expand_transaction, "b", "false"
+        "transaction.split", gnc_plugin_page_register2_cmd_expand_transaction, "b", "false"
     },
 
     /* Radio Actions */
     /* Translators: This is a menu item in the View menu */
     {
-        "view.ledger", NULL, "s", "basic"
+        "view.ledger", NULL, "s", "string \"basic\"", gnc_plugin_page_register2_cmd_style_changed
     },
 };
 
@@ -690,24 +690,24 @@ static const char* readonly_inactive_actions[] =
 {
     "edit.cut",
     "edit.paste",
-    "CutTransactionAction",
-    "PasteTransactionAction",
+    "transaction.cut",
+    "transaction.paste",
     TRANSACTION_UP_ACTION,
     TRANSACTION_DOWN_ACTION,
-    "DuplicateTransactionAction",
-    "DeleteTransactionAction",
-    "RemoveTransactionSplitsAction",
-    "RecordTransactionAction",
-    "CancelTransactionAction",
-    "UnvoidTransactionAction",
-    "VoidTransactionAction",
-    "ReverseTransactionAction",
-    "ActionsTransferAction",
-    "ActionsReconcileAction",
-    "ActionsStockSplitAction",
-    "ScheduleTransactionAction",
-    "ScrubAllAction",
-    "ScrubCurrentAction",
+    "transaction.duplicate",
+    "transaction.delete",
+    "transaction.remove-splits",
+    "transaction.record.start",
+    "transaction.record.cancel",
+    "transaction.unvoid",
+    "transaction.void",
+    "transaction.reverse",
+    "transaction.schedule",
+    "account.transfer",
+    "account.reconcile",
+    "account.stock-split",
+    "account.scrub.all",
+    "account.scrub",
     NULL
 };
 
@@ -773,7 +773,7 @@ gnc_plugin_page_register2_ui_update (gpointer various, GncPluginPageRegister2 *p
     GncPluginPageRegister2Private *priv;
     GncTreeViewSplitReg *view;
     GncTreeModelSplitReg *model;
-    GSimpleAction *action;
+    GAction *action;
     gboolean expanded, voided;
     Transaction *trans;
 
@@ -786,12 +786,12 @@ gnc_plugin_page_register2_ui_update (gpointer various, GncPluginPageRegister2 *p
     g_return_if_fail(view);
 
     expanded = gnc_tree_view_split_reg_trans_expanded (view, NULL);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
-                                         "actions.transaction.split"));
+    action = gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
+                                         "transaction.split");
     g_simple_action_set_enabled (action, model->style == REG2_STYLE_LEDGER);
     g_signal_handlers_block_by_func
     (action, gnc_plugin_page_register2_cmd_expand_transaction, page);
-    gtk_toggle_action_set_active (GTK_TOGGLE_ACTION (action), expanded);
+    g_action_change_state (action, g_variant_new_boolean(expanded));
     g_signal_handlers_unblock_by_func
     (action, gnc_plugin_page_register2_cmd_expand_transaction, page);
 
@@ -800,21 +800,24 @@ gnc_plugin_page_register2_ui_update (gpointer various, GncPluginPageRegister2 *p
     voided = xaccTransHasSplitsInState (trans, VREC); 
 
     action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
-                                         "actions.transaction.void"));
-    g_simple_action_set_enabled (action, !voided);
+                                         "transaction.void"));
+    g_simple_action_set_enabled (action, !voided); //g_variant_new_boolean(!voided));
 
     action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page),
-                                         "actions.transaction.unvoid"));
-    g_simple_action_set_enabled (action, voided);
+                                         "transaction.unvoid"));
+    g_simple_action_set_enabled (action, voided); //g_variant_new_boolean(voided));
 
     /* Modify the activeness of the up/down arrows */
     {
-        GSimpleAction *action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page), TRANSACTION_UP_ACTION));
-        g_simple_action_set_enabled(action,
-                                 gnc_tree_control_split_reg_is_current_movable_updown(view, TRUE));
-        action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page), TRANSACTION_DOWN_ACTION));
-        g_simple_action_set_enabled(action,
-                                 gnc_tree_control_split_reg_is_current_movable_updown(view, FALSE));
+        gboolean is_movable;
+
+        action = gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page), TRANSACTION_UP_ACTION);
+        is_movable = gnc_tree_control_split_reg_is_current_movable_updown(view, TRUE);
+        g_simple_action_set_enabled(action, is_movable);
+
+        action = gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page), TRANSACTION_DOWN_ACTION);
+        is_movable = gnc_tree_control_split_reg_is_current_movable_updown(view, FALSE);
+        g_simple_action_set_enabled(action, is_movable);
     }
 
     /* If we are in a readonly book, make any modifying action inactive */
@@ -824,8 +827,8 @@ gnc_plugin_page_register2_ui_update (gpointer various, GncPluginPageRegister2 *p
         for (iter = readonly_inactive_actions; *iter; ++iter)
         {
             /* Set the action's sensitivity */
-            GSimpleAction *action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page), *iter));
-            g_simple_action_set_enabled (action, FALSE);
+            action = gnc_plugin_page_get_action (GNC_PLUGIN_PAGE (page), *iter);
+            g_action_change_state (action, g_variant_new_boolean(FALSE));
         }
     }
 
@@ -899,22 +902,27 @@ gnc_plugin_page_register2_ui_initial_state (GncPluginPageRegister2 *page) // thi
                               "enabled", ledger_type == LD2_SINGLE);
 
     model = gnc_ledger_display2_get_split_model_register (priv->ledger);
+    g_return_if_fail(model);
+    view = gnc_split_reg2_get_register (priv->gsr);
+    g_return_if_fail(view);
 
     action = g_action_map_lookup_action (action_map, "view.ledger");
+    g_return_if_fail(action);
     g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_changed, page);
     g_action_change_state (action, g_variant_new_string(model->style));
     g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_changed, page);
 
     /* Set "double line" toggle button */
     action = g_action_map_lookup_action (action_map, "view.double-line");
+    g_return_if_fail(action);
     g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_double_line, page);
     g_action_change_state (action, g_variant_new_boolean(model->use_double_line));
     g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_double_line, page);
 
-    view = gnc_split_reg2_get_register (priv->gsr);
 
     /* Set "extra dates" toggle button */
     action = g_action_map_lookup_action (action_map, "view.extra-dates");
+    g_return_if_fail(action);
     g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_extra_dates, page);
     g_action_change_state (action, g_variant_new_boolean (view->show_extra_dates));
     g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_extra_dates, page);
@@ -1181,9 +1189,9 @@ gnc_plugin_page_register2_window_changed (GncPluginPage *plugin_page,
 
 static const gchar *style_names[] =
 {
-    "Ledger",
-    "Auto Ledger",
-    "Journal",
+    "basic",
+    "auto",
+    "journal",
     NULL
 };
 
@@ -1304,7 +1312,7 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
 
     /* Convert the style name to an index */
     style_name = g_key_file_get_string (key_file, group_name,
-                                       KEY_REGISTER_STYLE, &error);
+                                        KEY_REGISTER_STYLE, &error);
     for (i = 0 ; style_names[i]; i++)
     {
         if (g_ascii_strcasecmp (style_name, style_names[i]) == 0)
@@ -1422,7 +1430,7 @@ gnc_plugin_page_register2_update_edit_menu (GncPluginPage *page) //this works
     GncPluginPageRegister2Private *priv;
     GncPluginPageRegister2 *reg_page;
     GncTreeViewSplitReg *view;
-    GSimpleAction *action;
+    GAction *action;
     gboolean can_copy = FALSE, can_cut = FALSE, can_paste = FALSE;
     gboolean has_selection;
     gboolean is_readwrite = !qof_book_is_readonly (gnc_get_current_book());
@@ -1440,16 +1448,12 @@ gnc_plugin_page_register2_update_edit_menu (GncPluginPage *page) //this works
     can_cut = is_readwrite && has_selection;
     can_paste = is_readwrite;
 
-    // FIXME Migrate visibility?
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "edit.copy"));
-    g_simple_action_set_enabled (action, can_copy);
-    //gtk_action_set_visible (action, !hide || can_copy);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "edit.cut"));
-    g_simple_action_set_enabled (action, can_cut);
-    //gtk_action_set_visible (action, !hide || can_cut);
-    action = G_SIMPLE_ACTION(gnc_plugin_page_get_action (page, "edit.paste"));
-    g_simple_action_set_enabled (action, can_paste);
-    //gtk_action_set_visible (action,  !hide || can_paste);
+    action = gnc_plugin_page_get_action (page, "edit.copy");
+    g_action_change_state (action, g_variant_new_boolean(can_copy));
+    action = gnc_plugin_page_get_action (page, "edit.cut");
+    g_action_change_state (action, g_variant_new_boolean(can_cut));
+    action = gnc_plugin_page_get_action (page, "edit.paste");
+    g_action_change_state (action, g_variant_new_boolean(can_paste));
 }
 
 static gboolean
@@ -3055,8 +3059,7 @@ gnc_plugin_page_register2_cmd_style_changed (GSimpleAction *action, GVariant *pa
     ENTER("(action %p, radio action %p, plugin_page %p)",
           action, parameter, plugin_page);
 
-    g_return_if_fail (GTK_IS_ACTION (action));
-    // g_return_if_fail (GTK_IS_RADIO_ACTION (parameter));
+    g_return_if_fail (G_IS_ACTION (action));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER2 (plugin_page));
 
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (plugin_page);
@@ -3078,7 +3081,7 @@ gnc_plugin_page_register2_cmd_style_double_line (GSimpleAction *action, GVariant
 
     ENTER("(action %p, plugin_page %p)", action, plugin_page);
 
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (G_IS_SIMPLE_ACTION (action));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER2 (plugin_page));
 
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (plugin_page);
@@ -3109,7 +3112,7 @@ gnc_plugin_page_register2_cmd_style_extra_dates (GSimpleAction *action, GVariant
 
     ENTER("(action %p, plugin_page %p)", action, plugin_page);
 
-    g_return_if_fail (GTK_IS_ACTION (action));
+    g_return_if_fail (G_IS_ACTION (action));
     g_return_if_fail (GNC_IS_PLUGIN_PAGE_REGISTER2 (plugin_page));
 
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (plugin_page);

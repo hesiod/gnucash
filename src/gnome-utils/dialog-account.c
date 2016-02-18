@@ -1308,7 +1308,6 @@ gnc_account_window_create(AccountWindow *aw)
 {
     GtkWidget *amount;
     GtkWidget *date_edit;
-    GObject *awo;
     GtkWidget *box;
     GtkWidget *label;
     GtkBuilder  *builder;
@@ -1317,15 +1316,13 @@ gnc_account_window_create(AccountWindow *aw)
     ENTER("aw %p, modal %d", aw, aw->modal);
     builder = gtk_builder_new();
     gnc_builder_add_from_file (builder, "dialog-account.glade", "fraction_liststore");
-    gnc_builder_add_from_file (builder, "dialog-account.glade", "Account Dialog");
+    gnc_builder_add_from_file (builder, "dialog-account.glade", "account_dialog");
 
-    aw->dialog = GTK_WIDGET(gtk_builder_get_object (builder, "Account Dialog"));
-    awo = G_OBJECT (aw->dialog);
-
-    g_object_set_data (awo, "dialog_info", aw);
+    aw->dialog = GTK_WIDGET(gtk_builder_get_object (builder, "account_dialog"));
+    g_return_if_fail(aw->dialog);
 
     if (!aw->modal)
-        g_signal_connect (awo, "response",
+        g_signal_connect (G_OBJECT (aw->dialog), "response",
                           G_CALLBACK (gnc_account_window_response_cb), aw);
     else
         gtk_window_set_modal (GTK_WINDOW (aw->dialog), TRUE);
@@ -1338,12 +1335,12 @@ gnc_account_window_create(AccountWindow *aw)
     aw->code_entry =        GTK_WIDGET(gtk_builder_get_object (builder, "code_entry"));
     aw->notes_text_buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (GTK_WIDGET(gtk_builder_get_object (builder, "notes_text"))));
 
-    box = GTK_WIDGET(gtk_builder_get_object (builder, "commodity_hbox"));
+    box = GTK_WIDGET(gtk_builder_get_object (builder, "commodity_grid"));
     aw->commodity_edit = gnc_general_select_new (GNC_GENERAL_SELECT_TYPE_SELECT,
                          gnc_commodity_edit_get_string,
                          gnc_commodity_edit_new_select,
                          &aw->commodity_mode);
-    gtk_box_pack_start(GTK_BOX(box), aw->commodity_edit, TRUE, TRUE, 0);
+    gtk_grid_attach(GTK_GRID(box), aw->commodity_edit, 1, 2, 1, 1);
     gtk_widget_show (aw->commodity_edit);
 
     label = GTK_WIDGET(gtk_builder_get_object (builder, "security_label"));
@@ -1370,7 +1367,7 @@ gnc_account_window_create(AccountWindow *aw)
     box = GTK_WIDGET(gtk_builder_get_object (builder, "opening_balance_box"));
     amount = gnc_amount_edit_new ();
     aw->opening_balance_edit = amount;
-    gtk_box_pack_start(GTK_BOX(box), amount, TRUE, TRUE, 0);
+    gtk_grid_attach(GTK_GRID(box), amount, 1, 4, 1, 1);
     gnc_amount_edit_set_evaluate_on_enter (GNC_AMOUNT_EDIT (amount), TRUE);
     gtk_widget_show (amount);
 
@@ -1380,7 +1377,7 @@ gnc_account_window_create(AccountWindow *aw)
     box = GTK_WIDGET(gtk_builder_get_object (builder, "opening_balance_date_box"));
     date_edit = gnc_date_edit_new (gnc_time (NULL), 1, 1);
     aw->opening_balance_date_edit = date_edit;
-    gtk_box_pack_start(GTK_BOX(box), date_edit, TRUE, TRUE, 0);
+    gtk_grid_attach(GTK_GRID(box), date_edit, 1, 5, 1, 1);
     gtk_widget_show (date_edit);
 
     aw->opening_balance_page =

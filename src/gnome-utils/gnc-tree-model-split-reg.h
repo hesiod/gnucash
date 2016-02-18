@@ -85,10 +85,10 @@ typedef enum
 
 
 /** Register styles */
-typedef const char* SplitRegisterStyle2;
-#define REG2_STYLE_LEDGER       ((const char*)"basic")
-#define REG2_STYLE_AUTO_LEDGER  ((const char*)"auto")
-#define REG2_STYLE_JOURNAL      ((const char*)"journal")
+typedef const gchar* SplitRegisterStyle2;
+#define REG2_STYLE_LEDGER       ((const gchar*)"basic")
+#define REG2_STYLE_AUTO_LEDGER  ((const gchar*)"auto")
+#define REG2_STYLE_JOURNAL      ((const gchar*)"journal")
 
 
 typedef enum
@@ -143,7 +143,7 @@ typedef struct
 
     gboolean                     is_template;           /**< Are we using a template */
 
-    gint                         sort_depth;            /**< This is the row the sort direction is based on. */
+    gsize                        sort_depth;            /**< This is the row the sort direction is based on. */
     gint                         sort_col;              /**< This is the column the sort direction is based on. */
     GtkSortType                  sort_direction;        /**< This is the direction of sort */
 
@@ -157,7 +157,7 @@ typedef struct
     Transaction                 *current_trans;         /**< Current transaction */
     gint                         current_row;           /**< Current row in treeview */
     gint                         number_of_trans_in_full_tlist;     /**< The total number of transactions in full_tlist */
-    gint                         position_of_trans_in_full_tlist;   /**< The position of current transaction in full_tlist */
+    gsize                        position_of_trans_in_full_tlist;   /**< The position of current transaction in full_tlist */
 
 }GncTreeModelSplitReg;
 

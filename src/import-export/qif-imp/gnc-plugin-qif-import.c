@@ -44,7 +44,7 @@ static void gnc_plugin_qif_import_cmd_new_qif_import (GSimpleAction *action, GVa
 static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "QIFImportAction", gnc_plugin_qif_import_cmd_new_qif_import
+        "file.import.qif", gnc_plugin_qif_import_cmd_new_qif_import
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);

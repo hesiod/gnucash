@@ -232,9 +232,9 @@ enum // Values for m_flags
     explicit operator bool() const noexcept;
 
     GncInt128& operator++ () noexcept;
-    GncInt128& operator++ (int) noexcept;
+    GncInt128 operator++ (int) noexcept;
     GncInt128& operator-- () noexcept;
-    GncInt128& operator-- (int) noexcept;
+    GncInt128 operator-- (int) noexcept;
     GncInt128& operator<<= (unsigned int i) noexcept;
     GncInt128& operator>>= (unsigned int i) noexcept;
     GncInt128& operator+= (const GncInt128& b) noexcept;

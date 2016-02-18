@@ -7,15 +7,15 @@
             <section id="menubar-file-export-section">
               <item>
                 <attribute name="label" translatable="yes">Export Account Tree to CSV...</attribute>
-                <attribute name="action">file.export.csv.tree</attribute>
+                <attribute name="action">win.file.export.csv.tree</attribute>
               </item>
               <item>
                 <attribute name="label" translatable="yes">Export Transactions to CSV...</attribute>
-                <attribute name="action">file.export.csv.transaction</attribute>
+                <attribute name="action">win.file.export.csv.transaction</attribute>
               </item>
               <item>
                 <attribute name="label" translatable="yes">Export Accounts to CSV...</attribute>
-                <attribute name="action">file.export.csv.register</attribute>
+                <attribute name="action">win.file.export.csv.register</attribute>
               </item>
             </section>
           </submenu>

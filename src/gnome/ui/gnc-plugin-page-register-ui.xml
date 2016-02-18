@@ -98,6 +98,10 @@
             <attribute name="label" translatable="yes">Double Line</attribute>
             <attribute name="action">win.view.double-line</attribute>
           </item>
+          <item>
+            <attribute name="label" translatable="yes">Extra Dates</attribute>
+            <attribute name="action">win.view.extra-dates</attribute>
+          </item>
         </section>
       </submenu>
       <submenu id="menubar-actions">
@@ -122,23 +126,23 @@
         <section id="menubar-actions-transaction-section">
           <item>
             <attribute name="label" translatable="yes">Blank Transaction</attribute>
-            <attribute name="action">win.actions.transaction.blank</attribute>
+            <attribute name="action">win.transaction.blank</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Split Transaction</attribute>
-            <attribute name="action">win.actions.transaction.split</attribute>
+            <attribute name="action">win.transaction.split</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Edit Exchange Rate</attribute>
-            <attribute name="action">win.actions.transaction.edit-xchg-rate</attribute>
+            <attribute name="action">win.transaction.edit-xchg-rate</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Schedule...</attribute>
-            <attribute name="action">win.actions.transaction.schedule</attribute>
+            <attribute name="action">win.transaction.schedule</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Jump</attribute>
-            <attribute name="action">win.actions.transaction.jump</attribute>
+            <attribute name="action">win.transaction.jump</attribute>
           </item>
         </section>
         <submenu id="menubar-actions-scrub">
@@ -197,19 +201,19 @@
       <section id="toolbar-transaction-section">
         <item>
           <attribute name="label" translatable="yes">Blank Transaction</attribute>
-          <attribute name="action">win.actions.transaction.blank</attribute>
+          <attribute name="action">win.transaction.blank</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Split Transaction</attribute>
-          <attribute name="action">win.actions.transaction.split</attribute>
+          <attribute name="action">win.transaction.split</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Schedule...</attribute>
-          <attribute name="action">win.actions.transaction.schedule</attribute>
+          <attribute name="action">win.transaction.schedule</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Jump</attribute>
-          <attribute name="action">win.actions.transaction.jump</attribute>
+          <attribute name="action">win.transaction.jump</attribute>
         </item>
       </section>
       <section id="toolbar-edit-section">
@@ -278,23 +282,23 @@
         <section id="popup-actions-transaction-section">
           <item>
             <attribute name="label" translatable="yes">Blank Transaction</attribute>
-            <attribute name="action">win.actions.transaction.blank</attribute>
+            <attribute name="action">win.transaction.blank</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Split Transaction</attribute>
-            <attribute name="action">win.actions.transaction.split</attribute>
+            <attribute name="action">win.transaction.split</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Edit Exchange Rate</attribute>
-            <attribute name="action">win.actions.transaction.edit-xchg-rate</attribute>
+            <attribute name="action">win.transaction.edit-xchg-rate</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Schedule...</attribute>
-            <attribute name="action">win.actions.transaction.schedule</attribute>
+            <attribute name="action">win.transaction.schedule</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Jump</attribute>
-            <attribute name="action">win.actions.transaction.jump</attribute>
+            <attribute name="action">win.transaction.jump</attribute>
           </item>
         </section>
       </section>

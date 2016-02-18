@@ -103,7 +103,7 @@ struct GncTreeModelSplitRegPrivate
 
     GList *full_tlist;               // List of unique transactions derived from the query slist in same order
     GList *tlist;                    // List of unique transactions derived from the full_tlist to display in same order
-    gint   tlist_start;              // The position of the first transaction in tlist in the full_tlist
+    gsize  tlist_start;              // The position of the first transaction in tlist in the full_tlist
 
     Transaction *btrans;             // The Blank transaction
 
@@ -744,7 +744,9 @@ gnc_tree_model_split_reg_move (GncTreeModelSplitReg *model, GncTreeModelSplitReg
         g_signal_emit_by_name (model, "refresh_view");
     }
 
-    if ((model_update == VIEW_DOWN) && (model->current_row > NUM_OF_TRANS*2) && (priv->tlist_start < (g_list_length (priv->full_tlist) - NUM_OF_TRANS*3 )))
+    if ((model_update == VIEW_DOWN) &&
+        (model->current_row > NUM_OF_TRANS*2) &&
+        (priv->tlist_start < (g_list_length (priv->full_tlist) - NUM_OF_TRANS*3 )))
     {
         gint dblock_end = 0;
         gint iblock_start = priv->tlist_start + NUM_OF_TRANS*3;

@@ -2007,20 +2007,8 @@ gnc_gh_gint64_p(SCM num)
 
     if (!initialized)
     {
-        /* to be super safe, we have to build these manually because
-           though we know that we have gint64's here, we *don't* know how
-           to portably specify a 64bit constant to the compiler (i.e. like
-           0x7FFFFFFFFFFFFFFF). */
-        gint64 tmp;
-
-        tmp = 0x7FFFFFFF;
-        tmp <<= 32;
-        tmp |= 0xFFFFFFFF;
-        maxval = scm_from_int64(tmp);
-
-        tmp = 0x80000000;
-        tmp <<= 32;
-        minval = scm_from_int64(tmp);
+        maxval = scm_from_int64(G_MAXINT64);
+        minval = scm_from_int64(G_MININT64);
 
         scm_gc_protect_object(maxval);
         scm_gc_protect_object(minval);

@@ -365,7 +365,7 @@ gnc_application_activate (GApplication *app)
     GncMainWindow *win;
 
     printf("activate\n");
-    win = gnc_main_window_new ();
+    win = gnc_main_window_new (GTK_APPLICATION(app));
     gtk_application_add_window(GTK_APPLICATION(app), GTK_WINDOW(win));
     gnc_gui_init(win);
     gtk_window_present (GTK_WINDOW (win));
@@ -394,7 +394,7 @@ gnc_application_open (GApplication  *app,
     if (windows)
         win = GNC_MAIN_WINDOW (windows->data);
     else
-        win = gnc_main_window_new ();
+        win = gnc_main_window_new (GTK_APPLICATION(app));
 
 #if 0
     for (i = 0; i < n_files; i++)

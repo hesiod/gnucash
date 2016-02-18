@@ -82,7 +82,7 @@ typedef void (*GncMainWindowPageFunc) (GncPluginPage *page, gpointer user_data);
  *
  *  @return A pointer to the new object.
  */
-GncMainWindow *gnc_main_window_new (void);
+GncMainWindow *gnc_main_window_new (GtkApplication *app);
 
 
 /** Bring the window containing the specified page to the top of the
@@ -126,7 +126,8 @@ void gnc_main_window_close_page (GncPluginPage *page);
  *
  *  @param user_data A data pointer passed to each call of the function.
  */
-void gnc_main_window_foreach_page (GncMainWindowPageFunc fn,
+void gnc_main_window_foreach_page (GtkApplication *app,
+                                   GncMainWindowPageFunc fn,
                                    gpointer user_data);
 
 

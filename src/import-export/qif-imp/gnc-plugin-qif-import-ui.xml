@@ -7,7 +7,7 @@
             <section id="menubar-file-import-section">
               <item>
                 <attribute name="label" translatable="yes">Import QIF...</attribute>
-                <attribute name="action">file.import.qif</attribute>
+                <attribute name="action">win.file.import.qif</attribute>
               </item>
             </section>
           </submenu>

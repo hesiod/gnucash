@@ -2790,7 +2790,7 @@ gtv_sr_titles (GncTreeViewSplitReg *view, RowDepth depth)
     gboolean is_template;
 
     model = gnc_tree_view_split_reg_get_model_from_view (view);
-    ENTER("title depth is %d and sort_depth %d, sort_col is %d", depth, model->sort_depth, model->sort_col);
+    ENTER("title depth is %d and sort_depth %zd, sort_col is %d", depth, model->sort_depth, model->sort_col);
 
     columns = gtk_tree_view_get_columns (GTK_TREE_VIEW (view));
 

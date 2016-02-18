@@ -51,13 +51,13 @@ static void gnc_plugin_csv_export_register_cmd (GSimpleAction *action, GVariant 
 static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "CsvExportTreeAction", gnc_plugin_csv_export_tree_cmd
+        "file.export.csv.tree", gnc_plugin_csv_export_tree_cmd
     },
     {
-        "CsvExportTransAction", gnc_plugin_csv_export_trans_cmd
+        "file.export.csv.transaction", gnc_plugin_csv_export_trans_cmd
     },
     {
-        "CsvExportRegisterAction", gnc_plugin_csv_export_register_cmd
+        "file.export.csv.register", gnc_plugin_csv_export_register_cmd
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);

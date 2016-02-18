@@ -45,7 +45,7 @@ static void gnc_plugin_log_replay_cmd_new_log_replay (GSimpleAction *action, GVa
 static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "LogReplayAction", gnc_plugin_log_replay_cmd_new_log_replay
+        "file.import.log", gnc_plugin_log_replay_cmd_new_log_replay
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);

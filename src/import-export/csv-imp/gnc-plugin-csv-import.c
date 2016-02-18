@@ -47,13 +47,13 @@ static void gnc_plugin_csv_import_fixed_trans_cmd (GSimpleAction *action, GVaria
 static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "CsvImportAccountAction", gnc_plugin_csv_import_tree_cmd
+        "file.import.csv.account", gnc_plugin_csv_import_tree_cmd
     },
     {
-        "CsvImportTransAction", gnc_plugin_csv_import_trans_cmd
+        "file.import.csv.transaction", gnc_plugin_csv_import_trans_cmd
     },
     {
-        "CsvImportFixedTransAction", gnc_plugin_csv_import_fixed_trans_cmd
+        "file.import.csv.transaction-fixed", gnc_plugin_csv_import_fixed_trans_cmd
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);

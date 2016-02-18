@@ -43,7 +43,7 @@ static void gnc_plugin_ofx_cmd_import (GSimpleAction *action, GVariant *paramete
 static GActionEntry gnc_plugin_actions [] =
 {
     {
-        "OfxImportAction", gnc_plugin_ofx_cmd_import
+        "file.import.ofx", gnc_plugin_ofx_cmd_import
     },
 };
 static guint gnc_plugin_n_actions = G_N_ELEMENTS (gnc_plugin_actions);

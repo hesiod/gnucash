@@ -7,7 +7,7 @@
             <section id="menubar-file-import-section">
               <item>
                 <attribute name="label" translatable="yes">Replay Gnucash .log file...</attribute>
-                <attribute name="action">file.import.log</attribute>
+                <attribute name="action">win.file.import.log</attribute>
               </item>
             </section>
           </submenu>

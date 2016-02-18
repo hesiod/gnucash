@@ -456,7 +456,7 @@ trn_id_handler(xmlNodePtr node, gpointer trans_pdata)
 
     xaccTransSetGUID((Transaction*)trn, tmp);
 
-    g_free(tmp);
+    guid_free(tmp);
 
     return TRUE;
 }

@@ -7,15 +7,15 @@
             <section id="menubar-file-import-section">
               <item>
                 <attribute name="label" translatable="yes">Import Accounts from CSV...</attribute>
-                <attribute name="action">file.import.csv.account</attribute>
+                <attribute name="action">win.file.import.csv.account</attribute>
               </item>
               <item>
                 <attribute name="label" translatable="yes">Import Transactions from CSV...</attribute>
-                <attribute name="action">file.import.csv.transaction</attribute>
+                <attribute name="action">win.file.import.csv.transaction</attribute>
               </item>
               <item>
                 <attribute name="label" translatable="yes">Import Fixed Transactions from CSV...</attribute>
-                <attribute name="action">file.import.csv.transaction-fixed</attribute>
+                <attribute name="action">win.file.import.csv.transaction-fixed</attribute>
               </item>
             </section>
           </submenu>

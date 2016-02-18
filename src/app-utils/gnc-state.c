@@ -139,7 +139,6 @@ gnc_state_set_base (const QofSession *session)
             filename = g_strdup_printf ("%s_%d%s", original, i, sf_extension);
         DEBUG ("Trying %s", filename);
         key_file = gnc_key_file_load_from_file (filename, TRUE, FALSE, NULL);
-        DEBUG ("Result %p", key_file);
 
         if (!key_file)
         {
@@ -164,6 +163,8 @@ gnc_state_set_base (const QofSession *session)
             g_free (filename);
             break;
         }
+
+        DEBUG ("Result %p", key_file);
 
         file_guid = g_key_file_get_string (key_file,
                                            STATE_FILE_TOP, STATE_FILE_BOOK_GUID,
@@ -192,7 +193,6 @@ gnc_state_set_base (const QofSession *session)
 
     DEBUG("Clean up");
     g_free(original);
-    g_key_file_free (key_file);
 
     LEAVE ();
 }

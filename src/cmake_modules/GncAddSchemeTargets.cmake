@@ -129,13 +129,14 @@ MACRO(GNC_ADD_SCHEME_TARGETS _TARGET _SOURCE_FILES _OUTPUT_DIR_IN _GUILE_MODULES
            GNC_UNINSTALLED=${_GNC_UNINSTALLED}
            GNC_BUILDDIR=${CMAKE_BINARY_DIR}
            #DYLD_FALLBACK_LIBRARY_PATH=${Boost_LIBRARY_DIRS} # this is hack for OS X
-           LD_LIBRARY_PATH="${LIBDIR_BUILD}:${LIBDIR_BUILD}/gnucash:${_GUILE_LD_LIBRARY_PATH}"
-           DYLD_LIBRARY_PATH="${LIBDIR_BUILD}:${LIBDIR_BUILD}/gnucash:${_GUILE_LD_LIBRARY_PATH}"
+           LD_LIBRARY_PATH="${LIBDIR_BUILD}:${LIBDIR_BUILD}/gnucash:${_GUILE_LD_LIBRARY_PATH}:/usr/lib"
+           DYLD_LIBRARY_PATH="${LIBDIR_BUILD}:${LIBDIR_BUILD}/gnucash:${_GUILE_LD_LIBRARY_PATH}:/usr/lib"
            GUILE_LOAD_PATH=${_GUILE_LOAD_PATH}
            GUILE_LOAD_COMPILED_PATH=${_GUILE_LOAD_COMPILED_PATH}
-           #GNC_MODULE_PATH=${_GNC_MODULE_PATH}
+           GNC_MODULE_PATH=${_GNC_MODULE_PATH}
            GNC_MODULE_PATH="${LIBDIR_BUILD}:${LIBDIR_BUILD}/gnucash:${GNC_MODULE_PATH}"
-           ${PRELOAD}
+           #${PRELOAD}
+           #ASAN_OPTIONS=detect_leaks=0
            ${GUILE_EXECUTABLE} -e '\(@@ \(guild\) main\)' -s ${GUILD_EXECUTABLE} compile -o ${output_file} ${source_file_abs_path}
         DEPENDS ${guile_depends}
         MAIN_DEPENDENCY ${source_file_abs_path}

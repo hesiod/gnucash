@@ -3209,7 +3209,8 @@ gnc_ui_qif_import_finish_cb (GtkAssistant *gtkassistant,
                            _("GnuCash was unable to save your mapping preferences."));
 
     /* Open an account tab in the main window if one doesn't exist already. */
-    gnc_main_window_foreach_page(gnc_ui_qif_import_check_acct_tree,
+    gnc_main_window_foreach_page(GTK_APPLICATION(wind->window),
+                                 gnc_ui_qif_import_check_acct_tree,
                                  &acct_tree_found);
 
     wind->acct_tree_found = acct_tree_found;
