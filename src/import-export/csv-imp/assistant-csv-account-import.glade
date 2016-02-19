@@ -13,7 +13,8 @@
     <signal name="prepare" handler="csv_import_assistant_prepare" swapped="no"/>
     <signal name="cancel" handler="csv_import_assistant_cancel" swapped="no"/>
     <child>
-      <object class="GtkVBox" id="start_page">
+      <object class="GtkBox" id="start_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -47,7 +48,8 @@ Click on 'Forward' to proceed or 'Cancel' to Abort Import.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="file_page">
+      <object class="GtkBox" id="file_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -75,7 +77,8 @@ Enter file name and location for the Import...
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="import_tree_page">
+      <object class="GtkBox" id="import_tree_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -274,7 +277,8 @@ Cancel to abort.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="summary_page">
+      <object class="GtkBox" id="summary_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>

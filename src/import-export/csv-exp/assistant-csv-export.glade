@@ -13,7 +13,8 @@
     <signal name="prepare" handler="csv_export_assistant_prepare" swapped="no"/>
     <signal name="cancel" handler="csv_export_assistant_cancel" swapped="no"/>
     <child>
-      <object class="GtkVBox" id="start_page">
+      <object class="GtkBox" id="start_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -247,7 +248,8 @@ Select the type of Export required and the separator that will be used.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_page">
+      <object class="GtkBox" id="account_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -270,7 +272,8 @@ Select the type of Export required and the separator that will be used.
             <property name="can_focus">True</property>
             <property name="position">1</property>
             <child>
-              <object class="GtkVBox" id="acct_info_vbox">
+              <object class="GtkBox" id="acct_info_vbox">
+<property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">6</property>
@@ -455,7 +458,8 @@ Select the type of Export required and the separator that will be used.
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="date_vbox">
+              <object class="GtkBox" id="date_vbox">
+<property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">12</property>
@@ -727,7 +731,8 @@ Select the type of Export required and the separator that will be used.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="file_page">
+      <object class="GtkBox" id="file_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>

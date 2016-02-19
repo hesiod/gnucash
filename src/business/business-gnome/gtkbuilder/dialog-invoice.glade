@@ -7,7 +7,8 @@
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Invoice</property>
     <child>
-      <object class="GtkVBox" id="invoice_entry_vbox">
+      <object class="GtkBox" id="invoice_entry_vbox">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>

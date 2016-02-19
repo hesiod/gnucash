@@ -30,7 +30,8 @@ Click 'Cancel'  if you do not wish to create any new accounts now.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="currency_book_option_page_vbox">
+      <object class="GtkBox" id="currency_book_option_page_vbox">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="spacing">5</property>
@@ -105,7 +106,8 @@ Please choose the currency to use for new accounts.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="choose_account_types_vbox">
+      <object class="GtkBox" id="choose_account_types_vbox">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -374,7 +376,8 @@ Select categories that correspond to the ways that you foresee you will use GnuC
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="final_account_vbox">
+      <object class="GtkBox" id="final_account_vbox">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>

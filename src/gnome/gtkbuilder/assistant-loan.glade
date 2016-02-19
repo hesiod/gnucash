@@ -26,7 +26,8 @@ If you make a mistake or want to make changes later, you can edit the created Sc
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="loan_info_page">
+      <object class="GtkBox" id="loan_info_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">5</property>
@@ -405,7 +406,8 @@ If you make a mistake or want to make changes later, you can edit the created Sc
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="loan_options_page">
+      <object class="GtkBox" id="loan_options_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -518,7 +520,8 @@ Do you utilise an escrow account, if so an account must be specified...</propert
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="loan_repayment_page">
+      <object class="GtkBox" id="loan_repayment_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -741,7 +744,8 @@ All accounts must have valid entries to continue.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="loan_payment_page">
+      <object class="GtkBox" id="loan_payment_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -1131,7 +1135,8 @@ All enabled option pages must contain valid entries to continue.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="loan_review_page">
+      <object class="GtkBox" id="loan_review_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>

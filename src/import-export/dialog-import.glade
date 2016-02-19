@@ -336,7 +336,8 @@
     <property name="type_hint">dialog</property>
     <signal name="map" handler="gnc_ui_generic_account_picker_map_cb" swapped="no"/>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="account_picker_vbox">
+      <object class="GtkBox" id="account_picker_vbox">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child internal-child="action_area">
@@ -420,7 +421,8 @@
       <action-widget response="-5">okbutton</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkVBox" id="account_picker_content">
+  <object class="GtkBox" id="account_picker_content">
+<property name="orientation">vertical</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
@@ -1223,7 +1225,8 @@
     <property name="type_hint">dialog</property>
     <signal name="close" handler="on_matcher_cancel_clicked" swapped="no"/>
     <child internal-child="vbox">
-      <object class="GtkVBox" id="transaction_matcher_vbox">
+      <object class="GtkBox" id="transaction_matcher_vbox">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child internal-child="action_area">
@@ -1302,7 +1305,8 @@
       <action-widget response="-11">matcher__help</action-widget>
     </action-widgets>
   </object>
-  <object class="GtkVBox" id="transaction_matcher_content">
+  <object class="GtkBox" id="transaction_matcher_content">
+<property name="orientation">vertical</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>

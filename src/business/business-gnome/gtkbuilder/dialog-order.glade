@@ -844,7 +844,8 @@
                 <property name="can_focus">False</property>
                 <property name="label_xalign">0</property>
                 <child>
-                  <object class="GtkVBox" id="ledger_vbox">
+                  <object class="GtkBox" id="ledger_vbox">
+<property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">2</property>

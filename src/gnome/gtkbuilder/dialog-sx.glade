@@ -1128,7 +1128,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkVBox" id="register_vbox">
+                  <object class="GtkBox" id="register_vbox">
+<property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">1</property>

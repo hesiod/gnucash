@@ -21,7 +21,8 @@
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="stock_account_page">
+      <object class="GtkBox" id="stock_account_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
@@ -59,7 +60,8 @@
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="stock_details_page">
+      <object class="GtkBox" id="stock_details_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
@@ -241,7 +243,8 @@
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="stock_cash_page">
+      <object class="GtkBox" id="stock_cash_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="border_width">6</property>
         <property name="orientation">vertical</property>

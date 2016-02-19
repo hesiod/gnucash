@@ -25,7 +25,8 @@ Danger: this feature does not work correctly at this time; it is still under dev
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="menu_page">
+      <object class="GtkBox" id="menu_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -81,7 +82,8 @@ Books will be closed at midnight on the selected date.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="book_page">
+      <object class="GtkBox" id="book_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -206,7 +208,8 @@ Books will be closed at midnight on the selected date.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="summary_page">
+      <object class="GtkBox" id="summary_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>

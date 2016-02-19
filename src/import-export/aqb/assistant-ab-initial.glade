@@ -38,7 +38,8 @@ Press "Cancel" if you do not wish to setup any Online Banking connection now.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="wizard_page">
+      <object class="GtkBox" id="wizard_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -86,7 +87,8 @@ Press "Cancel" if you do not wish to setup any Online Banking connection now.
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_match_page">
+      <object class="GtkBox" id="account_match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>

@@ -14,7 +14,8 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkVBox" id="commodities_vbox">
+          <object class="GtkBox" id="commodities_vbox">
+<property name="orientation">vertical</property>
             <property name="visible">True</property>
             <property name="border_width">12</property>
             <property name="orientation">vertical</property>

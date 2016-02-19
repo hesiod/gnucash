@@ -62,7 +62,8 @@ On the preview page you can Load and Save the settings. To save the settings, se
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="file_page">
+      <object class="GtkBox" id="file_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -87,7 +88,8 @@ Select location and file name for the Import, then click 'OK'...
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="preview_page">
+      <object class="GtkBox" id="preview_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="events">GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK</property>
@@ -807,7 +809,8 @@ Select location and file name for the Import, then click 'OK'...
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_page">
+      <object class="GtkBox" id="account_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -831,7 +834,8 @@ Select location and file name for the Import, then click 'OK'...
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_match_page">
+      <object class="GtkBox" id="account_match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -944,7 +948,8 @@ Select location and file name for the Import, then click 'OK'...
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="doc_page">
+      <object class="GtkBox" id="doc_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
@@ -978,7 +983,8 @@ More information can be displayed by using the help button.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="match_page">
+      <object class="GtkBox" id="match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -1002,7 +1008,8 @@ More information can be displayed by using the help button.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="summary_page">
+      <object class="GtkBox" id="summary_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>

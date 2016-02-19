@@ -28,7 +28,8 @@ Click "Forward" to start loading your QIF data, or "Cancel" to abort the process
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="load_file_page">
+      <object class="GtkBox" id="load_file_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -104,7 +105,8 @@ You will have the opportunity to load as many files as you wish, so don't worry 
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="load_progress_page">
+      <object class="GtkBox" id="load_progress_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -251,7 +253,8 @@ You will have the opportunity to load as many files as you wish, so don't worry 
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="date_format_page">
+      <object class="GtkBox" id="date_format_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -312,7 +315,8 @@ Please select a date format for the file. QIF files created by European software
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_name_page">
+      <object class="GtkBox" id="account_name_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -399,7 +403,8 @@ Please enter a name for the account. If the file was exported from another accou
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="loaded_files_page">
+      <object class="GtkBox" id="loaded_files_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -493,7 +498,8 @@ Click "Forward" to finish loading files and move to the next step of the QIF imp
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_doc_page">
+      <object class="GtkBox" id="account_doc_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -520,7 +526,8 @@ Note that GnuCash will be creating many accounts that did not exist on your othe
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="account_match_page">
+      <object class="GtkBox" id="account_match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -626,7 +633,8 @@ Note that GnuCash will be creating many accounts that did not exist on your othe
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="category_doc_page">
+      <object class="GtkBox" id="category_doc_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -654,7 +662,8 @@ If you change your mind later, you can reorganize the account structure safely w
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="category_match_page">
+      <object class="GtkBox" id="category_match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -760,7 +769,8 @@ If you change your mind later, you can reorganize the account structure safely w
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="memo_doc_page">
+      <object class="GtkBox" id="memo_doc_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -786,7 +796,8 @@ In the following page, you will see the text that appears in the Payee and Memo 
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="memo_match_page">
+      <object class="GtkBox" id="memo_match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -892,7 +903,8 @@ In the following page, you will see the text that appears in the Payee and Memo 
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="currency_book_option_page">
+      <object class="GtkBox" id="currency_book_option_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -976,7 +988,8 @@ In the following page, you will see the text that appears in the Payee and Memo 
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="commodity_doc_page">
+      <object class="GtkBox" id="commodity_doc_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -1004,7 +1017,8 @@ If you don't see your exchange listed, or none of the available choices are appr
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="convert_progress_page">
+      <object class="GtkBox" id="convert_progress_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>
@@ -1150,7 +1164,8 @@ If you don't see your exchange listed, or none of the available choices are appr
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="duplicates_doc_page">
+      <object class="GtkBox" id="duplicates_doc_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">5</property>
@@ -1179,7 +1194,8 @@ Click "Forward" to review the possible matches.</property>
       </packing>
     </child>
     <child>
-      <object class="GtkVBox" id="duplicates_match_page">
+      <object class="GtkBox" id="duplicates_match_page">
+<property name="orientation">vertical</property>
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="border_width">12</property>

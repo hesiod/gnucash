@@ -560,7 +560,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkVBox" id="style_sheet_options">
+                  <object class="GtkBox" id="style_sheet_options">
+<property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>

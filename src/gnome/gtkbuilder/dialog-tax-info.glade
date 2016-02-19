@@ -239,7 +239,8 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkVBox" id="acct_info_vbox">
+              <object class="GtkBox" id="acct_info_vbox">
+<property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">6</property>
@@ -502,7 +503,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="tax_info_vbox">
+              <object class="GtkBox" id="tax_info_vbox">
+<property name="orientation">vertical</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">6</property>
@@ -556,7 +558,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkVBox" id="txf_categories_vbox">
+                  <object class="GtkBox" id="txf_categories_vbox">
+<property name="orientation">vertical</property>
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
                     <property name="can_focus">False</property>
@@ -655,7 +658,8 @@
                     <property name="can_focus">False</property>
                     <property name="spacing">30</property>
                     <child>
-                      <object class="GtkVBox" id="payer_name_source_vbox">
+                      <object class="GtkBox" id="payer_name_source_vbox">
+<property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
@@ -728,7 +732,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkVBox" id="copy_number_vbox">
+                      <object class="GtkBox" id="copy_number_vbox">
+<property name="orientation">vertical</property>
                         <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="can_focus">False</property>
