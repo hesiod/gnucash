@@ -42,7 +42,6 @@
 #include "gnc-main-window.h"
 
 #include "dialog-options.h"
-#include "dialog-preferences.h"
 #include "dialog-reset-warnings.h"
 #include "dialog-transfer.h"
 #include "dialog-utils.h"
@@ -110,9 +109,6 @@ enum
 static QofLogModule log_module = GNC_MOD_GUI;
 /** An identifier that indicates a "main" window. */
 static GQuark window_type = 0;
-/** A list of all extant main windows. This is for convenience as the
- *  same information can be obtained from the object tracking code. */
-static GList *active_windows = NULL;
 /** Count down timer for the save changes dialog. If the timer reaches zero
  *  any changes will be saved and the save dialog closed automatically */
 static guint secs_to_save = 0;
@@ -140,11 +136,9 @@ static void gnc_main_window_engine_commit_error_callback( gpointer data, QofBack
 static void gnc_main_window_cmd_page_setup (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_file_properties (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_file_close (GSimpleAction *action, GVariant *parameter, gpointer window);
-static void gnc_main_window_cmd_file_quit (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_edit_cut (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_edit_copy (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_edit_paste (GSimpleAction *action, GVariant *parameter, gpointer window);
-static void gnc_main_window_cmd_edit_preferences (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_view_refresh (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_view_toolbar (GSimpleAction *action, GVariant *parameter, gpointer window);
 static void gnc_main_window_cmd_view_summary (GSimpleAction *action, GVariant *parameter, gpointer window);
@@ -156,9 +150,6 @@ static void gnc_main_window_cmd_window_move_page (GSimpleAction *action, GVarian
 
 static void gnc_main_window_cmd_window_raise (GSimpleAction *action, GVariant *parameter, gpointer window);
 
-static void gnc_main_window_cmd_help_tutorial (GSimpleAction *action, GVariant *parameter, gpointer window);
-static void gnc_main_window_cmd_help_contents (GSimpleAction *action, GVariant *parameter, gpointer window);
-static void gnc_main_window_cmd_help_about (GSimpleAction *action, GVariant *parameter, gpointer window);
 
 static void do_popup_menu(GncPluginPage *page, GdkEventButton *event);
 static gboolean gnc_main_window_popup_menu_cb (GtkWidget *widget, GncPluginPage *page);
@@ -192,11 +183,6 @@ typedef struct GncMainWindowPrivate
      *  window that is contained in the status bar.  This pointer
      *  provides easy access for updating the progressbar. */
     GtkWidget *progressbar;
-    /** Pointer to the about dialog.  We need this so that we create
-     *  only one, can attach to its activate-link signal, and can
-     *  destroy it with the main window.
-     */
-    GtkWidget *about_dialog;
 
     //GtkWidget *menu;
 
@@ -239,90 +225,52 @@ typedef struct
  *  code. */
 static guint main_window_signals[LAST_SIGNAL] = { 0 };
 
-/** An array of all of the actions provided by the main window code.
- *  This includes some placeholder actions for the menus that are
- *  visible in the menu bar but have no action associated with
- *  them. */
-static GActionEntry gnc_app_actions [] =
-{
-    {
-        "quit", NULL, NULL, NULL,
-        gnc_main_window_cmd_file_quit
-    },
-    /* Help menu */
-    {
-        "help.tutorial", NULL, NULL, NULL,
-        gnc_main_window_cmd_help_tutorial
-    },
-    {
-        "help.contents", NULL, NULL, NULL,
-        gnc_main_window_cmd_help_contents
-    },
-    {
-        "help.about", NULL, NULL, NULL,
-        gnc_main_window_cmd_help_about
-    },
-    {
-        "edit.preferences", NULL, NULL, NULL,
-        gnc_main_window_cmd_edit_preferences
-    },
-};
+/** An array of all of the actions provided by the main window code. */
 
 static GActionEntry gnc_win_actions [] =
 {
     /* File menu */
     {
-        "file.page-setup", NULL, NULL, NULL,
-        gnc_main_window_cmd_page_setup
+        "file.page-setup", gnc_main_window_cmd_page_setup
     },
     {
-        "file.properties", NULL, NULL, NULL,
-        gnc_main_window_cmd_file_properties
+        "file.properties", gnc_main_window_cmd_file_properties
     },
     {
-        "file.close", NULL, NULL, NULL,
-        gnc_main_window_cmd_file_close
+        "file.close", gnc_main_window_cmd_file_close
     },
 
     /* Edit menu */
 
     {
-        "edit.cut", NULL, NULL, NULL,
-        gnc_main_window_cmd_edit_cut
+        "edit.cut", gnc_main_window_cmd_edit_cut
     },
     {
-        "edit.copy", NULL, NULL, NULL,
-        gnc_main_window_cmd_edit_copy
+        "edit.copy", gnc_main_window_cmd_edit_copy
     },
     {
-        "edit.paste", NULL, NULL, NULL,
-        gnc_main_window_cmd_edit_paste
+        "edit.paste", gnc_main_window_cmd_edit_paste
     },
 
     /* View menu */
     {
-        "view.refresh", NULL, NULL, NULL,
-        gnc_main_window_cmd_view_refresh
+        "view.refresh", gnc_main_window_cmd_view_refresh
     },
 
     /* Actions menu */
     {
-        "actions.forget-warnings", NULL, NULL, NULL,
-        gnc_main_window_cmd_actions_reset_warnings
+        "actions.forget-warnings", gnc_main_window_cmd_actions_reset_warnings
     },
     {
-        "actions.rename-page", NULL, NULL, NULL,
-        gnc_main_window_cmd_actions_rename_page
+        "actions.rename-page", gnc_main_window_cmd_actions_rename_page
     },
 
     /* Windows menu */
     {
-        "window.new", NULL, NULL, NULL,
-        gnc_main_window_cmd_window_new
+        "window.new", gnc_main_window_cmd_window_new
     },
     {
-        "window.move-page", NULL, NULL, NULL,
-        gnc_main_window_cmd_window_move_page
+        "window.move-page", gnc_main_window_cmd_window_move_page
     },
 
      /* Toggle actions */
@@ -340,7 +288,6 @@ static GActionEntry gnc_win_actions [] =
     }
 };
 /** The number of actions provided by the main window. */
-static guint gnc_app_n_actions = G_N_ELEMENTS (gnc_app_actions);
 static guint gnc_win_n_actions = G_N_ELEMENTS (gnc_win_actions);
 
 
@@ -590,12 +537,14 @@ gnc_main_window_restore_window (GncMainWindow *window, GncMainWindowSaveData *da
     if (window == NULL)
     {
         abort();
+#if 0
         DEBUG("Window %d doesn't exist. Creating new window.", data->window_num);
         DEBUG("active_windows %p.", active_windows);
         if (active_windows)
             DEBUG("first window %p.", active_windows->data);
         //window = gnc_main_window_new(gnc_window_get_application (window));
         gtk_widget_show(GTK_WIDGET(window));
+#endif
     }
 
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
@@ -794,6 +743,7 @@ gnc_main_window_restore_all_windows(const GKeyFile *keyfile)
     GError *error = NULL;
     GncMainWindowSaveData data;
     GncMainWindow *window;
+    GApplication *app;
 
     /* We use the same struct for reading and for writing, so we cast
        away the const. */
@@ -811,14 +761,12 @@ gnc_main_window_restore_all_windows(const GKeyFile *keyfile)
 
     /* Restore all state information on the open windows.  Window
        numbers in state file are 1-based. GList indices are 0-based. */
+    app = g_application_get_default();
+    g_application_mark_busy(app);
     gnc_set_busy_cursor (NULL, TRUE);
-    for (i = 0; i < window_count; i++)
-    {
-        data.window_num = i;
-        window = g_list_nth_data(active_windows, i);
-        gnc_main_window_restore_window(window, &data);
-    }
+    gnc_main_window_foreach_page (GTK_APPLICATION(app), gnc_main_window_restore_window, &data);
     gnc_unset_busy_cursor (NULL);
+    g_application_unmark_busy(app);
 
     statusbar_notification_lastmodified();
 }
@@ -832,7 +780,10 @@ gnc_main_window_restore_default_state(GncMainWindow *window)
      * in the window. */
     DEBUG("no saved state file");
     if (!window)
-        window = g_list_nth_data(active_windows, 0);
+    {
+        GtkApplication *app = GTK_APPLICATION(g_application_get_default());
+        window = g_list_nth_data(gtk_application_get_windows(app), 0);
+    }
     g_action_group_activate_action (G_ACTION_GROUP(window),
                                     "view.account-tree",
                                     NULL);
@@ -963,6 +914,8 @@ void
 gnc_main_window_save_all_windows(GKeyFile *keyfile)
 {
     GncMainWindowSaveData data;
+    GtkApplication *app = GTK_APPLICATION(g_application_get_default());
+    GList *list_windows = gtk_application_get_windows(app);
 
     /* Set up the iterator data structures */
     data.key_file = keyfile;
@@ -971,9 +924,9 @@ gnc_main_window_save_all_windows(GKeyFile *keyfile)
 
     g_key_file_set_integer(data.key_file,
                            STATE_FILE_TOP, WINDOW_COUNT,
-                           g_list_length(active_windows));
+                           g_list_length(list_windows));
     /* Dump all state information on the open windows */
-    g_list_foreach(active_windows, (GFunc)gnc_main_window_save_window, &data);
+    g_list_foreach(list_windows, (GFunc)gnc_main_window_save_window, &data);
 }
 
 
@@ -996,23 +949,36 @@ gnc_main_window_finish_pending (GncMainWindow *window)
     return TRUE;
 }
 
+static void
+check_finished(GncMainWindow *window, gboolean *retval)
+{
+    *retval = gnc_main_window_finish_pending(window);
+}
 
 gboolean
 gnc_main_window_all_finish_pending (void)
 {
+    gboolean retval;
     const GList *windows, *item;
-
-    windows = gnc_gobject_tracking_get_list(GNC_MAIN_WINDOW_NAME);
-    for (item = windows; item; item = g_list_next(item))
-    {
-        if (!gnc_main_window_finish_pending(item->data))
-        {
-            return FALSE;
-        }
-    }
-    return TRUE;
+    GtkApplication *app = GTK_APPLICATION(g_application_get_default());
+    windows = gtk_application_get_windows(app);
+    g_list_foreach(windows, check_finished, &retval);
+    return retval;
 }
 
+struct cp_struct {
+    GncPluginPage *page;
+    gboolean *found;
+};
+
+static void
+contains_page (GncMainWindow *window, struct cp_struct *data)
+{
+    GncMainWindowPrivate *priv;
+    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
+    g_return_if_fail(data);
+    data->found = g_list_find(priv->installed_pages, data->page);
+}
 
 /** See if the page already exists.  For each open window, look
  *  through the list of pages installed in that window and see if the
@@ -1027,20 +993,13 @@ gnc_main_window_all_finish_pending (void)
 static gboolean
 gnc_main_window_page_exists (GncPluginPage *page)
 {
-    GncMainWindow *window;
-    GncMainWindowPrivate *priv;
+    gboolean found = FALSE;
     GList *walker;
+    struct cp_struct cps = { .found = &found, .page = page };
 
-    for (walker = active_windows; walker; walker = g_list_next(walker))
-    {
-        window = walker->data;
-        priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-        if (g_list_find(priv->installed_pages, page))
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
+    gnc_main_window_foreach_page (GTK_APPLICATION(g_application_get_default()),
+                                  contains_page, &cps);
+    return found;
 }
 
 static gboolean auto_save_countdown (GtkWidget *dialog)
@@ -1254,6 +1213,7 @@ gnc_main_window_delete_event (GtkWidget *window,
                               gpointer user_data)
 {
     static gboolean already_dead = FALSE;
+    GtkApplication *app;
 
     if (already_dead)
         return TRUE;
@@ -1264,7 +1224,8 @@ gnc_main_window_delete_event (GtkWidget *window,
         return TRUE;
     }
 
-    if (g_list_length(active_windows) > 1)
+    app = GTK_APPLICATION(g_application_get_default());
+    if (g_list_length(gtk_application_get_windows(app)) > 1)
         return FALSE;
 
     already_dead = gnc_main_window_quit(GNC_MAIN_WINDOW(window));
@@ -1451,7 +1412,8 @@ gnc_main_window_update_title (GncMainWindow *window)
 static void
 gnc_main_window_update_all_titles (void)
 {
-    g_list_foreach(active_windows,
+    GtkApplication *app = GTK_APPLICATION(g_application_get_default());
+    g_list_foreach(gtk_application_get_windows(app),
                    (GFunc)gnc_main_window_update_title,
                    NULL);
 }
@@ -1574,6 +1536,8 @@ static gchar *generate_statusbar_lastmodified_message()
 static void
 statusbar_notification_lastmodified()
 {
+    // FIXME Gtk+ 3 migration: Don't do this for now
+#if 0
     // First look up the first GncMainWindow to set the statusbar there
     GList *iter;
     GtkWidget *widget = NULL;
@@ -1605,6 +1569,7 @@ statusbar_notification_lastmodified()
     {
         g_warning("uh oh, no GNC_IS_MAIN_WINDOW\n");
     }
+#endif
 }
 
 
@@ -2347,7 +2312,6 @@ gnc_main_window_init (GncMainWindow *window)
 
     /* Get the show_color_tabs value preference */
     priv->show_color_tabs = gnc_prefs_get_bool(GNC_PREFS_GROUP_GENERAL, GNC_PREF_TAB_COLOR);
-    priv->about_dialog = NULL;
 
     gnc_prefs_register_cb (GNC_PREFS_GROUP_GENERAL,
                            GNC_PREF_TAB_COLOR,
@@ -2380,13 +2344,6 @@ gnc_main_window_finalize (GObject *object)
     g_return_if_fail (object != NULL);
     g_return_if_fail (GNC_IS_MAIN_WINDOW (object));
 
-    if (active_windows == NULL)
-    {
-        /* Oops. User killed last window and we didn't catch it. */
-        g_idle_add((GSourceFunc)gnc_shutdown, 0);
-    }
-
-    gnc_gobject_tracking_forget(object);
     G_OBJECT_CLASS (gnc_main_window_parent_class)->finalize (object);
 }
 
@@ -2403,8 +2360,6 @@ gnc_main_window_destroy (GtkWidget *object)
     g_return_if_fail (GNC_IS_MAIN_WINDOW (object));
 
     window = GNC_MAIN_WINDOW (object);
-
-    active_windows = g_list_remove (active_windows, window);
 
     /* Do these things once */
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
@@ -2437,8 +2392,6 @@ gnc_main_window_destroy (GtkWidget *object)
         g_list_foreach (plugins, gnc_main_window_remove_plugin, window);
         g_list_free (plugins);
     }
-    if (priv->about_dialog)
-        g_object_unref (priv->about_dialog);
     GTK_WIDGET_CLASS (gnc_main_window_parent_class)->destroy (object);
 }
 
@@ -2471,7 +2424,6 @@ gnc_main_window_new (GtkApplication *app)
         }
     }
 #endif
-    active_windows = g_list_append (active_windows, window);
     gnc_main_window_update_title(window);
     gnc_main_window_update_all_menu_items();
     gnc_engine_add_commit_error_callback( gnc_main_window_engine_commit_error_callback, window );
@@ -2690,6 +2642,7 @@ gnc_main_window_open_page (GncMainWindow *window,
     /* Does the page want to be in a new window? */
     if (gnc_plugin_page_get_use_new_window(page))
     {
+#if 0
         /* See if there's a blank window. If so, use that. */
         for (tmp = active_windows; tmp; tmp = g_list_next(tmp))
         {
@@ -2701,12 +2654,14 @@ gnc_main_window_open_page (GncMainWindow *window,
             }
         }
         if (tmp == NULL)
-            window = gnc_main_window_new (gtk_window_get_application(GTK_WINDOW(window)));
+#endif
+        window = gnc_main_window_new (gtk_window_get_application(GTK_WINDOW(window)));
         gtk_widget_show(GTK_WIDGET(window));
     }
-    else if ((window == NULL) && active_windows)
+    else if (window == NULL)
     {
-        window = active_windows->data;
+        window = gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()));
+        g_assert(window);
     }
 
     gnc_plugin_page_set_window(page, GTK_WIDGET(window));
@@ -2838,7 +2793,9 @@ gnc_main_window_close_page (GncPluginPage *page)
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     if (priv->installed_pages == NULL)
     {
-        if (g_list_length(active_windows) > 1)
+        GList *windows = gtk_application_get_windows(GTK_APPLICATION(
+                                                     g_application_get_default()));
+        if (g_list_length(windows) > 1)
         {
             gtk_widget_destroy(GTK_WIDGET(window));
         }
@@ -3219,16 +3176,6 @@ gnc_main_window_setup_window (GncMainWindow *window)
                                   initially_insensitive_actions,
                                   "enabled", FALSE);
     }
-    {
-        GActionMap *app_map;
-        GtkApplication *app = gtk_window_get_application(GTK_WINDOW(window));
-        g_return_if_fail(GTK_IS_APPLICATION(app));
-        app_map = G_ACTION_MAP(app);
-        g_return_if_fail(G_IS_ACTION_MAP(app_map));
-        g_action_map_add_action_entries (app_map,
-                                         gnc_app_actions,
-                                         gnc_app_n_actions, window);
-    }
 
     filename = gnc_filepath_locate_ui_file("gnc-main-window-ui.xml");
 
@@ -3559,17 +3506,6 @@ gnc_main_window_cmd_file_close (GSimpleAction *action,
 }
 
 static void
-gnc_main_window_cmd_file_quit (GSimpleAction *action,
-                               GVariant      *parameter,
-                               gpointer       window)
-{
-    if (!gnc_main_window_all_finish_pending())
-        return;
-
-    gnc_main_window_quit(window);
-}
-
-static void
 gnc_main_window_cmd_edit_cut (GSimpleAction *action,
                               GVariant      *parameter,
                               gpointer       window)
@@ -3635,14 +3571,6 @@ gnc_main_window_cmd_edit_paste (GSimpleAction *action,
                                               GDK_SELECTION_CLIPBOARD);
         gtk_text_buffer_paste_clipboard (text_buffer, clipboard, NULL, FALSE);
     }
-}
-
-static void
-gnc_main_window_cmd_edit_preferences (GSimpleAction *action,
-                                      GVariant      *parameter,
-                                      gpointer       window)
-{
-    gnc_preferences_dialog ();
 }
 
 static void
@@ -3828,6 +3756,8 @@ gnc_main_window_cmd_window_raise (GSimpleAction *action,
                                   GVariant      *parameter,
                                   gpointer       old_window)
 {
+    abort();
+#if 0
     GncMainWindow *new_window;
     gint32 value;
 
@@ -3842,162 +3772,8 @@ gnc_main_window_cmd_window_raise (GSimpleAction *action,
      * impossible while handling "changed" (G_SIGNAL_NO_RECURSE) */
     g_idle_add((GSourceFunc)gnc_main_window_update_radio_button, old_window);
     LEAVE(" ");
-}
-
-static void
-gnc_main_window_cmd_help_tutorial (GSimpleAction *action,
-                                   GVariant      *parameter,
-                                   gpointer       window)
-{
-    gnc_gnome_help (HF_GUIDE, NULL);
-}
-
-static void
-gnc_main_window_cmd_help_contents (GSimpleAction *action,
-                                   GVariant      *parameter,
-                                   gpointer       window)
-{
-    gnc_gnome_help (HF_HELP, NULL);
-}
-
-/** This is a helper function to find a data file and suck it into
- *  memory.
- *
- *  @param partial The name of the file relative to the gnucash
- *  specific shared data directory.
- *
- *  @return The text of the file or NULL. The caller is responsible
- *  for freeing this string.
- */
-static gchar *
-get_file (const gchar *partial)
-{
-    gchar *filename, *text = NULL;
-    gsize length;
-
-    filename = gnc_filepath_locate_doc_file(partial);
-    if (filename && g_file_get_contents(filename, &text, &length, NULL))
-    {
-        if (length)
-        {
-            g_free(filename);
-            return text;
-        }
-        g_free(text);
-    }
-    g_free (filename);
-    return NULL;
-}
-
-
-/** This is a helper function to find a data file, suck it into
- *  memory, and split it into an array of strings.
- *
- *  @param partial The name of the file relative to the gnucash
- *  specific shared data directory.
- *
- *  @return The text of the file as an array of strings, or NULL. The
- *  caller is responsible for freeing all the strings and the array.
- */
-static gchar **
-get_file_strsplit (const gchar *partial)
-{
-    gchar *text, **lines;
-
-    text = get_file(partial);
-    if (!text)
-        return NULL;
-
-    lines = g_strsplit_set(text, "\r\n", -1);
-    g_free(text);
-    return lines;
-}
-/** URL activation callback.
- *  Use our own function to activate the URL in the users browser
- *  instead of gtk_show_uri(), which requires gvfs.
- *  Signature described in gtk docs at GtkAboutDialog activate-link signal.
- */
-
-static gboolean
-url_signal_cb (GtkAboutDialog *dialog, gchar *uri, gpointer data)
-{
-    gnc_launch_assoc (uri);
-    return TRUE;
-}
-
-/** Create and display the "about" dialog for gnucash.
- *
- *  @param action The GAction for the "about" menu item.
- *
- *  @param window The main window whose menu item was activated.
- */
-static void
-gnc_main_window_cmd_help_about (GSimpleAction *action,
-                                GVariant      *parameter,
-                                gpointer       window)
-{
-    GncMainWindowPrivate *priv;
-
-    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
-
-    if (priv->about_dialog == NULL)
-    {
-        const gchar *fixed_message = _("The GnuCash personal finance manager. "
-                                   "The GNU way to manage your money!");
-	const gchar *copyright = _("© 1997-2016 Contributors");
-	gchar **authors = get_file_strsplit("AUTHORS");
-	gchar **documenters = get_file_strsplit("DOCUMENTERS");
-	gchar *license = get_file("LICENSE");
-	gchar *message;
-
-#ifdef GNUCASH_SCM
-    /* Development version */
-    /* Translators: 1st %s is a fixed message, which is translated independently;
-                    2nd %s is the scm type (svn/svk/git/bzr);
-                    3rd %s is the scm revision number;
-                    4th %s is the build date */
-        message = g_strdup_printf(_("%s\nThis copy was built from %s rev %s on %s."),
-                                  fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
-                                  GNUCASH_BUILD_DATE);
-#else
-    /* Translators: 1st %s is a fixed message, which is translated independently;
-                    2nd %s is the scm (svn/svk/git/bzr) revision number;
-                    3rd %s is the build date */
-        message = g_strdup_printf(_("%s\nThis copy was built from rev %s on %s."),
-                                  fixed_message, GNUCASH_SCM_REV,
-                                  GNUCASH_BUILD_DATE);
 #endif
-    priv->about_dialog = gtk_about_dialog_new ();
-    g_object_set (priv->about_dialog,
-              "authors", authors,
-              "documenters", documenters,
-              "comments", message,
-              "copyright", copyright,
-              "license", license,
-              "name", "GnuCash",
-     /* Translators: the following string will be shown in Help->About->Credits
-      * Enter your name or that of your team and an email contact for feedback.
-      * The string can have multiple rows, so you can also add a list of
-      * contributors. */
-                      "translator-credits", _("translator_credits"),
-                      "version", VERSION,
-                      "website", "http://www.gnucash.org",
-                      NULL);
-
-    g_free(message);
-    if (license)     g_free(license);
-    if (documenters) g_strfreev(documenters);
-    if (authors)     g_strfreev(authors);
-    g_signal_connect (priv->about_dialog, "activate-link",
-              G_CALLBACK(url_signal_cb), NULL);
-    g_signal_connect (priv->about_dialog, "response",
-              G_CALLBACK(gtk_widget_hide), NULL);
-    gtk_window_set_transient_for (GTK_WINDOW (priv->about_dialog),
-                      GTK_WINDOW (window));
-    }
-    gtk_dialog_run (GTK_DIALOG (priv->about_dialog));
 }
-
 
 /************************************************************
  *                                                          *
@@ -4006,13 +3782,9 @@ gnc_main_window_cmd_help_about (GSimpleAction *action,
 void
 gnc_main_window_show_all_windows(void)
 {
-    GList *window_iter;
+    GtkApplication *app = GTK_APPLICATION(g_application_get_default());
 
-    for (window_iter = active_windows; window_iter != NULL; window_iter = window_iter->next)
-    {
-        gtk_widget_show(GTK_WIDGET(window_iter->data));
-    }
-
+    g_list_foreach(gtk_application_get_windows(app), gtk_widget_show, NULL);
 }
 
 /** Get a pointer to the first active top level window or NULL
@@ -4022,13 +3794,9 @@ gnc_main_window_show_all_windows(void)
 GtkWidget *
 gnc_ui_get_toplevel (void)
 {
-    GList *window;
+    GtkApplication *app = GTK_APPLICATION(g_application_get_default());
 
-    for (window = active_windows; window; window = window->next)
-        if (gtk_window_is_active (GTK_WINDOW (window->data)))
-            return window->data;
-
-    return NULL;
+    return gtk_application_get_active_window(app);
 }
 
 
@@ -4242,19 +4010,33 @@ gnc_main_window_button_press_cb (GtkWidget *whatever,
     return FALSE;
 }
 
+static void
+set_enabled(GncMainWindow *window, const gchar *action_name)
+{
+    GSimpleAction *action;
+    action = G_SIMPLE_ACTION(gnc_main_window_find_action (window, action_name));
+    g_simple_action_set_enabled(action, TRUE);
+}
+
+static void
+set_not_enabled(GncMainWindow *window, const gchar *action_name)
+{
+    GSimpleAction *action;
+    action = G_SIMPLE_ACTION(gnc_main_window_find_action (window, action_name));
+    g_simple_action_set_enabled(action, FALSE);
+}
 
 void
 gnc_main_window_all_action_set_sensitive (const gchar *action_name,
         gboolean sensitive)
 {
     GList *tmp;
-    GAction *action;
-
-    for (tmp = active_windows; tmp; tmp = g_list_next(tmp))
-    {
-        action = gnc_main_window_find_action (tmp->data, action_name);
-        g_simple_action_set_enabled (G_SIMPLE_ACTION(action), sensitive);
-    }
+    GtkApplication *app = GTK_APPLICATION(g_application_get_default());
+    tmp = gtk_application_get_windows(app);
+    if (sensitive)
+      g_list_foreach(tmp, set_enabled, action_name);
+    else
+      g_list_foreach(tmp, set_not_enabled, action_name);
 }
 
 EggMenuManager *gnc_main_window_get_uimanager (GncMainWindow *window)

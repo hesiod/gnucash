@@ -2979,7 +2979,7 @@ csv_import_trans_assistant_create (CsvImportTrans *info)
                                    };
         GtkContainer *date_format_container, *currency_format_container;
         int           i;
-        GtkTable     *enctable;
+        GtkGrid      *enctable;
         GtkListStore *settings_store;
 
         info->preview_page = GTK_WIDGET(gtk_builder_get_object (builder, "preview_page"));
@@ -3050,9 +3050,9 @@ csv_import_trans_assistant_create (CsvImportTrans *info)
                          G_CALLBACK(sep_button_clicked), (gpointer)info);
 
         /* Get the table from the Glade builder file. */
-        enctable = GTK_TABLE(gtk_builder_get_object (builder, "enctable"));
+        enctable = GTK_GRID(gtk_builder_get_object (builder, "enctable"));
         /* Put the selector in at the top. */
-        gtk_table_attach_defaults (enctable, GTK_WIDGET(info->encselector), 1, 2, 0, 1);
+        gtk_grid_attach (enctable, GTK_WIDGET(info->encselector), 1, 0, 1, 1);
         /* Show the table in all its glory. */
         gtk_widget_show_all (GTK_WIDGET(enctable));
 

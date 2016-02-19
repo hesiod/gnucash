@@ -73,24 +73,24 @@
         <section id="menubar-edit-clipboard-section">
           <item>
             <attribute name="label" translatable="yes">Cut</attribute>
-            <attribute name="action">edit.cut</attribute>
+            <attribute name="action">win.edit.cut</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Copy</attribute>
-            <attribute name="action">edit.copy</attribute>
+            <attribute name="action">win.edit.copy</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Paste</attribute>
-            <attribute name="action">edit.paste</attribute>
+            <attribute name="action">win.edit.paste</attribute>
           </item>
         </section>
         <section id="menubar-edit-selection-section"></section>
         <section id="menubar-edit-find-section"></section>
         <section id="menubar-edit-preferences-section">
-          <item>
+          <!--<item>
             <attribute name="label" translatable="yes">Preferences</attribute>
             <attribute name="action">app.edit.preferences</attribute>
-          </item>
+          </item>-->
         </section>
         <section id="menubar-edit-style-sheets-section"></section>
       </submenu>

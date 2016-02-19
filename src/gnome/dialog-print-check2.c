@@ -1689,7 +1689,7 @@ gnc_ui_print_check_dialog_create2(GncPluginPageRegister2 *plugin_page,
     /* Create and attach the date-format chooser */
     table = GTK_WIDGET(gtk_builder_get_object (builder, "options_table"));
     pcd->date_format = gnc_date_format_new_without_label();
-    gtk_table_attach_defaults(GTK_TABLE(table), pcd->date_format, 1, 3, 4, 7);
+    gtk_grid_attach(GTK_GRID(table), pcd->date_format, 1, 4, 1, 1);
 
     /* Default font (set in preferences) */
     font = gnc_prefs_get_string(GNC_PREFS_GROUP, GNC_PREF_DEFAULT_FONT);

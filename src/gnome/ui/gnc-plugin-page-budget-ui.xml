@@ -5,17 +5,17 @@
         <section id="menubar-edit-selection-section">
           <item>
             <attribute name="label" translatable="yes">Estimate Budget</attribute>
-            <attribute name="action">edit.budget.estimate</attribute>
+            <attribute name="action">win.edit.budget.estimate</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Delete Budget</attribute>
-            <attribute name="action">edit.budget.delete</attribute>
+            <attribute name="action">win.edit.budget.delete</attribute>
           </item>
         </section>
         <section id="menubar-edit-preferences-section">
           <item>
             <attribute name="label" translatable="yes">Budget Options</attribute>
-            <attribute name="action">edit.budget.options</attribute>
+            <attribute name="action">win.edit.budget.options</attribute>
           </item>
         </section>
       </submenu>
@@ -26,7 +26,7 @@
       <section id="popup-pre-section">
         <item>
           <attribute name="label" translatable="yes">Budget Options</attribute>
-          <attribute name="action">edit.budget.options</attribute>
+          <attribute name="action">win.edit.budget.options</attribute>
         </item>
       </section>
     </section>
@@ -36,24 +36,24 @@
       <section id="toolbar-account-section">
         <item>
           <attribute name="label" translatable="yes">Open Account</attribute>
-          <attribute name="action">account.open</attribute>
+          <attribute name="action">win.account.open</attribute>
         </item>
       </section>
       <section id="toolbar-budget-section">
         <section id="toolbar-budget-options-section">
           <item>
           <attribute name="label" translatable="yes">Budget Options</attribute>
-          <attribute name="action">edit.budget.options</attribute>
+          <attribute name="action">win.edit.budget.options</attribute>
         </item>
         </section>
         <section id="toolbar-budget-actions-section">
           <item>
             <attribute name="label" translatable="yes">Estimate Budget</attribute>
-            <attribute name="action">edit.budget.estimate</attribute>
+            <attribute name="action">win.edit.budget.estimate</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Delete Budget</attribute>
-            <attribute name="action">edit.budget.delete</attribute>
+            <attribute name="action">win.edit.budget.delete</attribute>
           </item>
         </section>
       </section>

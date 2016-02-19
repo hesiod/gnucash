@@ -476,7 +476,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
 
     /* Information Page */
     {
-        ldd->prmTable = GTK_TABLE(gtk_builder_get_object(builder, "param_table"));
+        ldd->prmTable = GTK_GRID(gtk_builder_get_object(builder, "param_table"));
         ldd->prmVarFrame = GTK_FRAME(gtk_builder_get_object(builder, "type_freq_frame"));
         ldd->prmIrateSpin = GTK_SPIN_BUTTON (gtk_builder_get_object(builder, "irate_spin"));
         ldd->prmType = GTK_COMBO_BOX (gtk_builder_get_object(builder, "type_combobox"));
@@ -491,7 +491,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
     }
     /* Repayment Page */
     {
-        ldd->repTable = GTK_TABLE(gtk_builder_get_object(builder, "repay_table"));
+        ldd->repTable = GTK_GRID(gtk_builder_get_object(builder, "repay_table"));
         ldd->repTxnName = GTK_ENTRY(gtk_builder_get_object(builder, "txn_title"));
         ldd->repAmtEntry = GTK_ENTRY(gtk_builder_get_object(builder, "amount_ent"));
         ldd->repFreqFrame = GTK_FRAME(gtk_builder_get_object(builder, "freq_frame"));
@@ -504,7 +504,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
     }
     /* Payment Page */
     {
-        ldd->payTable = GTK_TABLE(gtk_builder_get_object(builder, "pay_table"));
+        ldd->payTable = GTK_GRID(gtk_builder_get_object(builder, "pay_table"));
         ldd->payTxnName = GTK_ENTRY(gtk_builder_get_object(builder, "pay_txn_title"));
         ldd->payAmtEntry = GTK_ENTRY(gtk_builder_get_object(builder, "pay_amt_ent"));
         ldd->payUseEscrow = GTK_CHECK_BUTTON(gtk_builder_get_object(builder, "pay_use_escrow"));
@@ -517,7 +517,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
     }
     /* Review Page */
     {
-        ldd->revTable = GTK_TABLE(gtk_builder_get_object(builder, "rev_date_range_table"));
+        ldd->revTable = GTK_GRID(gtk_builder_get_object(builder, "rev_date_range_table"));
         ldd->revRangeOpt = GTK_COMBO_BOX(gtk_builder_get_object(builder, "rev_range_opt"));
         ldd->revDateFrame = GTK_FRAME(gtk_builder_get_object(builder, "rev_date_frame"));
         ldd->revScrollWin = GTK_SCROLLED_WINDOW(gtk_builder_get_object(builder, "rev_scrollwin"));
@@ -722,7 +722,7 @@ gnc_loan_assistant_create( LoanAssistantData *ldd )
             for ( i = 0; i < ldd->ld.repayOptCount; i++ )
             {
                 rouid = ldd->repayOptsUI[i];
-                vb = GTK_BOX(gtk_vbox_new( FALSE, 2 ));
+                vb = GTK_BOX(gtk_box_new( GTK_ORIENTATION_VERTICAL, 2 ));
 
                 /* Add payment checkbox. */
 

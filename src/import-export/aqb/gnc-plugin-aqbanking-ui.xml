@@ -65,7 +65,7 @@
               </item>
               <!--<item>
                 <attribute name="label" translatable="yes">Issue SEPA Direct Debit Action</attribute>
-                <attribute name="action">actions.online.issue.transaction.sepa-direct-debit</attribute>
+                <attribute name="action">win.actions.online.issue.transaction.sepa-direct-debit</attribute>
               </item>/-->
             </section>
             <section id="menubar-actions-online-log-section">

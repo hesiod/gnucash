@@ -53,9 +53,11 @@
 #include "gnc-prefs-utils.h"
 #include "gnc-session.h"
 #include "gnc-ui-util.h"
+#include "gnc-ui.h"
 
 #include "top-level.h"
 #include "dialog-new-user.h"
+#include "dialog-preferences.h"
 #include "engine-helpers-guile.h"
 #include "swig-runtime.h"
 
@@ -144,6 +146,33 @@ static GOptionEntry options[] =
     { NULL }
 };
 
+static void gnc_main_window_cmd_edit_preferences (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_file_quit (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_help_tutorial (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_help_contents (GSimpleAction *action, GVariant *parameter, gpointer window);
+static void gnc_main_window_cmd_help_about (GSimpleAction *action, GVariant *parameter, gpointer window);
+
+static GActionEntry gnc_app_actions [] =
+{
+    {
+        "quit", gnc_main_window_cmd_file_quit
+    },
+    /* Help menu */
+    {
+        "help.tutorial", gnc_main_window_cmd_help_tutorial
+    },
+    {
+        "help.contents", gnc_main_window_cmd_help_contents
+    },
+    {
+        "help.about", gnc_main_window_cmd_help_about
+    },
+    {
+        "edit.preferences", gnc_main_window_cmd_edit_preferences
+    },
+};
+static guint gnc_app_n_actions = G_N_ELEMENTS (gnc_app_actions);
+
 static void
 gnc_print_unstable_message(void)
 {
@@ -217,6 +246,185 @@ gnc_application_init (GncApplication *app)
 {
     printf("init\n");
     g_application_add_main_option_entries (G_APPLICATION (app), options);
+    {
+        g_action_map_add_action_entries (G_ACTION_MAP(app),
+                                         gnc_app_actions,
+                                         gnc_app_n_actions, app);
+    }
+}
+
+
+static void
+gnc_main_window_cmd_edit_preferences (GSimpleAction *action,
+                                      GVariant      *parameter,
+                                      gpointer       window)
+{
+    printf("prefs\n");
+    gnc_preferences_dialog ();
+}
+
+/** This is a helper function to find a data file and suck it into
+ *  memory.
+ *
+ *  @param partial The name of the file relative to the gnucash
+ *  specific shared data directory.
+ *
+ *  @return The text of the file or NULL. The caller is responsible
+ *  for freeing this string.
+ */
+static gchar *
+get_file (const gchar *partial)
+{
+    gchar *filename, *text = NULL;
+    gsize length;
+
+    filename = gnc_filepath_locate_doc_file(partial);
+    if (filename && g_file_get_contents(filename, &text, &length, NULL))
+    {
+        if (length)
+        {
+            g_free(filename);
+            return text;
+        }
+        g_free(text);
+    }
+    g_free (filename);
+    return NULL;
+}
+
+
+/** This is a helper function to find a data file, suck it into
+ *  memory, and split it into an array of strings.
+ *
+ *  @param partial The name of the file relative to the gnucash
+ *  specific shared data directory.
+ *
+ *  @return The text of the file as an array of strings, or NULL. The
+ *  caller is responsible for freeing all the strings and the array.
+ */
+static gchar **
+get_file_strsplit (const gchar *partial)
+{
+    gchar *text, **lines;
+
+    text = get_file(partial);
+    if (!text)
+        return NULL;
+
+    lines = g_strsplit_set(text, "\r\n", -1);
+    g_free(text);
+    return lines;
+}
+/** URL activation callback.
+ *  Use our own function to activate the URL in the users browser
+ *  instead of gtk_show_uri(), which requires gvfs.
+ *  Signature described in gtk docs at GtkAboutDialog activate-link signal.
+ */
+
+static gboolean
+url_signal_cb (GtkAboutDialog *dialog, gchar *uri, gpointer data)
+{
+    gnc_launch_assoc (uri);
+    return TRUE;
+}
+
+/** Create and display the "about" dialog for gnucash.
+ *
+ *  @param action The GAction for the "about" menu item.
+ *
+ *  @param window The main window whose menu item was activated.
+ */
+static void
+gnc_main_window_cmd_help_about (GSimpleAction *action,
+                                GVariant      *parameter,
+                                gpointer       app)
+{
+    static GtkWidget *about_dialog = NULL;
+
+    if (about_dialog == NULL)
+    {
+        const gchar *fixed_message = _("The GnuCash personal finance manager. "
+                                   "The GNU way to manage your money!");
+	const gchar *copyright = _("© 1997-2016 Contributors");
+	gchar **authors = get_file_strsplit("AUTHORS");
+	gchar **documenters = get_file_strsplit("DOCUMENTERS");
+	gchar *license = get_file("LICENSE");
+	gchar *message;
+
+#ifdef GNUCASH_SCM
+    /* Development version */
+    /* Translators: 1st %s is a fixed message, which is translated independently;
+                    2nd %s is the scm type (svn/svk/git/bzr);
+                    3rd %s is the scm revision number;
+                    4th %s is the build date */
+        message = g_strdup_printf(_("%s\nThis copy was built from %s rev %s on %s."),
+                                  fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
+                                  GNUCASH_BUILD_DATE);
+#else
+    /* Translators: 1st %s is a fixed message, which is translated independently;
+                    2nd %s is the scm (svn/svk/git/bzr) revision number;
+                    3rd %s is the build date */
+        message = g_strdup_printf(_("%s\nThis copy was built from rev %s on %s."),
+                                  fixed_message, GNUCASH_SCM_REV,
+                                  GNUCASH_BUILD_DATE);
+#endif
+    about_dialog = gtk_about_dialog_new ();
+    g_object_set (about_dialog,
+              "authors", authors,
+              "documenters", documenters,
+              "comments", message,
+              "copyright", copyright,
+              "license", license,
+              "name", "GnuCash",
+     /* Translators: the following string will be shown in Help->About->Credits
+      * Enter your name or that of your team and an email contact for feedback.
+      * The string can have multiple rows, so you can also add a list of
+      * contributors. */
+                      "translator-credits", _("translator_credits"),
+                      "version", VERSION,
+                      "website", "http://www.gnucash.org",
+                      NULL);
+
+    g_free(message);
+    if (license)     g_free(license);
+    if (documenters) g_strfreev(documenters);
+    if (authors)     g_strfreev(authors);
+    g_signal_connect (about_dialog, "activate-link",
+              G_CALLBACK(url_signal_cb), NULL);
+    g_signal_connect (about_dialog, "response",
+              G_CALLBACK(gtk_widget_hide), NULL);
+    gtk_window_set_transient_for (GTK_WINDOW (about_dialog),
+                      GTK_WINDOW (gtk_application_get_active_window(app)));
+    }
+    gtk_dialog_run (GTK_DIALOG (about_dialog));
+}
+
+
+static void
+gnc_main_window_cmd_help_tutorial (GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       window)
+{
+    gnc_gnome_help (HF_GUIDE, NULL);
+}
+
+static void
+gnc_main_window_cmd_help_contents (GSimpleAction *action,
+                                   GVariant      *parameter,
+                                   gpointer       window)
+{
+    gnc_gnome_help (HF_HELP, NULL);
+}
+
+static void
+gnc_main_window_cmd_file_quit (GSimpleAction *action,
+                               GVariant      *parameter,
+                               gpointer       app)
+{
+    if (!gnc_main_window_all_finish_pending())
+        return;
+
+    g_application_quit(G_APPLICATION(app));
 }
 
 static gint

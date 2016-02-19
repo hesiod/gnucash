@@ -539,7 +539,7 @@ gnc_preferences_build_page (gpointer data,
     if (add_in->full_page)
     {
         label = gtk_label_new(add_in->tabname);
-        gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+        gtk_widget_set_valign(label, 0.5);
         gtk_notebook_append_page(notebook, new_content, label);
         g_object_unref(G_OBJECT(builder));
         LEAVE("appended page");
@@ -577,7 +577,7 @@ gnc_preferences_build_page (gpointer data,
         existing_content = gtk_grid_new(); //0, 4, FALSE);
         gtk_container_set_border_width(GTK_CONTAINER(existing_content), 6);
         label = gtk_label_new(add_in->tabname);
-        gtk_misc_set_alignment(GTK_MISC(label), 0.0, 0.5);
+        gtk_widget_set_valign (label, 0.5);
         gtk_notebook_append_page(notebook, existing_content, label);
         gtk_widget_show_all(existing_content);
         DEBUG("created new page %s, appended it", add_in->tabname);
@@ -1075,9 +1075,9 @@ gnc_preferences_dialog_create(void)
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "retain_days_adj");
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "tab_width_adj");
     gnc_builder_add_from_file (builder, "dialog-preferences.glade", "date_formats");
-    gnc_builder_add_from_file (builder, "dialog-preferences.glade", "GnuCash Preferences");
+    gnc_builder_add_from_file (builder, "dialog-preferences.glade", "window_preferences");
 
-    dialog = GTK_WIDGET(gtk_builder_get_object (builder, "GnuCash Preferences"));
+    dialog = GTK_WIDGET(gtk_builder_get_object (builder, "window_preferences"));
 
 #ifndef WITH_REGISTER2
     /* Hide preferences that are related to register2 */

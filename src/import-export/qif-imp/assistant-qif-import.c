@@ -847,7 +847,7 @@ new_security_page(SCM security_hash_key, gnc_commodity *comm, QIFImportWindow *w
           " enter a new one.");
 
     /* Make the page widget. */
-    page = gtk_vbox_new( FALSE, 0 );
+    page = gtk_box_new( GTK_ORIENTATION_VERTICAL, 0 );
     retval->page = page;
     g_object_set_data(G_OBJECT(retval->page), "page_struct", retval);
     page = retval->page;
@@ -874,9 +874,9 @@ new_security_page(SCM security_hash_key, gnc_commodity *comm, QIFImportWindow *w
     /*
      * Add all the widgets to the page.
      */
-    table = gtk_table_new(3, 2, FALSE);
-    gtk_table_set_row_spacings(GTK_TABLE(table), 6);
-    gtk_table_set_col_spacings(GTK_TABLE(table), 12);
+    table = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(table), 6);
+    gtk_grid_set_column_spacing(GTK_GRID(table), 12);
 
     /* Name entry */
     retval->name_entry = gtk_entry_new();
@@ -889,10 +889,10 @@ new_security_page(SCM security_hash_key, gnc_commodity *comm, QIFImportWindow *w
     gtk_widget_set_tooltip_text(label, name_tooltip);
     gtk_widget_set_tooltip_text(retval->name_entry, name_tooltip);
 
-    gtk_table_attach(GTK_TABLE(table), label, 0, 1, 0, 1,
-                     GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
-    gtk_table_attach_defaults(GTK_TABLE(table), retval->name_entry,
-                              1, 2, 0, 1);
+    gtk_grid_attach(GTK_GRID(table), label,
+                    0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(table), retval->name_entry,
+                    1, 0, 1, 1);
 
     g_signal_connect (retval->name_entry, "changed",
                       G_CALLBACK (gnc_ui_qif_import_comm_changed_cb), wind);
@@ -909,10 +909,10 @@ new_security_page(SCM security_hash_key, gnc_commodity *comm, QIFImportWindow *w
     gtk_widget_set_tooltip_text(label, mnemonic_tooltip);
     gtk_widget_set_tooltip_text(retval->mnemonic_entry, mnemonic_tooltip);
 
-    gtk_table_attach(GTK_TABLE(table), label, 0, 1, 1, 2,
-                     GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
-    gtk_table_attach_defaults(GTK_TABLE(table), retval->mnemonic_entry,
-                              1, 2, 1, 2);
+    gtk_grid_attach(GTK_GRID(table), label,
+                    0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(table), retval->mnemonic_entry,
+                    1, 1, 1, 1);
 
     g_signal_connect (retval->mnemonic_entry, "changed",
                       G_CALLBACK (gnc_ui_qif_import_comm_changed_cb), wind);
@@ -934,10 +934,9 @@ new_security_page(SCM security_hash_key, gnc_commodity *comm, QIFImportWindow *w
     gtk_widget_set_tooltip_text(label, namespace_tooltip);
     gtk_widget_set_tooltip_text(retval->namespace_combo, namespace_tooltip);
 
-    gtk_table_attach(GTK_TABLE(table), label, 0, 1, 2, 3,
-                     GTK_FILL, GTK_EXPAND | GTK_FILL, 0, 0);
-    gtk_table_attach_defaults(GTK_TABLE(table), retval->namespace_combo,
-                              1, 2, 2, 3);
+    gtk_grid_attach(GTK_GRID(table), label, 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(table), retval->namespace_combo,
+                    1, 2, 1, 1);
 
     gtk_container_set_border_width(GTK_CONTAINER(page), 12);
 
