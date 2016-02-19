@@ -1626,7 +1626,7 @@ recnWindow2 (GtkWidget *parent, Account *account)
 
 
 static void
-recnWindow2_add_widget (GtkUIManager *merge,
+recnWindow2_add_widget (GtkBuilder *merge,
                        GtkWidget *widget,
                        GtkBox *dock)
 {

@@ -399,12 +399,9 @@ sxftd_init( SXFromTransInfo *sxfti )
         sxfti->startDateGDE =
             GNC_DATE_EDIT( gnc_date_edit_new (gnc_time (NULL),
                                               FALSE, FALSE));
-        gtk_table_attach( GTK_TABLE(paramTable),
+        gtk_grid_attach(  GTK_GRID(paramTable),
                           GTK_WIDGET( sxfti->startDateGDE ),
-                          1, 2, 2, 3,
-                          (GTK_EXPAND | GTK_FILL),
-                          GTK_FILL,
-                          0, 0 );
+                          1, 2, 1, 1 );
         g_signal_connect( sxfti->startDateGDE, "date-changed",
                           G_CALLBACK( sxftd_update_excal_adapt ),
                           sxfti );

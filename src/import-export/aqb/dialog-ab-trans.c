@@ -499,7 +499,7 @@ gnc_ab_trans_dialog_check_ktoblzcheck(const GncABTransDialog *td,
                                                "the account number might contain an error."),
                                              AB_Transaction_GetRemoteIban(trans));
             gnc_ab_trans_dialog_entry_set (td->recp_account_entry, message,
-                                           GTK_STOCK_DIALOG_WARNING);
+                                           _("Warning"));
         }
         else
         {
@@ -540,9 +540,9 @@ gnc_ab_trans_dialog_check_ktoblzcheck(const GncABTransDialog *td,
                                   AB_Transaction_GetRemoteAccountNumber(trans),
                                   AB_Transaction_GetRemoteBankCode(trans));
         gnc_ab_trans_dialog_entry_set (td->recp_bankcode_entry, message,
-                                       GTK_STOCK_DIALOG_WARNING);
+                                       _("Warning"));
         gnc_ab_trans_dialog_entry_set (td->recp_account_entry, message,
-                                       GTK_STOCK_DIALOG_WARNING);
+                                       _("Warning"));
 
         blztext = "Kontonummer wahrscheinlich falsch";
         break;
@@ -624,7 +624,7 @@ gnc_ab_trans_dialog_verify_values(GncABTransDialog *td)
         gnc_ab_trans_dialog_entry_set (td->recp_name_entry,
                                        _("You did not enter a recipient name. A recipient name is "
                                          "required for an online transfer.\n"),
-                                       GTK_STOCK_CANCEL);
+                                       _("Cancel"));
 
         g_free (othername);
         values_ok = FALSE;
@@ -644,7 +644,7 @@ gnc_ab_trans_dialog_verify_values(GncABTransDialog *td)
         gnc_ab_trans_dialog_entry_set (td->recp_account_entry,
                                        _("You did not enter a recipient account. A recipient account is "
                                          "required for an online transfer.\n"),
-                                       GTK_STOCK_CANCEL);
+                                       _("Cancel"));
         values_ok = FALSE;
     }
     else
@@ -660,7 +660,7 @@ gnc_ab_trans_dialog_verify_values(GncABTransDialog *td)
         gnc_ab_trans_dialog_entry_set (td->recp_bankcode_entry,
                                        _("You did not enter a recipient bank. A recipient bank is "
                                          "required for an online transfer.\n"),
-                                       GTK_STOCK_CANCEL);
+                                       _("Cancel"));
         values_ok = FALSE;
     }
     else
@@ -680,7 +680,7 @@ gnc_ab_trans_dialog_verify_values(GncABTransDialog *td)
                                          "interpreted correctly. You might have mixed up decimal "
                                          "point and comma, compared to your locale settings. "
                                          "This does not result in a valid online transfer job."),
-                                       GTK_STOCK_CANCEL);
+                                       _("Cancel"));
         values_ok = FALSE;
     }
     else
@@ -695,7 +695,7 @@ gnc_ab_trans_dialog_verify_values(GncABTransDialog *td)
         gnc_ab_trans_dialog_entry_set (td->purpose_entry,
                                        _("You did not enter any transaction purpose. A purpose is "
                                          "required for an online transfer.\n"),
-                                       GTK_STOCK_CANCEL);
+                                       _("Cancel"));
         g_free (purpose);
         values_ok = FALSE;
     }

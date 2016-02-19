@@ -2176,7 +2176,7 @@ csv_import_trans_assistant_preview_page_prepare (GtkAssistant *assistant,
         gtk_assistant_commit (GTK_ASSISTANT(info->window));
 
         gtk_image_get_stock (info->instructions_image, &name, &size);
-        gtk_image_set_from_stock (info->instructions_image, GTK_STOCK_DIALOG_ERROR, size);
+        gtk_image_set_from_stock (info->instructions_image, _("Error"), size);
         gtk_label_set_text (info->instructions_label,
                            _("The rows displayed below had errors which are in the last column. You can attempt to correct them by changing the configuration."));
         gtk_widget_show (GTK_WIDGET(info->instructions_image));
@@ -2955,7 +2955,7 @@ csv_import_trans_assistant_create (CsvImportTrans *info)
     info->file_chooser = gtk_file_chooser_widget_new (GTK_FILE_CHOOSER_ACTION_OPEN);
     g_signal_connect (G_OBJECT(info->file_chooser), "file-activated",
                       G_CALLBACK(csv_import_trans_file_chooser_confirm_cb), info);
-    button = gtk_button_new_from_stock (GTK_STOCK_OK);
+    button = gtk_button_new_from_icon_name (_("OK"), GTK_ICON_SIZE_BUTTON);
     gtk_widget_set_size_request (button, 100, -1);
     gtk_widget_show (button);
     h_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);

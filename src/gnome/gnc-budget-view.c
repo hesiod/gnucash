@@ -158,7 +158,7 @@ struct GncBudgetViewPrivate
 #define GNC_BUDGET_VIEW_GET_PRIVATE(o)  \
    (G_TYPE_INSTANCE_GET_PRIVATE((o), GNC_TYPE_BUDGET_VIEW, GncBudgetViewPrivate))
 
-G_DEFINE_TYPE(GncBudgetView, gnc_budget_view, GTK_TYPE_VBOX)
+G_DEFINE_TYPE(GncBudgetView, gnc_budget_view, GTK_TYPE_BOX)
 
 /** \brief Create new gnc budget view.
 
