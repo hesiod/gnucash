@@ -284,10 +284,10 @@ gnc_plugin_page_account_tree_new (void)
 static void
 gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
 {
+    //g_type_class_add_private(klass, sizeof(GncPluginPageAccountTreePrivate));
+
     GObjectClass *object_class = G_OBJECT_CLASS (klass);
     GncPluginPageClass *gnc_plugin_class = GNC_PLUGIN_PAGE_CLASS(klass);
-
-    gnc_plugin_page_account_tree_parent_class = g_type_class_peek_parent (klass);
 
     object_class->finalize = gnc_plugin_page_account_tree_finalize;
 
@@ -299,7 +299,6 @@ gnc_plugin_page_account_tree_class_init (GncPluginPageAccountTreeClass *klass)
     gnc_plugin_class->save_page       = gnc_plugin_page_account_tree_save_page;
     gnc_plugin_class->recreate_page   = gnc_plugin_page_account_tree_recreate_page;
 
-    g_type_class_add_private(klass, sizeof(GncPluginPageAccountTreePrivate));
 
     plugin_page_signals[ACCOUNT_SELECTED] =
         g_signal_new ("account_selected",
@@ -855,7 +854,7 @@ gnc_plugin_page_account_tree_selection_changed_cb (GtkTreeSelection *selection,
 
     action = g_action_map_lookup_action (action_map, "account.renumber");
     g_return_if_fail(action);
-    g_action_change_state (action, g_variant_new_boolean(is_rws && subaccounts));
+    g_simple_action_set_enabled (G_SIMPLE_ACTION(action), is_rws && subaccounts);
 }
 
 

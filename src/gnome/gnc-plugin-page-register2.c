@@ -365,13 +365,6 @@ static const gchar *actions_requiring_account[] =
     NULL
 };
 
-/** View Style actions */
-static const gchar *view_style_actions[] =
-{
-    "view.ledger",
-    NULL
-};
-
 struct status_action
 {
     const char *action_name;
@@ -896,18 +889,16 @@ gnc_plugin_page_register2_ui_initial_state (GncPluginPageRegister2 *page) // thi
     gnc_plugin_update_actions(action_map, actions_requiring_account,
                               "enabled", is_readwrite && account != NULL);
 
-    /* Set "style" radio button */
-    ledger_type = gnc_ledger_display2_type (priv->ledger);
-    gnc_plugin_update_actions (action_map, view_style_actions,
-                              "enabled", ledger_type == LD2_SINGLE);
-
     model = gnc_ledger_display2_get_split_model_register (priv->ledger);
     g_return_if_fail(model);
     view = gnc_split_reg2_get_register (priv->gsr);
     g_return_if_fail(view);
 
+    /* Set "style" radio button */
+    ledger_type = gnc_ledger_display2_type (priv->ledger);
     action = g_action_map_lookup_action (action_map, "view.ledger");
     g_return_if_fail(action);
+    g_simple_action_set_enabled(action, ledger_type == LD2_SINGLE);
     g_signal_handlers_block_by_func (action, gnc_plugin_page_register2_cmd_style_changed, page);
     g_action_change_state (action, g_variant_new_string(model->style));
     g_signal_handlers_unblock_by_func (action, gnc_plugin_page_register2_cmd_style_changed, page);
@@ -1187,14 +1178,6 @@ gnc_plugin_page_register2_window_changed (GncPluginPage *plugin_page,
         GTK_WIDGET(gnc_window_get_gtk_window (GNC_WINDOW (window)));
 }
 
-static const gchar *style_names[] =
-{
-    "basic",
-    "auto",
-    "journal",
-    NULL
-};
-
 #define KEY_REGISTER_TYPE       "RegisterType"
 #define KEY_ACCOUNT_NAME        "AccountName"
 #define KEY_REGISTER_STYLE      "RegisterStyle"
@@ -1274,8 +1257,7 @@ gnc_plugin_page_register2_save_page (GncPluginPage *plugin_page,
         return;
     }
 
-    // FIXME Migrate this to Gtk+ 3
-    // g_key_file_set_string (key_file, group_name, KEY_REGISTER_STYLE, style_names[model->style]);
+    g_key_file_set_string (key_file, group_name, KEY_REGISTER_STYLE, model->style);
     g_key_file_set_boolean (key_file, group_name, KEY_DOUBLE_LINE, model->use_double_line);
     g_key_file_set_boolean (key_file, group_name, KEY_EXTRA_DATES, view->show_extra_dates);
 
@@ -1299,34 +1281,27 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
         GKeyFile *key_file,
         const gchar *group_name)
 {
+    GActionMap *action_map;
     GncPluginPageRegister2Private *priv;
     GAction *action;
     GError *error = NULL;
     gchar *style_name;
-    gint i;
     gboolean use_double_line;
     gboolean show_extra_dates;
 
     ENTER(" ");
+    action_map = G_ACTION_MAP(gnc_plugin_page_get_window(GNC_PLUGIN_PAGE (page)));
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (page);
 
     /* Convert the style name to an index */
     style_name = g_key_file_get_string (key_file, group_name,
                                         KEY_REGISTER_STYLE, &error);
-    for (i = 0 ; style_names[i]; i++)
-    {
-        if (g_ascii_strcasecmp (style_name, style_names[i]) == 0)
-        {
-            DEBUG("Found match for style name: %s", style_name);
-            break;
-        }
-    }
 
     /* Update the style menu action for this page */
     if (style_name)
     {
         DEBUG("Setting style: %s", style_name);
-        action = gnc_plugin_page_get_action (page, "view.ledger");
+        action = g_action_map_lookup_action (action_map, "view.ledger");
         g_return_if_fail(action);
         g_action_change_state (action, g_variant_new_string(style_name));
     }
@@ -1336,14 +1311,16 @@ gnc_plugin_page_register2_restore_edit_menu (GncPluginPage *page,
     use_double_line =
         g_key_file_get_boolean (key_file, group_name, KEY_DOUBLE_LINE, &error);
     DEBUG("Setting double_line_mode: %d", use_double_line);
-    action = gnc_plugin_page_get_action (page, "view.double-line");
+    action = g_action_map_lookup_action (action_map, "view.double-line");
+    g_return_if_fail(action);
     g_action_change_state (action, g_variant_new_boolean(use_double_line));
 
     /* Update the extra dates action on this page */
     show_extra_dates =
         g_key_file_get_boolean (key_file, group_name, KEY_EXTRA_DATES, &error);
     DEBUG("Setting extra_dates_mode: %d", show_extra_dates);
-    action = gnc_plugin_page_get_action (page, "view.extra-dates");
+    action = g_action_map_lookup_action (action_map, "view.extra-dates");
+    g_return_if_fail(action);
     g_action_change_state (action, g_variant_new_boolean(show_extra_dates));
     LEAVE(" ");
 }
@@ -3052,7 +3029,6 @@ static void
 gnc_plugin_page_register2_cmd_style_changed (GSimpleAction *action, GVariant *parameter, gpointer user_data)
 {
     GncPluginPageRegister2 *plugin_page = (GncPluginPageRegister2 *)user_data;
-    // GtkRadioAction current = parameter
     GncPluginPageRegister2Private *priv;
     SplitRegisterStyle2 sty;
 
@@ -3064,7 +3040,10 @@ gnc_plugin_page_register2_cmd_style_changed (GSimpleAction *action, GVariant *pa
 
     priv = GNC_PLUGIN_PAGE_REGISTER2_GET_PRIVATE (plugin_page);
     sty = g_variant_get_string(parameter, NULL);
+    g_return_if_fail (sty);
     gnc_split_reg2_change_style (priv->gsr, sty);
+
+    g_simple_action_set_state (action, parameter);
 
     gnc_plugin_page_register2_ui_update (NULL, plugin_page);
     LEAVE(" ");

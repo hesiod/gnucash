@@ -3333,52 +3333,55 @@ gnc_main_window_switch_page (GtkNotebook *notebook,
 {
     GncMainWindowPrivate *priv;
     GtkWidget *child;
-    GncPluginPage *old_page, *new_page;
+    GncPluginPage *old_page, *new_page = NULL;
     gboolean immutable, visible;
 
     ENTER("Notebook %p, page, %p, index %d, window %p",
           notebook, notebook_page, pos, window);
     g_return_if_fail (GNC_IS_MAIN_WINDOW (window));
 
-    child = gtk_notebook_get_nth_page (notebook, pos);
-    g_return_if_fail (child != NULL);
-
-    new_page = g_object_get_data (G_OBJECT (child), PLUGIN_PAGE_LABEL);
-    g_return_if_fail (new_page != NULL);
-
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     old_page = priv->current_page;
-    if (old_page != NULL)
+    if (old_page)
     {
         gnc_plugin_page_unmerge_actions (old_page, priv->ui_merge);
         gnc_plugin_page_unselected (old_page);
     }
 
-    priv->current_page = new_page;
+    child = gtk_notebook_get_nth_page (notebook, pos);
+    if (child)
+    {
+        new_page = g_object_get_data (G_OBJECT (child), PLUGIN_PAGE_LABEL);
+    }
 
-    /* Update the user interface (e.g. menus and toolbars */
-    gnc_plugin_page_merge_actions (new_page, priv->ui_merge);
-    visible = gnc_main_window_show_summarybar(window, NULL);
-    gnc_plugin_page_show_summarybar (new_page, visible);
+    if (new_page)
+    {
+        priv->current_page = new_page;
 
-    /* Allow page specific actions */
-    gnc_plugin_page_selected (new_page);
-    gnc_window_update_status (GNC_WINDOW(window), new_page);
+        /* Update the user interface (e.g. menus and toolbars */
+        gnc_plugin_page_merge_actions (new_page, priv->ui_merge);
+        visible = gnc_main_window_show_summarybar(window, NULL);
+        gnc_plugin_page_show_summarybar (new_page, visible);
 
-    /* Update the page reference info */
-    priv->usage_order = g_list_remove (priv->usage_order, new_page);
-    priv->usage_order = g_list_prepend (priv->usage_order, new_page);
+        /* Allow page specific actions */
+        gnc_plugin_page_selected (new_page);
+        gnc_window_update_status (GNC_WINDOW(window), new_page);
 
-    gnc_plugin_update_actions(G_ACTION_MAP(window),
-                              multiple_page_actions,
-                              "enabled",
-                              g_list_length(priv->installed_pages) > 1);
+        /* Update the page reference info */
+        priv->usage_order = g_list_remove (priv->usage_order, new_page);
+        priv->usage_order = g_list_prepend (priv->usage_order, new_page);
+
+        gnc_plugin_update_actions(G_ACTION_MAP(window),
+                                  multiple_page_actions,
+                                  "enabled",
+                                  g_list_length(priv->installed_pages) > 1);
+
+        g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, new_page);
+    }
 
     gnc_main_window_update_title(window);
     gnc_main_window_update_menu_item(window);
     gnc_main_window_update_menubar(window);
-
-    g_signal_emit (window, main_window_signals[PAGE_CHANGED], 0, new_page);
 
     LEAVE(" ");
 }
