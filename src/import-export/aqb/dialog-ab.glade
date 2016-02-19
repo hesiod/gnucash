@@ -454,7 +454,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="enter_from_box">
+                              <object class="GtkBox" id="enter_from_box">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -560,7 +561,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="enter_to_box">
+                              <object class="GtkBox" id="enter_to_box">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -1387,7 +1389,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="amount_hbox">
+                  <object class="GtkBox" id="amount_hbox">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>

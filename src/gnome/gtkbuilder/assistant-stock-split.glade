@@ -213,7 +213,8 @@
               <placeholder/>
             </child>
             <child>
-              <object class="GtkHBox" id="price_currency_box">
+              <object class="GtkBox" id="price_currency_box">
+<property name="orientation">horizontal</property>
                 <property name="visible">True</property>
                 <child>
                   <placeholder/>
@@ -309,7 +310,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHBox" id="cash_box">
+              <object class="GtkBox" id="cash_box">
+<property name="orientation">horizontal</property>
                 <property name="visible">True</property>
                 <child>
                   <placeholder/>

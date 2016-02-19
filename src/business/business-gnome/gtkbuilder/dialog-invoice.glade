@@ -166,7 +166,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="page_date_opened_hbox">
+                          <object class="GtkBox" id="page_date_opened_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -180,7 +181,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="date_posted_hbox">
+                          <object class="GtkBox" id="date_posted_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -357,7 +359,8 @@
                         <property name="can_focus">False</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <object class="GtkHBox" id="page_owner_hbox">
+                          <object class="GtkBox" id="page_owner_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -371,7 +374,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="page_job_hbox">
+                          <object class="GtkBox" id="page_job_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -523,7 +527,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="page_proj_cust_hbox">
+                  <object class="GtkBox" id="page_proj_cust_hbox">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -551,7 +556,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="page_proj_job_hbox">
+                  <object class="GtkBox" id="page_proj_job_hbox">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -607,7 +613,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="to_charge_box">
+                  <object class="GtkBox" id="to_charge_box">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -810,7 +817,8 @@
                         <property name="border_width">3</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <object class="GtkHBox" id="dialog_type_hbox">
+                          <object class="GtkBox" id="dialog_type_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -826,7 +834,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="dialog_type_choice_hbox">
+                              <object class="GtkBox" id="dialog_type_choice_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -897,7 +906,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="dialog_date_opened_hbox">
+                          <object class="GtkBox" id="dialog_date_opened_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -1019,7 +1029,8 @@
                         <property name="border_width">3</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <object class="GtkHBox" id="dialog_owner_hbox">
+                          <object class="GtkBox" id="dialog_owner_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -1033,7 +1044,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="dialog_job_hbox">
+                          <object class="GtkBox" id="dialog_job_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -1161,7 +1173,8 @@
                         <property name="border_width">3</property>
                         <property name="homogeneous">True</property>
                         <child>
-                          <object class="GtkHBox" id="dialog_proj_cust_hbox">
+                          <object class="GtkBox" id="dialog_proj_cust_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -1175,7 +1188,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="dialog_proj_job_hbox">
+                          <object class="GtkBox" id="dialog_proj_job_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>

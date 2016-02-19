@@ -280,7 +280,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHBox" id="StartDate_hbox">
+              <object class="GtkBox" id="StartDate_hbox">
+<property name="orientation">horizontal</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
@@ -415,7 +416,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="BudgetPeriod">
+                  <object class="GtkBox" id="BudgetPeriod">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>

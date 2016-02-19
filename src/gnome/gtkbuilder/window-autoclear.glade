@@ -50,7 +50,8 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="end_value_box">
+                      <object class="GtkBox" id="end_value_box">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <child>
                           <placeholder/>

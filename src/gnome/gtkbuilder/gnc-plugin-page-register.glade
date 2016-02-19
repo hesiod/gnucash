@@ -139,7 +139,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="date_hbox">
+                  <object class="GtkBox" id="date_hbox">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -489,7 +490,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="start_date_hbox">
+                      <object class="GtkBox" id="start_date_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -504,7 +506,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="end_date_hbox">
+                      <object class="GtkBox" id="end_date_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>

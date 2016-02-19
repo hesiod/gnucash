@@ -107,7 +107,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="date_value_box">
+                      <object class="GtkBox" id="date_value_box">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <child>
                           <placeholder/>
@@ -121,7 +122,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="ending_value_box">
+                      <object class="GtkBox" id="ending_value_box">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <child>
                           <placeholder/>

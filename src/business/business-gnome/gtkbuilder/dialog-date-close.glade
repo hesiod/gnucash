@@ -64,7 +64,8 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkHBox" id="the_top_hbox">
+              <object class="GtkBox" id="the_top_hbox">
+<property name="orientation">horizontal</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">3</property>
@@ -204,7 +205,8 @@
                     <property name="can_focus">False</property>
                     <property name="homogeneous">True</property>
                     <child>
-                      <object class="GtkHBox" id="post_date_box">
+                      <object class="GtkBox" id="post_date_box">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -218,7 +220,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="date_hbox">
+                      <object class="GtkBox" id="date_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -249,7 +252,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="acct_hbox">
+                      <object class="GtkBox" id="acct_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -383,7 +387,8 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
-              <object class="GtkHBox" id="the_hbox">
+              <object class="GtkBox" id="the_hbox">
+<property name="orientation">horizontal</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="border_width">3</property>
@@ -452,7 +457,8 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkHBox" id="date_box">
+                  <object class="GtkBox" id="date_box">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>

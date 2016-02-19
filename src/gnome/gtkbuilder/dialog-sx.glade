@@ -260,7 +260,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="remind_days_hbox">
+          <object class="GtkBox" id="remind_days_hbox">
+<property name="orientation">horizontal</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">6</property>
@@ -306,7 +307,8 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="create_days_hbox">
+          <object class="GtkBox" id="create_days_hbox">
+<property name="orientation">horizontal</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="spacing">6</property>
@@ -627,7 +629,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="remind_hbox">
+                              <object class="GtkBox" id="remind_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -692,7 +695,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="advance_hbox">
+                              <object class="GtkBox" id="advance_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -975,7 +979,8 @@
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkHBox" id="end_date_hbox">
+                                      <object class="GtkBox" id="end_date_hbox">
+<property name="orientation">horizontal</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <child>
@@ -1077,7 +1082,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkHBox" id="gncfreq_hbox">
+                      <object class="GtkBox" id="gncfreq_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -1091,7 +1097,8 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkHBox" id="example_cal_hbox">
+                      <object class="GtkBox" id="example_cal_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -1551,7 +1558,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="end_date_hbox">
+                              <object class="GtkBox" id="end_date_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>

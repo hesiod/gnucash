@@ -639,7 +639,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="hours_hbox">
+                              <object class="GtkBox" id="hours_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -677,7 +678,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="rate_hbox">
+                              <object class="GtkBox" id="rate_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -716,7 +718,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="currency_box">
+                              <object class="GtkBox" id="currency_box">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -772,7 +775,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="ccard_acct_hbox">
+                              <object class="GtkBox" id="ccard_acct_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>

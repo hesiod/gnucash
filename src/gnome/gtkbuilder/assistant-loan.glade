@@ -327,7 +327,8 @@ If you make a mistake or want to make changes later, you can edit the created Sc
                 <property name="can_focus">False</property>
                 <property name="label_xalign">0.5</property>
                 <child>
-                  <object class="GtkHBox" id="type_freq_hbox">
+                  <object class="GtkBox" id="type_freq_hbox">
+<property name="orientation">horizontal</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="border_width">10</property>
@@ -454,7 +455,8 @@ Do you utilise an escrow account, if so an account must be specified...</propert
                     <property name="can_focus">False</property>
                     <property name="xscale">0.75</property>
                     <child>
-                      <object class="GtkHBox" id="opt_escrow_hbox">
+                      <object class="GtkBox" id="opt_escrow_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -682,7 +684,8 @@ All accounts must have valid entries to continue.
                     <property name="can_focus">False</property>
                     <property name="label_xalign">0.5</property>
                     <child>
-                      <object class="GtkHBox" id="freq_frame_hbox">
+                      <object class="GtkBox" id="freq_frame_hbox">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="border_width">10</property>

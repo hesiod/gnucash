@@ -161,7 +161,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="date_opened_hbox">
+                          <object class="GtkBox" id="date_opened_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -254,7 +255,8 @@
                         <property name="can_focus">False</property>
                         <property name="border_width">3</property>
                         <child>
-                          <object class="GtkHBox" id="bill_owner_hbox">
+                          <object class="GtkBox" id="bill_owner_hbox">
+<property name="orientation">horizontal</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -565,7 +567,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="opened_date_hbox">
+                              <object class="GtkBox" id="opened_date_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -579,7 +582,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="closed_date_hbox">
+                              <object class="GtkBox" id="closed_date_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -712,7 +716,8 @@
                             <property name="border_width">3</property>
                             <property name="homogeneous">True</property>
                             <child>
-                              <object class="GtkHBox" id="owner_hbox">
+                              <object class="GtkBox" id="owner_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>

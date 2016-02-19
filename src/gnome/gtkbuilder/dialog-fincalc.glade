@@ -62,7 +62,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="payment_periods_hbox">
+                              <object class="GtkBox" id="payment_periods_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
@@ -113,7 +114,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="interest_rate_hbox">
+                              <object class="GtkBox" id="interest_rate_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
@@ -164,7 +166,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="present_value_hbox">
+                              <object class="GtkBox" id="present_value_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
@@ -215,7 +218,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="periodic_payment_hbox">
+                              <object class="GtkBox" id="periodic_payment_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>
@@ -266,7 +270,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="future_value_hbox">
+                              <object class="GtkBox" id="future_value_hbox">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="spacing">6</property>
                                 <child>

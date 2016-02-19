@@ -34,7 +34,8 @@
                     <property name="can_focus">False</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkHBox" id="owner_box">
+                      <object class="GtkBox" id="owner_box">
+<property name="orientation">horizontal</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="has_tooltip">True</property>
@@ -280,7 +281,8 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="date_box">
+                              <object class="GtkBox" id="date_box">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
@@ -402,7 +404,8 @@ In case of an over-payment or if no invoice was selected, GnuCash will automatic
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="amount_payment_box">
+                              <object class="GtkBox" id="amount_payment_box">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
@@ -428,7 +431,8 @@ In case of an over-payment or if no invoice was selected, GnuCash will automatic
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="amount_refund_box">
+                              <object class="GtkBox" id="amount_refund_box">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
@@ -482,7 +486,8 @@ In case of an over-payment or if no invoice was selected, GnuCash will automatic
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="amount_top_filler">
+                              <object class="GtkBox" id="amount_top_filler">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
@@ -509,7 +514,8 @@ In case of an over-payment or if no invoice was selected, GnuCash will automatic
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkHBox" id="amount_bot_filler">
+                              <object class="GtkBox" id="amount_bot_filler">
+<property name="orientation">horizontal</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="has_tooltip">True</property>
