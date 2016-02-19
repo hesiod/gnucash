@@ -1921,18 +1921,8 @@ draw_picture(GtkPrintContext *context, check_item_t *data)
     /* Get the picture. */
     image = GTK_IMAGE(read_image(data->filename));
     pixbuf = gtk_image_get_pixbuf(image);
-    if (pixbuf)
-    {
-        g_object_ref(pixbuf);
-    }
-    else
-    {
-        g_warning("Filename '%s' cannot be read or understood.",
-                  data->filename);
-        pixbuf = gtk_widget_render_icon(GTK_WIDGET(image),
-                                        GTK_STOCK_MISSING_IMAGE,
-                                        -1, NULL);
-    }
+    g_return_if_fail(pixbuf);
+    g_object_ref(pixbuf);
     pix_w = gdk_pixbuf_get_width(pixbuf);
     pix_h = gdk_pixbuf_get_height(pixbuf);
 

@@ -118,6 +118,7 @@ static void impl_webkit_set_parent( GncHtml* self, GtkWindow* parent );
 static void
 gnc_html_webkit_init( GncHtmlWebkit* self )
 {
+    GValue *val = G_VALUE_INIT;
     GncHtmlWebkitPrivate* priv;
     GncHtmlWebkitPrivate* new_priv;
 
@@ -131,8 +132,10 @@ gnc_html_webkit_init( GncHtmlWebkit* self )
     priv->html_string = NULL;
     priv->web_view = WEBKIT_WEB_VIEW(webkit_web_view_new());
 
-    /* Get the default font family from GtkStyle of a GtkWidget(priv-web_view). */
-    default_font_family = pango_font_description_get_family( gtk_rc_get_style(GTK_WIDGET(priv->web_view))->font_desc );
+    /* Get the default font family from GtkStyleContext of a GtkWidget(priv-web_view). */
+    gtk_style_context_get_style_property(gtk_widget_get_style_context(GTK_WIDGET(priv->web_view)), "font", val);
+    default_font_family = g_value_get_string(val);
+    g_value_unset(val);
 
     /* Set default webkit settings */
     webkit_settings = webkit_web_view_get_settings (priv->web_view);
@@ -1144,8 +1147,8 @@ impl_webkit_print( GncHtml* self, const gchar* jobname, gboolean export_pdf )
         dialog = gtk_file_chooser_dialog_new (_("Export to PDF File"),
                                               NULL,
                                               GTK_FILE_CHOOSER_ACTION_SAVE,
-                                              GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                              GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
+                                              _("Cancel"), GTK_RESPONSE_CANCEL,
+                                              _("OK"), GTK_RESPONSE_ACCEPT,
                                               NULL);
         gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
 

@@ -711,22 +711,20 @@ remove_element (GtkWidget *button, GNCSearchWindow *sw)
 
 
 static void
-attach_element (GtkWidget *element, GNCSearchWindow *sw, int row)
+attach_element (GtkWidget *element, GNCSearchWindow *sw)
 {
     GtkWidget *remove;
     struct _crit_data *data;
 
     data = g_object_get_data (G_OBJECT (element), "data");
 
-    gtk_table_attach (GTK_TABLE (sw->criteria_table), element, 0, 1, row, row + 1,
-                      GTK_EXPAND | GTK_FILL, 0, 0, 0);
-
-
-    remove = gtk_button_new_from_stock (GTK_STOCK_REMOVE);
+    gtk_grid_attach (GTK_GRID (sw->criteria_table), element,
+                     0, 0, 1, 1);
+    remove = gtk_button_new_from_icon_name ("list-remove", GTK_ICON_SIZE_MENU);
     g_object_set_data (G_OBJECT (remove), "element", element);
     g_signal_connect (G_OBJECT (remove), "clicked", G_CALLBACK (remove_element), sw);
-    gtk_table_attach (GTK_TABLE (sw->criteria_table), remove, 1, 2, row, row + 1,
-                      0, 0, 0, 0);
+    gtk_grid_attach (GTK_GRID (sw->criteria_table), remove,
+                     1, 0, 1, 1);
     gtk_widget_show (remove);
     data->button = remove;	/* Save the button for later */
 }
@@ -967,15 +965,13 @@ gnc_search_dialog_add_criterion (GNCSearchWindow *sw)
     {
         struct _crit_data *data;
         GtkWidget *w;
-        int rows;
 
         w = get_element_widget (sw, new_sct);
         data = g_object_get_data (G_OBJECT (w), "data");
         sw->crit_list = g_list_append (sw->crit_list, data);
 
-        gtk_table_get_size (GTK_TABLE (sw->criteria_table), &rows, NULL);
-        gtk_table_resize (GTK_TABLE (sw->criteria_table), rows + 1, 2);
-        attach_element (w, sw, rows);
+        gtk_grid_insert_row(GTK_GRID(sw->criteria_table), 0);
+        attach_element (w, sw);
 
         gnc_search_core_type_grab_focus (new_sct);
         gnc_search_core_type_editable_enters (new_sct);
@@ -1132,7 +1128,7 @@ gnc_search_dialog_init_widgets (GNCSearchWindow *sw, const gchar *title)
     gtk_label_set_text (GTK_LABEL (label), type_label);
 
     /* Set the 'add criterion' button */
-    add = gtk_button_new_from_stock (GTK_STOCK_ADD);
+    add = gtk_button_new_from_icon_name ("list-add", GTK_ICON_SIZE_MENU);
 
     g_signal_connect (G_OBJECT (add), "clicked", G_CALLBACK (add_criterion), sw);
     box = GTK_WIDGET(gtk_builder_get_object (builder, "add_button_box"));

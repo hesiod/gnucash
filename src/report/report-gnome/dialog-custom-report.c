@@ -212,22 +212,20 @@ set_reports_view_and_model(CustomReportDialog *crd)
     crd->namecol = gtk_tree_view_get_column (GTK_TREE_VIEW (crd->reportview), VIEW_COL_NAME);
     gtk_tree_view_column_set_expand (crd->namecol, TRUE);
 
+    // FIXME Gtk+ 3 migration: Icons here?
     renderer = gtk_cell_renderer_pixbuf_new();
-    g_object_set (G_OBJECT (renderer), "stock-id", GTK_STOCK_EXECUTE, NULL);
     gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (crd->reportview), -1,
             "R", renderer,
             NULL);
     crd->runcol = gtk_tree_view_get_column (GTK_TREE_VIEW (crd->reportview), VIEW_COL_RUN);
 
     renderer = gtk_cell_renderer_pixbuf_new();
-    g_object_set (G_OBJECT (renderer), "stock-id", GTK_STOCK_EDIT, NULL);
     gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (crd->reportview), -1,
             "E", renderer,
             NULL);
     crd->editcol = gtk_tree_view_get_column (GTK_TREE_VIEW (crd->reportview), VIEW_COL_EDIT);
 
     renderer = gtk_cell_renderer_pixbuf_new();
-    g_object_set (G_OBJECT (renderer), "stock-id", GTK_STOCK_DELETE, NULL);
     colnum = gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (crd->reportview), -1,
              "D", renderer,
              NULL);

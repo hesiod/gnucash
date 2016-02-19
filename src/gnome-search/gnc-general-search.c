@@ -106,7 +106,7 @@ gnc_general_search_get_type (void)
             (GInstanceInitFunc) gnc_general_search_init,
         };
 
-        general_search_type = g_type_register_static (GTK_TYPE_HBOX,
+        general_search_type = g_type_register_static (GTK_TYPE_BOX,
                               "GNCGeneralSearch",
                               &our_info, 0);
     }

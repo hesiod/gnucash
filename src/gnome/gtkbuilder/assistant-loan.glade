@@ -322,33 +322,25 @@ If you make a mistake or want to make changes later, you can edit the created Sc
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="alignment23">
+              <object class="GtkFrame" id="type_freq_frame">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="xscale">0.5</property>
-                <property name="yscale">0.75</property>
+                <property name="label_xalign">0.5</property>
                 <child>
-                  <object class="GtkFrame" id="type_freq_frame">
+                  <object class="GtkHBox" id="type_freq_hbox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label_xalign">0.5</property>
+                    <property name="border_width">10</property>
                     <child>
-                      <object class="GtkHBox" id="type_freq_hbox">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="border_width">10</property>
-                        <child>
-                          <placeholder/>
-                        </child>
-                      </object>
+                      <placeholder/>
                     </child>
-                    <child type="label">
-                      <object class="GtkLabel" id="label847976">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Interest Rate Change Frequency</property>
-                      </object>
-                    </child>
+                  </object>
+                </child>
+                <child type="label">
+                  <object class="GtkLabel" id="label847976">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Interest Rate Change Frequency</property>
                   </object>
                 </child>
               </object>
