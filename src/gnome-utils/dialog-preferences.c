@@ -966,7 +966,9 @@ gnc_prefs_connect_one (const gchar *name,
 {
     /* These tests must be ordered from more specific widget to less
      * specific widget. */
-
+    g_return_if_fail(widget);
+    g_return_if_fail(G_TYPE_CHECK_INSTANCE(widget));
+    g_return_if_fail(g_type_class_peek(G_TYPE_FROM_INSTANCE(G_OBJECT(widget))));
     if (GTK_IS_FONT_BUTTON(widget))
     {
         DEBUG("  %s - entry", name);
