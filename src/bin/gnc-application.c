@@ -244,7 +244,6 @@ gnc_application_shutdown (GApplication *app)
 static void
 gnc_application_init (GncApplication *app)
 {
-    printf("init\n");
     g_application_add_main_option_entries (G_APPLICATION (app), options);
     {
         g_action_map_add_action_entries (G_ACTION_MAP(app),
@@ -259,7 +258,6 @@ gnc_main_window_cmd_edit_preferences (GSimpleAction *action,
                                       GVariant      *parameter,
                                       gpointer       window)
 {
-    printf("prefs\n");
     gnc_preferences_dialog ();
 }
 
@@ -291,7 +289,6 @@ get_file (const gchar *partial)
     g_free (filename);
     return NULL;
 }
-
 
 /** This is a helper function to find a data file, suck it into
  *  memory, and split it into an array of strings.
@@ -363,56 +360,56 @@ gnc_main_window_cmd_help_about (GSimpleAction *action,
     {
         const gchar *fixed_message = _("The GnuCash personal finance manager. "
                                    "The GNU way to manage your money!");
-	const gchar *copyright = _("© 1997-2016 Contributors");
-	gchar **authors = get_file_strsplit("AUTHORS");
-	gchar **documenters = get_file_strsplit("DOCUMENTERS");
-	gchar *license = get_file("LICENSE");
-	gchar *message;
+	    const gchar *copyright = _("© 1997-2016 Contributors");
+	    gchar **authors = get_file_strsplit("AUTHORS");
+	    gchar **documenters = get_file_strsplit("DOCUMENTERS");
+	    gchar *license = get_file("LICENSE");
+	    gchar *message;
 
 #ifdef GNUCASH_SCM
-    /* Development version */
-    /* Translators: 1st %s is a fixed message, which is translated independently;
-                    2nd %s is the scm type (svn/svk/git/bzr);
-                    3rd %s is the scm revision number;
-                    4th %s is the build date */
-        message = g_strdup_printf(_("%s\nThis copy was built from %s rev %s on %s."),
-                                  fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
-                                  GNUCASH_BUILD_DATE);
+        /* Development version */
+        /* Translators: 1st %s is a fixed message, which is translated independently;
+                        2nd %s is the scm type (svn/svk/git/bzr);
+                        3rd %s is the scm revision number;
+                        4th %s is the build date */
+            message = g_strdup_printf(_("%s\nThis copy was built from %s rev %s on %s."),
+                                      fixed_message, GNUCASH_SCM, GNUCASH_SCM_REV,
+                                      GNUCASH_BUILD_DATE);
 #else
-    /* Translators: 1st %s is a fixed message, which is translated independently;
-                    2nd %s is the scm (svn/svk/git/bzr) revision number;
-                    3rd %s is the build date */
+        /* Translators: 1st %s is a fixed message, which is translated independently;
+                        2nd %s is the scm (svn/svk/git/bzr) revision number;
+                        3rd %s is the build date */
         message = g_strdup_printf(_("%s\nThis copy was built from rev %s on %s."),
                                   fixed_message, GNUCASH_SCM_REV,
                                   GNUCASH_BUILD_DATE);
 #endif
-    about_dialog = gtk_about_dialog_new ();
-    g_object_set (about_dialog,
-              "authors", authors,
-              "documenters", documenters,
-              "comments", message,
-              "copyright", copyright,
-              "license", license,
-              "name", "GnuCash",
-     /* Translators: the following string will be shown in Help->About->Credits
-      * Enter your name or that of your team and an email contact for feedback.
-      * The string can have multiple rows, so you can also add a list of
-      * contributors. */
-                      "translator-credits", _("translator_credits"),
-                      "version", VERSION,
-                      "website", "http://www.gnucash.org",
-                      NULL);
+        about_dialog = gtk_about_dialog_new ();
+        g_object_set (about_dialog,
+                  "authors", authors,
+                  "documenters", documenters,
+                  "comments", message,
+                  "copyright", copyright,
+                  "license", license,
+                  "name", "GnuCash",
+         /* Translators: the following string will be shown in Help->About->Credits
+          * Enter your name or that of your team and an email contact for feedback.
+          * The string can have multiple rows, so you can also add a list of
+          * contributors. */
+                          "translator-credits", _("translator_credits"),
+                          "version", VERSION,
+                          "website", "http://www.gnucash.org",
+                          NULL);
 
-    g_free(message);
-    if (license)     g_free(license);
-    if (documenters) g_strfreev(documenters);
-    if (authors)     g_strfreev(authors);
-    g_signal_connect (about_dialog, "activate-link",
-              G_CALLBACK(url_signal_cb), NULL);
-    g_signal_connect (about_dialog, "response",
-              G_CALLBACK(gtk_widget_hide), NULL);
-    gtk_window_set_transient_for (GTK_WINDOW (about_dialog),
-                      GTK_WINDOW (gtk_application_get_active_window(app)));
+        g_free(message);
+        if (license)     g_free(license);
+        if (documenters) g_strfreev(documenters);
+        if (authors)     g_strfreev(authors);
+        g_signal_connect (about_dialog, "activate-link",
+                  G_CALLBACK(url_signal_cb), NULL);
+        g_signal_connect (about_dialog, "response",
+                  G_CALLBACK(gtk_widget_hide), NULL);
+        gtk_window_set_transient_for (GTK_WINDOW (about_dialog),
+                          GTK_WINDOW (gtk_application_get_active_window(app)));
     }
     gtk_dialog_run (GTK_DIALOG (about_dialog));
 }
@@ -446,10 +443,9 @@ gnc_main_window_cmd_file_quit (GSimpleAction *action,
 }
 
 static gint
-gnc_application_command_line (GApplication            *application,
-                              GApplicationCommandLine *command_line)
+gnc_application_handle_local_options (GApplication *app,
+                                      GVariantDict *dict)
 {
-    printf("cmd line\n");
     gnc_prefs_set_debugging(debugging);
     gnc_prefs_set_extra(extra);
 
@@ -459,14 +455,6 @@ gnc_application_command_line (GApplication            *application,
     if (namespace_regexp)
         gnc_prefs_set_namespace_regexp(namespace_regexp);
 
-    return 0;
-}
-
-static gint
-gnc_application_handle_local_options (GApplication *app,
-                                      GVariantDict *dict)
-{
-    printf("localopt\n");
     if (gnucash_show_version)
     {
         gchar *fixed_message;
@@ -500,7 +488,6 @@ gnc_application_handle_local_options (GApplication *app,
 static void
 gnc_application_startup (GApplication *app)
 {
-    printf("startup\n");
     G_APPLICATION_CLASS (gnc_application_parent_class)->startup(app);
     g_application_mark_busy (g_application_get_default());
 
@@ -528,8 +515,6 @@ gnc_application_startup (GApplication *app)
     //gnc_file_set_shutdown_callback (gnc_shutdown);
     id = g_timeout_add_full (G_PRIORITY_DEFAULT_IDLE, 10000, /* 10 secs */
                              gnc_ui_check_events, NULL, NULL);
-
-    printf("inner_main\n");
 
     {
         SCM main_mod;
@@ -559,19 +544,16 @@ gnc_application_startup (GApplication *app)
 
     /* TODO: After some more guile-extraction, this should happen even
        before booting guile.  */
-    printf("mginit\n");
     gnc_main_gui_init();
 
     gnc_hook_add_dangler(HOOK_UI_SHUTDOWN, (GFunc)gnc_file_quit, NULL);
 
     /* Install Price Quote Sources */
-    printf("check f::q\n");
     scm_c_use_module("gnucash price-quotes");
     scm_c_eval_string("(gnc:price-quotes-install-sources)");
 
     gnc_hook_run(HOOK_STARTUP, NULL);
 
-    printf("destroy splash\n");
     g_application_unmark_busy (g_application_get_default());
 
     if (gnc_prefs_get_bool(GNC_PREFS_GROUP_NEW_USER, GNC_PREF_FIRST_STARTUP))
@@ -582,7 +564,6 @@ gnc_application_startup (GApplication *app)
     gnc_prefs_reset_group (GNC_PREFS_GROUP_WARNINGS_TEMP);
 
     gnc_hook_run(HOOK_UI_POST_STARTUP, NULL);
-    printf("exiting\n");
 }
 
 static void
@@ -590,7 +571,6 @@ gnc_application_activate (GApplication *app)
 {
     GncMainWindow *win;
 
-    printf("activate\n");
     win = gnc_main_window_new (GTK_APPLICATION(app));
     gtk_application_add_window(GTK_APPLICATION(app), GTK_WINDOW(win));
     gnc_gui_init(win);
@@ -608,7 +588,6 @@ gnc_application_open (GApplication  *app,
     GncMainWindow *win;
     int i;
 
-    printf("open\n");
     // FIXME this
     {
         char* fn = g_file_get_path(files[0]);
@@ -636,7 +615,6 @@ gnc_application_class_init (GncApplicationClass *class)
 {
     G_APPLICATION_CLASS (class)->activate = gnc_application_activate;
     G_APPLICATION_CLASS (class)->open = gnc_application_open;
-    G_APPLICATION_CLASS (class)->command_line = gnc_application_command_line;
     G_APPLICATION_CLASS (class)->handle_local_options = gnc_application_handle_local_options;
     G_APPLICATION_CLASS (class)->startup = gnc_application_startup;
     G_APPLICATION_CLASS (class)->shutdown = gnc_application_shutdown;
