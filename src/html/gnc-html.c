@@ -332,12 +332,16 @@ gnc_html_parse_url( GncHtml* self, const gchar* url,
 void
 gnc_html_show_data( GncHtml* self, const gchar* data, int datalen )
 {
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
-    if ( GNC_HTML_GET_CLASS(self)->show_data != NULL )
+    if ( klass->show_data != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->show_data( self, data, datalen );
+        klass->show_data( self, data, datalen );
     }
     else
     {
@@ -361,13 +365,17 @@ gnc_html_show_url( GncHtml* self, URLType type,
 {
     URLType lc_type = NULL;
 
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
     lc_type = g_ascii_strdown (type, -1);
-    if ( GNC_HTML_GET_CLASS(self)->show_url != NULL )
+    if ( klass->show_url != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->show_url( self, lc_type, location, label, new_window_hint );
+        klass->show_url( self, lc_type, location, label, new_window_hint );
     }
     else
     {
@@ -386,12 +394,16 @@ gnc_html_show_url( GncHtml* self, URLType type,
 void
 gnc_html_reload( GncHtml* self )
 {
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
-    if ( GNC_HTML_GET_CLASS(self)->reload != NULL )
+    if ( klass->reload != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->reload( self );
+        klass->reload( self );
     }
     else
     {
@@ -407,12 +419,16 @@ gnc_html_reload( GncHtml* self )
 void
 gnc_html_cancel( GncHtml* self )
 {
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
-    if ( GNC_HTML_GET_CLASS(self)->cancel != NULL )
+    if ( klass->cancel != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->cancel( self );
+        klass->cancel( self );
     }
     else
     {
@@ -494,12 +510,16 @@ gnc_html_set_button_cb( GncHtml* self, GncHTMLButtonCB button_cb, gpointer data 
 void
 gnc_html_copy_to_clipboard( GncHtml* self )
 {
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
-    if ( GNC_HTML_GET_CLASS(self)->copy_to_clipboard != NULL )
+    if ( klass->copy_to_clipboard != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->copy_to_clipboard( self );
+        klass->copy_to_clipboard( self );
     }
     else
     {
@@ -514,12 +534,16 @@ gnc_html_copy_to_clipboard( GncHtml* self )
 gboolean
 gnc_html_export_to_file( GncHtml* self, const gchar* filepath )
 {
-    g_return_val_if_fail( self != NULL, FALSE );
+    GncHtmlClass *klass;
+    g_return_val_if_fail( self, FALSE );
     g_return_val_if_fail( GNC_IS_HTML(self), FALSE );
+    g_return_val_if_fail( G_TYPE_CHECK_INSTANCE(self), FALSE );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_val_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML), FALSE );
 
-    if ( GNC_HTML_GET_CLASS(self)->export_to_file != NULL )
+    if ( klass->export_to_file != NULL )
     {
-        return GNC_HTML_GET_CLASS(self)->export_to_file( self, filepath );
+        return klass->export_to_file( self, filepath );
     }
     else
     {
@@ -531,12 +555,16 @@ gnc_html_export_to_file( GncHtml* self, const gchar* filepath )
 void
 gnc_html_print( GncHtml* self, const gchar* jobname, gboolean export_pdf )
 {
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
-    if ( GNC_HTML_GET_CLASS(self)->print != NULL )
+    if ( klass->print != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->print( self, jobname, export_pdf );
+        klass->print( self, jobname, export_pdf );
     }
     else
     {
@@ -566,12 +594,16 @@ gnc_html_get_widget( GncHtml* self )
 void
 gnc_html_set_parent( GncHtml* self, GtkWindow* parent )
 {
-    g_return_if_fail( self != NULL );
+    GncHtmlClass *klass;
+    g_return_if_fail( self );
     g_return_if_fail( GNC_IS_HTML(self) );
+    g_return_if_fail( G_TYPE_CHECK_INSTANCE(self) );
+    klass = GNC_HTML_GET_CLASS(self);
+    g_return_if_fail( G_TYPE_CHECK_CLASS_TYPE(klass, GNC_TYPE_HTML) );
 
-    if ( GNC_HTML_GET_CLASS(self)->set_parent != NULL )
+    if ( klass->set_parent != NULL )
     {
-        GNC_HTML_GET_CLASS(self)->set_parent( self, parent );
+        klass->set_parent( self, parent );
     }
     else
     {
