@@ -675,6 +675,8 @@ gnc_transaction_balance_trading (Transaction *trans, Account *root)
         if (! gnc_commodity_equal (txn_curr, commodity))
         {
             val_imbalance = gnc_transaction_get_commodity_imbalance (trans, commodity);
+        } else {
+            val_imbalance = gnc_numeric_zero();
         }
 
         xaccTransBeginEdit (trans);
