@@ -87,10 +87,10 @@
         <section id="menubar-edit-selection-section"></section>
         <section id="menubar-edit-find-section"></section>
         <section id="menubar-edit-preferences-section">
-          <!--<item>
+          <item>
             <attribute name="label" translatable="yes">Preferences</attribute>
             <attribute name="action">app.edit.preferences</attribute>
-          </item>-->
+          </item>
         </section>
         <section id="menubar-edit-style-sheets-section"></section>
       </submenu>
@@ -131,12 +131,10 @@
       </submenu>
       <submenu id="menubar-transaction">
         <attribute name="label" translatable="yes">Transaction</attribute>
-        <section id="menubar-transaction-section">
-          <section id="menubar-transaction-edit-section"></section>
-          <section id="menubar-transaction-record-section"></section>
-          <section id="menubar-transaction-undo-section"></section>
-          <section id="menubar-transaction-associate-section"></section>
-        </section>
+        <section id="menubar-transaction-edit-section"></section>
+        <section id="menubar-transaction-record-section"></section>
+        <section id="menubar-transaction-undo-section"></section>
+        <section id="menubar-transaction-associate-section"></section>
       </submenu>
       <submenu id="menubar-actions">
         <attribute name="label" translatable="yes">Actions</attribute>

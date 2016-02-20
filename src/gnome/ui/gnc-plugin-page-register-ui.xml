@@ -10,71 +10,69 @@
         </section>
       </submenu>
       <submenu id="menubar-transaction">
-        <section id="menubar-transaction-section">
-          <section id="menubar-transaction-edit-section">
-            <item>
-              <attribute name="label" translatable="yes">Cut Transaction</attribute>
-              <attribute name="action">win.transaction.cut</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Copy Transaction</attribute>
-              <attribute name="action">win.transaction.copy</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Paste Transaction</attribute>
-              <attribute name="action">win.transaction.paste</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Duplicate Transaction</attribute>
-              <attribute name="action">win.transaction.duplicate</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Delete Transaction</attribute>
-              <attribute name="action">win.transaction.delete</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Remove Splits</attribute>
-              <attribute name="action">win.transaction.remove-splits</attribute>
-            </item>
-          </section>
-          <section id="menubar-transaction-record-section">
-            <item>
-              <attribute name="label" translatable="yes">Record Transaction</attribute>
-              <attribute name="action">win.transaction.record.start</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Cancel Recording Transaction</attribute>
-              <attribute name="action">win.transaction.record.cancel</attribute>
-            </item>
-          </section>
-          <section id="menubar-transaction-undo-section">
-            <item>
-              <attribute name="label" translatable="yes">Void Transaction</attribute>
-              <attribute name="action">win.transaction.void</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Unvoid Transaction</attribute>
-              <attribute name="action">win.transaction.unvoid</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Reverse Transaction</attribute>
-              <attribute name="action">win.transaction.reverse</attribute>
-            </item>
-          </section>
-          <section id="menubar-transaction-associate-section">
-            <item>
-              <attribute name="label" translatable="yes">Associate File with Transaction</attribute>
-              <attribute name="action">win.transaction.associate.file</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Associate Location with Transaction</attribute>
-              <attribute name="action">win.transaction.associate.location</attribute>
-            </item>
-            <item>
-              <attribute name="label" translatable="yes">Open Associated File/Location</attribute>
-              <attribute name="action">win.transaction.associate.exec</attribute>
-            </item>
-          </section>
+        <section id="menubar-transaction-edit-section">
+          <item>
+            <attribute name="label" translatable="yes">Cut Transaction</attribute>
+            <attribute name="action">win.transaction.cut</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Copy Transaction</attribute>
+            <attribute name="action">win.transaction.copy</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Paste Transaction</attribute>
+            <attribute name="action">win.transaction.paste</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Duplicate Transaction</attribute>
+            <attribute name="action">win.transaction.duplicate</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Delete Transaction</attribute>
+            <attribute name="action">win.transaction.delete</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Remove Splits</attribute>
+            <attribute name="action">win.transaction.remove-splits</attribute>
+          </item>
+        </section>
+        <section id="menubar-transaction-record-section">
+          <item>
+            <attribute name="label" translatable="yes">Record Transaction</attribute>
+            <attribute name="action">win.transaction.record.start</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Cancel Recording Transaction</attribute>
+            <attribute name="action">win.transaction.record.cancel</attribute>
+          </item>
+        </section>
+        <section id="menubar-transaction-undo-section">
+          <item>
+            <attribute name="label" translatable="yes">Void Transaction</attribute>
+            <attribute name="action">win.transaction.void</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Unvoid Transaction</attribute>
+            <attribute name="action">win.transaction.unvoid</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Reverse Transaction</attribute>
+            <attribute name="action">win.transaction.reverse</attribute>
+          </item>
+        </section>
+        <section id="menubar-transaction-associate-section">
+          <item>
+            <attribute name="label" translatable="yes">Associate File with Transaction</attribute>
+            <attribute name="action">win.transaction.associate.file</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Associate Location with Transaction</attribute>
+            <attribute name="action">win.transaction.associate.location</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Open Associated File/Location</attribute>
+            <attribute name="action">win.transaction.associate.exec</attribute>
+          </item>
         </section>
       </submenu>
       <submenu id="menubar-view">
