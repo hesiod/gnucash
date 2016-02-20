@@ -130,6 +130,17 @@ void gnc_main_window_foreach_page (GtkApplication *app,
                                    GncMainWindowPageFunc fn,
                                    gpointer user_data);
 
+/*  Iterator function to walk all windows, calling the
+ *  specified function for each window.
+ *
+ *  @param entry A pointer to the function to be called.
+ *
+ *  @param user_data A data pointer passed to each call of the function.
+ */
+void
+gnc_main_window_foreach_window (GtkApplication *app,
+                                GFunc           fn,
+                                gpointer        user_data);
 
 /** Retrieve a pointer to the page that is currently at the front of
  *  the specified window.  Any plugin that needs to manipulate its

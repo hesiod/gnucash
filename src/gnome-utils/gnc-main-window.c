@@ -356,15 +356,22 @@ void foreach_page_fn (GncMainWindow *window, GFunc fn, gpointer user_data)
                    user_data);
 }
 
+void
+gnc_main_window_foreach_window (GtkApplication *app, GFunc fn, gpointer user_data)
+{
+    ENTER(" ");
+    g_list_foreach(gtk_application_get_windows(app),
+                   (GFunc)fn,
+                   user_data);
+    LEAVE(" ");
+}
 /*  Iterator function to walk all pages in all windows, calling the
  *  specified function for each page. */
 void
 gnc_main_window_foreach_page (GtkApplication *app, GncMainWindowPageFunc fn, gpointer user_data)
 {
     ENTER(" ");
-    g_list_foreach(gtk_application_get_windows(app),
-                   (GFunc)foreach_page_fn,
-                   user_data);
+    gnc_main_window_foreach_window (app, (GFunc)fn, user_data);
     LEAVE(" ");
 }
 
@@ -764,7 +771,7 @@ gnc_main_window_restore_all_windows(const GKeyFile *keyfile)
     app = g_application_get_default();
     g_application_mark_busy(app);
     gnc_set_busy_cursor (NULL, TRUE);
-    gnc_main_window_foreach_page (GTK_APPLICATION(app), gnc_main_window_restore_window, &data);
+    gnc_main_window_foreach_window (GTK_APPLICATION(app), (GFunc)gnc_main_window_restore_window, &data);
     gnc_unset_busy_cursor (NULL);
     g_application_unmark_busy(app);
 
@@ -959,10 +966,10 @@ gboolean
 gnc_main_window_all_finish_pending (void)
 {
     gboolean retval;
-    const GList *windows, *item;
+    GList *windows;
     GtkApplication *app = GTK_APPLICATION(g_application_get_default());
     windows = gtk_application_get_windows(app);
-    g_list_foreach(windows, check_finished, &retval);
+    gnc_main_window_foreach_window(app, (GFunc)check_finished, &retval);
     return retval;
 }
 
@@ -972,12 +979,10 @@ struct cp_struct {
 };
 
 static void
-contains_page (GncMainWindow *window, struct cp_struct *data)
+contains_page (GncPluginPage *page, struct cp_struct *data)
 {
-    GncMainWindowPrivate *priv;
-    priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     g_return_if_fail(data);
-    data->found = g_list_find(priv->installed_pages, data->page);
+    *data->found = (page == data->page);
 }
 
 /** See if the page already exists.  For each open window, look
@@ -998,7 +1003,7 @@ gnc_main_window_page_exists (GncPluginPage *page)
     struct cp_struct cps = { .found = &found, .page = page };
 
     gnc_main_window_foreach_page (GTK_APPLICATION(g_application_get_default()),
-                                  contains_page, &cps);
+                                  (GncMainWindowPageFunc)contains_page, &cps);
     return found;
 }
 
@@ -2002,19 +2007,16 @@ main_window_update_page_name (GncPluginPage *page,
 
     ENTER(" ");
 
-    printf("null?\n");
     if ((name_in == NULL) || (*name_in == '\0'))
     {
         LEAVE("no string");
         return;
     }
-    printf("new name: %s\n", name_in);
     name = g_strstrip(g_strdup(name_in));
 
     /* Optimization, if the name hasn't changed, don't update X. */
     if (0 && (*name == '\0' || 0 == strcmp(name, gnc_plugin_page_get_page_name(page))))
     {
-        printf("nup\n");
         g_free(name);
         LEAVE("empty string or name unchanged");
         return;
@@ -2025,8 +2027,6 @@ main_window_update_page_name (GncPluginPage *page,
 
     /* Update the plugin */
     gnc_plugin_page_set_page_name(page, name);
-
-    printf("blub\n");
 
     /* Update the notebook tab */
     window = GNC_MAIN_WINDOW(gnc_plugin_page_get_window(page));
@@ -2039,7 +2039,6 @@ main_window_update_page_name (GncPluginPage *page,
     if (main_window_find_tab_items(window, page, &label, &entry))
         gtk_label_set_text(GTK_LABEL(label), name);
 
-    printf("still there\n");
     /* Update Tooltip on notebook Tab */
     if (old_page_long_name && old_page_name
             && g_strrstr(old_page_long_name, old_page_name) != NULL)
@@ -2070,7 +2069,6 @@ main_window_update_page_name (GncPluginPage *page,
 
     /* Force an update of the window title */
     gnc_main_window_update_title(window);
-    printf("end\n");
     LEAVE("done");
 cleanup:
     g_free(old_page_long_name);
@@ -2481,8 +2479,6 @@ gnc_main_window_connect (GncMainWindow *window,
     GncMainWindowPrivate *priv;
     GtkNotebook *notebook;
 
-    printf("ADD PLUGIN PAGE\n");
-
     gnc_plugin_page_set_window(page, GTK_WIDGET(window));
     priv = GNC_MAIN_WINDOW_GET_PRIVATE(window);
     notebook = GTK_NOTEBOOK (priv->notebook);
@@ -2660,7 +2656,7 @@ gnc_main_window_open_page (GncMainWindow *window,
     }
     else if (window == NULL)
     {
-        window = gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default()));
+        window = GNC_MAIN_WINDOW(gtk_application_get_active_window(GTK_APPLICATION(g_application_get_default())));
         g_assert(window);
     }
 
@@ -2685,8 +2681,6 @@ gnc_main_window_open_page (GncMainWindow *window,
 
     tab_hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
     gtk_widget_show (tab_hbox);
-
-    printf("New label %p with text %s\n", label, gnc_plugin_page_get_page_name(page));
 
 #if 0
     if (icon != NULL)
@@ -3784,7 +3778,7 @@ gnc_main_window_show_all_windows(void)
 {
     GtkApplication *app = GTK_APPLICATION(g_application_get_default());
 
-    g_list_foreach(gtk_application_get_windows(app), gtk_widget_show, NULL);
+    gnc_main_window_foreach_window(app, (GFunc)gtk_widget_show, NULL);
 }
 
 /** Get a pointer to the first active top level window or NULL
@@ -3796,7 +3790,7 @@ gnc_ui_get_toplevel (void)
 {
     GtkApplication *app = GTK_APPLICATION(g_application_get_default());
 
-    return gtk_application_get_active_window(app);
+    return GTK_WIDGET(gtk_application_get_active_window(app));
 }
 
 
@@ -4030,13 +4024,11 @@ void
 gnc_main_window_all_action_set_sensitive (const gchar *action_name,
         gboolean sensitive)
 {
-    GList *tmp;
     GtkApplication *app = GTK_APPLICATION(g_application_get_default());
-    tmp = gtk_application_get_windows(app);
     if (sensitive)
-      g_list_foreach(tmp, set_enabled, action_name);
+      gnc_main_window_foreach_window(app, (GFunc)set_enabled, (gpointer)action_name);
     else
-      g_list_foreach(tmp, set_not_enabled, action_name);
+      gnc_main_window_foreach_window(app, (GFunc)set_not_enabled, (gpointer)action_name);
 }
 
 EggMenuManager *gnc_main_window_get_uimanager (GncMainWindow *window)
