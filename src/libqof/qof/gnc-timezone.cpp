@@ -53,6 +53,16 @@ endian_swap(T* t)
     return t;
 }
 
+template<typename Container>
+Container
+endian_swap_safe(Container& t)
+{
+#if ! WORDS_BIGENDIAN
+    std::reverse(t.begin(), t.end());
+#endif
+    return t;
+}
+
 #if PLATFORM(WINDOWS)
 /* libstdc++ to_string is broken on MinGW with no real interest in fixing it.
  * See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=52015
@@ -424,18 +434,27 @@ namespace IANAParser
 	for(uint32_t index = 0; index < time_count; ++index)
 	{
 	    fb_index = start_index + index * transition_size;
-	    auto info_index = info_index_zero + index;
+	    const auto info_index = info_index_zero + index;
+	    const auto fb = fileblock[info_index];
+	    const auto fb8 = static_cast<uint8_t>(fb);
+	    const auto fb_ptr = reinterpret_cast<int8_t *>(&fileblock[fb_index]);
 	    if (transition_size  == 4)
 	    {
-		transitions.push_back(
-		    {*(endian_swap(reinterpret_cast<int32_t*>(&fileblock[fb_index]))),
-			    static_cast<uint8_t>(fileblock[info_index])});
+	    auto v = std::vector<int8_t>(4);
+        std::copy(fb_ptr,
+                  fb_ptr + 4,
+                  v.data());
+        const auto swapped = static_cast<int32_t>(*endian_swap_safe(v).data());
+		transitions.push_back({ swapped, fb8});
 	    }
 	    else
 	    {
-		transitions.push_back(
-		    {*(endian_swap(reinterpret_cast<int64_t*>(&fileblock[fb_index]))),
-			    static_cast<uint8_t>(fileblock[info_index])});
+	    auto v = std::vector<int8_t>(8);
+        std::copy(fb_ptr,
+                  fb_ptr + 8,
+                  v.data());
+        const auto swapped = static_cast<int32_t>(*endian_swap_safe(v).data());
+		transitions.push_back({ swapped, fb8});
 	    }
 	}
 
@@ -449,7 +468,13 @@ namespace IANAParser
 	for(uint32_t index = 0; index < type_count; ++index)
 	{
 	    fb_index = start_index + index * tzinfo_size;
-	    TTInfo info = *reinterpret_cast<TTInfo*>(&fileblock[fb_index]);
+	    auto buf = std::vector<char>(sizeof(TTInfo));
+	    const auto fb_ptr = reinterpret_cast<char *>(&fileblock[fb_index]);
+        std::copy(fb_ptr,
+                  fb_ptr + sizeof(TTInfo),
+                  buf.data());
+        const auto tmp = *static_cast<TTInfo *>(static_cast<void *>(buf.data()));
+	    TTInfo info = tmp;
 	    endian_swap(&info.gmtoff);
 	    tzinfo.push_back(
 		{info, &fileblock[abbrev + info.abbrind],
