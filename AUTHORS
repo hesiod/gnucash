@@ -63,7 +63,7 @@ Christian Stimming <stimming@tuhh.de> is a report-generating
 
 Joshua Sled <jsled@asynchronous.org> works on scheduled transactions, and
    general project monkeying (IRC bot, logs, website maintenance,
-   bug-triage, &c.).
+   bug-triage, etc.).
 
 Derek Atkins <derek@ihtfp.com> wrote the business-accounting package
    for Gnucash. This includes the Customer/Vendor database, Job tracking,
