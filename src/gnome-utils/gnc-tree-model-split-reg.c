@@ -1878,7 +1878,7 @@ gnc_tree_model_split_reg_iter_n_children (GtkTreeModel *tree_model, GtkTreeIter 
        if iter is NULL, then the number of toplevel nodes is returned.  */
     GncTreeModelSplitReg *model = GNC_TREE_MODEL_SPLIT_REG (tree_model);
     GList *tnode;
-    int i;
+    int i = 0;
 
     g_return_val_if_fail (GNC_IS_TREE_MODEL_SPLIT_REG (tree_model), FALSE);
     ENTER("model %p, iter %s", tree_model, iter_to_string (iter));
