@@ -68,6 +68,7 @@ write_one_account(FILE *out,
     if (ferror(out) || fprintf(out, "\n") < 0)
         return FALSE;
 
+    g_return_val_if_fail(gd, FALSE);
     gd->counter.accounts_loaded++;
     sixtp_run_callback(gd, "account");
     return TRUE;
