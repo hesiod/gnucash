@@ -132,6 +132,7 @@ gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
                                   GncPlugin *plugin)
 {
     GncPluginManagerPrivate *priv;
+    GncPluginClass *klass;
     gint index;
 
     ENTER (" ");
@@ -139,6 +140,9 @@ gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
     g_return_if_fail (GNC_IS_PLUGIN (plugin));
 
     priv = GNC_PLUGIN_MANAGER_GET_PRIVATE(manager);
+    g_return_if_fail(priv);
+    klass = GNC_PLUGIN_GET_CLASS(plugin);
+    g_return_if_fail(klass);
     index = g_list_index (priv->plugins, plugin);
 
     if (index < 0)
@@ -146,7 +150,7 @@ gnc_plugin_manager_remove_plugin (GncPluginManager *manager,
 
     priv->plugins = g_list_remove (priv->plugins, plugin);
     g_hash_table_remove (priv->plugins_table,
-                         GNC_PLUGIN_GET_CLASS(plugin)->plugin_name);
+                         klass->plugin_name);
 
     g_signal_emit (G_OBJECT (manager), signals[PLUGIN_REMOVED], 0, plugin);
 
