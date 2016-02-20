@@ -105,7 +105,7 @@ gnc_environment_setup (void)
     GError      *error = NULL;
     gchar **env_vars;
     gsize param_count;
-    gint i;
+    gsize i;
     gboolean got_keyfile;
     gchar *env_parm;
 
@@ -162,7 +162,7 @@ gnc_environment_setup (void)
     {
         gchar **val_list;
         gsize val_count;
-        gint j;
+        gsize j;
         gchar *new_val = NULL, *tmp_val;
 
         /* For each variable, read its new value, optionally expand it and set/unset it */
