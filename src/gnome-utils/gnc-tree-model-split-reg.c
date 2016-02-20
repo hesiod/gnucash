@@ -1393,7 +1393,7 @@ gnc_tree_model_split_reg_get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
         {
             spos = xaccTransCountSplits (tnode->data);
         }
-        else
+        else if (tnode)
         {
             /* Can not use snode position directly as slist length does not follow
                number of splits exactly, especailly if you delete a split */
