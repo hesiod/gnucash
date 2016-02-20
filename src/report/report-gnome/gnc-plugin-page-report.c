@@ -1691,6 +1691,9 @@ static gchar *report_create_jobname(GncPluginPageReportPrivate *priv)
         job_name = g_strdup_printf(format, report_name, report_number, job_date);
 
         g_free(format);
+    } else {
+        PWARN("Could not assemble job name");
+        job_name = g_strdup("Error while assembling job name");
     }
     g_free (report_name);
     g_free (job_date);
