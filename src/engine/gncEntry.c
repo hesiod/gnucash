@@ -1548,6 +1548,7 @@ int gncEntryCompare (const GncEntry *a, const GncEntry *b)
     if (a == b) return 0;
     if (!a && b) return -1;
     if (a && !b) return 1;
+    if (!a && !b) return 0;
 
     compare = timespec_cmp (&(a->date), &(b->date));
     if (compare) return compare;
