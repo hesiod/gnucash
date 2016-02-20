@@ -258,7 +258,9 @@ gnc_cm_event_handler (QofInstance *entity,
                       gpointer user_data,
                       gpointer event_data)
 {
-    const GncGUID *guid = qof_entity_get_guid(entity);
+    const GncGUID *guid;
+    g_return_if_fail(entity);
+    guid = qof_entity_get_guid(entity);
 #if CM_DEBUG
     gchar guidstr[GUID_ENCODING_LENGTH+1];
     guid_to_string_buff (guid, guidstr);
