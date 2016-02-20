@@ -1812,7 +1812,8 @@ gnc_plugin_page_register2_filter_time2dmy (time64 raw_time)
 
     timeinfo = gnc_localtime (&raw_time);
     i = strftime (date_string, 11, "%d-%m-%Y", timeinfo);
-    PINFO("Date string is %s", date_string);
+    if (i > 0)
+        PINFO("Date string is %s", date_string);
 
     gnc_tm_free (timeinfo);
     return g_strdup (date_string);
