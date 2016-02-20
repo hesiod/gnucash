@@ -1762,7 +1762,7 @@ integer_to_words(gint64 val)
     if (val > 0)
     {
         this_part = val;
-        val -= this_part;
+        //val -= this_part;
         g_string_append(result, gettext(small_numbers[this_part]));
         g_string_append_c(result, ' ');
     }
