@@ -288,7 +288,7 @@ static void update_inactive_actions(GncPluginPage *plugin_page)
 
     /* Set the action's sensitivity */
     gnc_plugin_update_actions (action_map, readonly_inactive_actions,
-                               "sensitive", is_readwrite);
+                               "enabled", is_readwrite);
 }
 
 
@@ -338,18 +338,14 @@ gnc_plugin_ab_account_selected(GncPluginPage *plugin_page, Account *account,
         accountid = gnc_ab_get_account_accountid(account);
 
         gnc_plugin_update_actions(action_map, need_account_actions,
-                                  "sensitive",
+                                  "enabled",
                                   (account && bankcode && *bankcode
                                    && accountid && *accountid));
-        gnc_plugin_update_actions(action_map, need_account_actions,
-                                  "visible", TRUE);
     }
     else
     {
         gnc_plugin_update_actions(action_map, need_account_actions,
-                                  "sensitive", FALSE);
-        gnc_plugin_update_actions(action_map, need_account_actions,
-                                  "visible", FALSE);
+                                  "enabled", FALSE);
     }
 
 }

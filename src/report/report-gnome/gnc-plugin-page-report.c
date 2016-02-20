@@ -1130,7 +1130,7 @@ gnc_plugin_page_report_constr_init(GncPluginPageReport *plugin_page, gint report
                                     plugin_page);
     gnc_plugin_update_actions(action_map,
                               initially_insensitive_actions,
-                              "sensitive", FALSE);
+                              "enabled", FALSE);
     // FIXME Migrate this
     // gnc_plugin_init_short_names (G_ACTION_GROUP(action_group), toolbar_labels);
 }
