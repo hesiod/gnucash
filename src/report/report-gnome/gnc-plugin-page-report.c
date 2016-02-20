@@ -136,7 +136,7 @@ typedef struct GncPluginPageReportPrivate
 
 static void gnc_plugin_page_report_class_init( GncPluginPageReportClass *klass );
 static void gnc_plugin_page_report_init( GncPluginPageReport *plugin_page );
-static GObject *gnc_plugin_page_report_constructor(GType this_type, guint n_properties, GObjectConstructParam *properties);
+static GObject *gnc_plugin_page_report_constructor(GType this_type, gsize n_properties, GObjectConstructParam *properties);
 static void gnc_plugin_page_report_finalize (GObject *object);
 static void gnc_plugin_page_report_setup( GncPluginPage *ppage );
 
@@ -1065,13 +1065,13 @@ gnc_plugin_page_report_init ( GncPluginPageReport *plugin_page )
 }
 
 static GObject*
-gnc_plugin_page_report_constructor(GType this_type, guint n_properties, GObjectConstructParam *properties)
+gnc_plugin_page_report_constructor(GType this_type, gsize n_properties, GObjectConstructParam *properties)
 {
     GObject *obj;
     GncPluginPageReportClass *our_class;
     GObjectClass *parent_class;
     gint reportId = -42;
-    int i;
+    gsize i;
 
     our_class = GNC_PLUGIN_PAGE_REPORT_CLASS (
                     g_type_class_peek (GNC_TYPE_PLUGIN_PAGE_REPORT));
