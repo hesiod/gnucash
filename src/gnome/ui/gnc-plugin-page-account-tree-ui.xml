@@ -89,60 +89,60 @@
         <section id="popup-account-file-section">
           <item>
             <attribute name="label" translatable="yes">Open Account</attribute>
-            <attribute name="action">win.file.account.open</attribute>
+            <attribute name="action">win.account.open</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Open Subaccounts</attribute>
-            <attribute name="action">win.file.account.open-sub</attribute>
+            <attribute name="action">win.account.open-sub</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Edit Account</attribute>
-            <attribute name="action">win.edit.account</attribute>
+            <attribute name="action">win.account</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">New Account</attribute>
-            <attribute name="action">win.actions.account.new</attribute>
+            <attribute name="action">win.account.new</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Delete Account</attribute>
-            <attribute name="action">win.edit.account.delete</attribute>
+            <attribute name="action">win.account.delete</attribute>
           </item>
         </section>
         <section id="popup-account-actions-section">
           <item>
             <attribute name="label" translatable="yes">Transfer...</attribute>
-            <attribute name="action">win.edit.account.transfer</attribute>
+            <attribute name="action">win.account.transfer</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Reconcile...</attribute>
-            <attribute name="action">win.edit.account.reconcile</attribute>
+            <attribute name="action">win.account.reconcile</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Auto-clear...</attribute>
-            <attribute name="action">win.edit.account.autoclear</attribute>
+            <attribute name="action">win.account.autoclear</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Stock Split...</attribute>
-            <attribute name="action">win.edit.account.stock-split</attribute>
+            <attribute name="action">win.account.stock-split</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">View Lots...</attribute>
-            <attribute name="action">win.edit.account.view-lots</attribute>
+            <attribute name="action">win.account.view-lots</attribute>
           </item>
         </section>
       </section>
       <section id="popup-scrub-section">
         <item>
           <attribute name="label" translatable="yes">This Account</attribute>
-          <attribute name="action">win.actions.account.scrub</attribute>
+          <attribute name="action">win.account.scrub</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Subaccounts</attribute>
-          <attribute name="action">win.actions.account.scrub-sub</attribute>
+          <attribute name="action">win.account.scrub-sub</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Everything</attribute>
-          <attribute name="action">win.actions.account.scrub-all</attribute>
+          <attribute name="action">win.account.scrub-all</attribute>
         </item>
       </section>
     </section>
@@ -153,20 +153,20 @@
         <section id="toolbar-account-this-section">
           <item>
             <attribute name="label" translatable="yes">Open Account</attribute>
-            <attribute name="action">win.file.account.open</attribute>
+            <attribute name="action">win.account.open</attribute>
           </item>
           <item>
             <attribute name="label" translatable="yes">Edit Account</attribute>
-            <attribute name="action">win.edit.account</attribute>
+            <attribute name="action">win.account.edit</attribute>
           </item>
         </section>
         <item>
           <attribute name="label" translatable="yes">New Account</attribute>
-          <attribute name="action">win.file.account.new</attribute>
+          <attribute name="action">win.account.new</attribute>
         </item>
         <item>
           <attribute name="label" translatable="yes">Delete Account</attribute>
-          <attribute name="action">win.edit.account.delete</attribute>
+          <attribute name="action">win.account.delete</attribute>
         </item>
       </section>
     </section>
