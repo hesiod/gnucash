@@ -122,6 +122,7 @@ gnc_strtok_r (char *s, const char *delim, char **save_ptr)
 {
     char *token;
 
+    g_return_val_if_fail(save_ptr, NULL);
     if (s == NULL)
         s = *save_ptr;
 
