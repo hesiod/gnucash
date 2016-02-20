@@ -204,17 +204,18 @@ gnc_plugin_remove_from_window (GncPlugin *plugin,
 
     g_return_if_fail (GNC_IS_PLUGIN (plugin));
     klass = GNC_PLUGIN_GET_CLASS (plugin);
+    g_return_if_fail (klass);
     ENTER (": plugin %s(%p), window %p", gnc_plugin_get_name(plugin),
            plugin, window);
 
     /*
      * Do plugin specific actions.
      */
-    if (GNC_PLUGIN_GET_CLASS (plugin)->remove_from_window)
+    if (klass->remove_from_window)
     {
         DEBUG ("Calling child class function %p",
-               GNC_PLUGIN_GET_CLASS (plugin)->remove_from_window);
-        GNC_PLUGIN_GET_CLASS (plugin)->remove_from_window (plugin, window, type);
+               klass->remove_from_window);
+        klass->remove_from_window (plugin, window, type);
     }
 
     /*
@@ -236,6 +237,7 @@ const gchar *
 gnc_plugin_get_name (GncPlugin *plugin)
 {
     g_return_val_if_fail (GNC_IS_PLUGIN (plugin), NULL);
+    g_return_val_if_fail (GNC_PLUGIN_GET_CLASS(plugin), NULL);
     return (GNC_PLUGIN_GET_CLASS(plugin)->plugin_name);
 }
 
