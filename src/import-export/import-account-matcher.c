@@ -315,18 +315,18 @@ Account * gnc_import_select_account(GtkWidget *parent,
         if (account_human_description != NULL)
         {
             strncat(account_description_text, account_human_description,
-                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
             strncat(account_description_text, "\n",
-                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
         }
         if (account_online_id_value != NULL)
         {
             strncat(account_description_text, _("(Full account ID: "),
-                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
             strncat(account_description_text, account_online_id_value,
-                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
             strncat(account_description_text, ")",
-                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                    ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
         }
         gtk_label_set_text((GtkLabel*)online_id_label, account_description_text);
         build_acct_tree(picker);
@@ -499,18 +499,18 @@ Account * gnc_import_account_assist_update (AccountPickerDialog *picker)
     if (picker->account_human_description != NULL)
     {
         strncat(account_description_text, picker->account_human_description,
-                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
         strncat(account_description_text, "\n",
-                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
     }
     if (picker->account_online_id_value != NULL)
     {
         strncat(account_description_text, _("(Full account ID: "),
-                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
         strncat(account_description_text, picker->account_online_id_value,
-                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
         strncat(account_description_text, ")",
-                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text));
+                ACCOUNT_DESCRIPTION_MAX_SIZE - strlen(account_description_text) - 1);
     }
     gtk_label_set_text(GTK_LABEL( picker->account_online_id_label), account_description_text);
 
