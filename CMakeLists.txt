@@ -90,7 +90,6 @@ IF(GNC_BUILD_AS_INSTALL)
   SET(LIBDIR_BUILD     ${CMAKE_BINARY_DIR}/lib)
   SET(SYSCONFDIR_BUILD ${CMAKE_BINARY_DIR}/etc)
   SET(BINDIR_BUILD     ${CMAKE_BINARY_DIR}/bin)
-
 ENDIF()
 
 SET(SHELL_FROM_ENV $ENV{SHELL})
@@ -371,41 +370,46 @@ ELSE (Boost_FOUND)
   MESSAGE (SEND_ERROR "Boost 1.54.0 or later is not installed, and is required. Please install it and ensure that the following libraries are built: chrono, date_time, filesystem, log, program_options, regex, signals, system, and test.")
 ENDIF (Boost_FOUND)
 
-
 # Compiler flags
-
-IF (APPLE)
-  ADD_DEFINITIONS(-Wno-unknown-attributes -Wno-typedef-redefinition)
-  #  SET (CMAKE_OSX_ARCHITECTURES "i386")
-ENDIF (APPLE)
-
-
 # Also, set the C++ version to c++11
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")  # FIXME: should be -std=c++11
+# FIXME: should be -std=c++11
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
 
-SET(SANITIZERS "")
-IF (ENABLE_ADDRESS_SANITIZER)
-    LIST(APPEND SANITIZERS "address")
-ENDIF (ENABLE_ADDRESS_SANITIZER)
-IF (ENABLE_UNDEFINED_SANITIZER)
-    LIST(APPEND SANITIZERS "undefined")
-ENDIF (ENABLE_UNDEFINED_SANITIZER)
+IF (ENABLE_ADDRESS_SANITIZER AND ENABLE_UNDEFINED_SANITIZER)
+    SET(SANITIZERS "address,undefined")
+ELSEIF (ENABLE_ADDRESS_SANITIZER)
+    SET(SANITIZERS "address")
+ELSEIF (ENABLE_UNDEFINED_SANITIZER)
+    SET(SANITIZERS "undefined")
+ELSE ()
+    SET(SANITIZERS "disable")
+ENDIF (ENABLE_ADDRESS_SANITIZER AND ENABLE_UNDEFINED_SANITIZER)
 
-IF (SANITIZERS)
-    LIST(APPEND CMAKE_C_FLAGS "-fsanitize=${SANITIZERS}")
-    LIST(APPEND CMAKE_CXX_FLAGS "-fsanitize=${SANITIZERS}")
-ENDIF (SANITIZERS)
+IF (NOT "${SANITIZERS}" STREQUAL "disable")
+    SET(SANITIZERS "-fsanitize=${SANITIZERS} -fno-omit-frame-pointer")
+    SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${SANITIZERS}")
+    SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${SANITIZERS}")
+ENDIF (NOT "${SANITIZERS}" STREQUAL "disable")
+IF ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    SET(CMAKE_LINKER "${CMAKE_C_COMPILER}")
+    #SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZERS}")
+    #SET(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${SANITIZERS}")
+    #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZERS}")
+ENDIF ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+
+#IF (NOT APPLE) #-Wno-pointer-sign
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wdeclaration-after-statement -Wmissing-prototypes")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Weffc++ -Wno-error=effc++")
+add_compile_options(-Wall -Wextra -Wmissing-declarations -Wno-unused -Wno-unused-parameter -Wno-missing-field-initializers)
+#ENDIF ()
 
 IF (UNIX)
-  SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wdeclaration-after-statement -Wno-pointer-sign -D_FORTIFY_SOURCE=2 -Wall -Wunused -Wmissing-prototypes -Wmissing-declarations  -Wno-unused")
-  SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=deprecated-declarations -std=gnu11 -O2")
-ENDIF (UNIX)
-IF (MINGW)
-  SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wdeclaration-after-statement -Wno-pointer-sign -Wall -Wunused -Wmissing-prototypes -Wmissing-declarations  -Wno-unused -std=gnu11")
-ENDIF (MINGW)
-IF (APPLE)
-  SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedef")
-ENDIF(APPLE)
+  #add_definitions(-D_FORTIFY_SOURCE=2)
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error=deprecated-declarations")
+ELSEIF (APPLE)
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedef -Wno-unknown-attributes -Wno-typedef-redefinition")
+ENDIF(UNIX)
 
 IF (APPLE AND WITH_GNUCASH)
   SET(CMAKE_MACOSX_RPATH ON)
@@ -413,7 +417,7 @@ ENDIF (APPLE AND WITH_GNUCASH)
 
 IF (UNIX AND NOT APPLE)
   SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib:${CMAKE_INSTALL_PREFIX}/lib/gnucash")
-ENDIF()
+ENDIF(UNIX AND NOT APPLE)
 
 SET(BUILD_SHARED_LIBS ON)
 
@@ -421,7 +425,6 @@ IF (GNC_BUILD_AS_INSTALL)
   # Most libraries are installed to lib/gnucash, so set that as the default.
   # For the handful that are installed to lib, we override the properies below
   # (after the targets have been read in).
-
 
   SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}/lib/gnucash)
   IF (XCODE_VERSION)
@@ -440,7 +443,7 @@ IF (GNC_BUILD_AS_INSTALL)
 ENDIF()
 # ############################################################
 
-SET(CMAKE_CTEST_COMMAND ctest)
+#SET(CMAKE_CTEST_COMMAND ctest)
 IF (XCODE_VERSION)
   SET(CMAKE_CTEST_COMMAND ctest -C Debug)
 ENDIF()

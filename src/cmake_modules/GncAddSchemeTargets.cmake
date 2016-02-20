@@ -118,6 +118,11 @@ MACRO(GNC_ADD_SCHEME_TARGETS _TARGET _SOURCE_FILES _OUTPUT_DIR_IN _GUILE_MODULES
       IF (${CMAKE_VERSION} VERSION_GREATER 3.1)
         SET(CMAKE_COMMAND_TMP ${CMAKE_COMMAND} -E env)
       ENDIF()
+      IF (ENABLE_ADDRESS_SANITIZER)
+        SET(PRELOAD "LD_PRELOAD=/usr/lib/libasan.so")
+      ELSE()
+        SET(PRELOAD "")
+      ENDIF(ENABLE_ADDRESS_SANITIZER)
       ADD_CUSTOM_COMMAND(
         OUTPUT ${output_file}
         COMMAND ${CMAKE_COMMAND_TMP}
@@ -130,6 +135,7 @@ MACRO(GNC_ADD_SCHEME_TARGETS _TARGET _SOURCE_FILES _OUTPUT_DIR_IN _GUILE_MODULES
            GUILE_LOAD_COMPILED_PATH=${_GUILE_LOAD_COMPILED_PATH}
            #GNC_MODULE_PATH=${_GNC_MODULE_PATH}
            GNC_MODULE_PATH="${LIBDIR_BUILD}:${LIBDIR_BUILD}/gnucash:${GNC_MODULE_PATH}"
+           ${PRELOAD}
            ${GUILE_EXECUTABLE} -e '\(@@ \(guild\) main\)' -s ${GUILD_EXECUTABLE} compile -o ${output_file} ${source_file_abs_path}
         DEPENDS ${guile_depends}
         MAIN_DEPENDENCY ${source_file_abs_path}
