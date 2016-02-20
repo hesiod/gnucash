@@ -1937,6 +1937,7 @@ gtv_sr_cdf0 (GtkTreeViewColumn *col, GtkCellRenderer *cell, GtkTreeModel *s_mode
             }
         }
 
+        num = gnc_numeric_zero();
         if (is_split) // Amount
         {
             if (anchor == NULL)
