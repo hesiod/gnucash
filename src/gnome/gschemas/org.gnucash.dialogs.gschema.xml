@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
   <schema id="org.gnucash.dialogs" path="/org/gnucash/dialogs/">
     <child name="account" schema="org.gnucash.dialogs.account"/>
@@ -60,7 +61,7 @@
         followed by the width and height of the window.</description>
     </key>
   </schema>
-  
+
   <schema id="org.gnucash.dialogs.pricedb-editor" path="/org/gnucash/dialogs/pricedb-editor/">
     <key name="last-geometry" type="(iiii)">
       <default>(-1,-1,-1,-1)</default>

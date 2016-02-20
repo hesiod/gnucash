@@ -2,17 +2,12 @@ MACRO(ADD_GSCHEMA_TARGETS _TARGET _gschema_INPUTS)
   SET(_gschema_OUTPUTS "")
   SET(_gschema_VALIDS "")
   SET(_gschema_BUILDS "")
-  # FIXME: I have no idea of I'm using the right options here for intltool-merge for Windows.
-  SET(INITTOOL_OPTIONS "--no-translations")
-  IF(WIN32)
-    SET(INITTOOL_OPTIONS "/tmp")
-  ENDIF(WIN32)
   SET(CMAKE_COMMAND_TMP "")
   IF (${CMAKE_VERSION} VERSION_GREATER 3.1)
     SET(CMAKE_COMMAND_TMP ${CMAKE_COMMAND} -E env)
   ENDIF()
   FOREACH(file ${_gschema_INPUTS})
-    GNC_CONFIGURE2(${file}.in.in ${file}.in)
+    GNC_CONFIGURE2(${file} ${file})
     STRING(REPLACE ".xml" ".valid" file_no_xml ${file})
     SET(_OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${file})
     SET(_BUILD_FILE ${DATADIR_BUILD}/glib-2.0/schemas/${file})
@@ -22,14 +17,6 @@ MACRO(ADD_GSCHEMA_TARGETS _TARGET _gschema_INPUTS)
     IF (GNC_BUILD_AS_INSTALL)
       LIST(APPEND _gschema_BUILDS ${_BUILD_FILE})
     ENDIF()
-    ADD_CUSTOM_COMMAND(
-        OUTPUT ${_OUTPUT_FILE}
-        COMMAND ${CMAKE_COMMAND_TMP}
-          LC_ALL=C
-          ${PERL_EXECUTABLE} ${INTLTOOL_MERGE} -x -u ${INITTOOL_OPTIONS} ${CMAKE_CURRENT_BINARY_DIR}/${file}.in ${CMAKE_CURRENT_BINARY_DIR}/${file}
-        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${file}.in
-        MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/${file}.in.in
-    )
     IF (GNC_BUILD_AS_INSTALL)
       ADD_CUSTOM_COMMAND(
         OUTPUT ${_BUILD_FILE}

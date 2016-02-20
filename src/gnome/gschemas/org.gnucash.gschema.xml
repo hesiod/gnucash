@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <schemalist gettext-domain="@GETTEXT_PACKAGE@">
   <schema id="org.gnucash" path="/org/gnucash/">
     <child name="general" schema="org.gnucash.general"/>
@@ -311,7 +312,7 @@
       <description>This sets the number of characters before auto complete starts for description, notes and memo fields.</description>
     </key>
   </schema>
-  
+
   <schema id="org.gnucash.general.report" path="/org/gnucash/general/report/">
     <key name="use-new-window" type="b">
       <default>false</default>

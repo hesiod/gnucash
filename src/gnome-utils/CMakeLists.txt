@@ -8,10 +8,7 @@ ADD_SUBDIRECTORY(test)
 SET (SWIG_GNOME_UTILS_C ${CMAKE_CURRENT_BINARY_DIR}/swig-gnome-utils.c)
 GNC_ADD_SWIG_COMMAND (${SWIG_GNOME_UTILS_C} ${CMAKE_CURRENT_SOURCE_DIR}/gnome-utils.i)
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/gschemas/org.gnucash.warnings.gschema.xml.in.in
-			   ${CMAKE_CURRENT_BINARY_DIR}/gschemas/org.gnucash.warnings.gschema.xml.in)
-
-SET (WARNINGS_SCHEMA gschemas/org.gnucash.warnings.gschema.xml.in)
+SET (WARNINGS_SCHEMA ${CMAKE_CURRENT_SOURCE_DIR}/gschemas/org.gnucash.warnings.gschema.xml)
 SET (GNC_WARNINGS_C ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.c)
 SET (GNC_WARNINGS_H ${CMAKE_CURRENT_BINARY_DIR}/gnc-warnings.h)
 

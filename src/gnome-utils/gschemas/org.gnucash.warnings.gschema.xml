@@ -95,7 +95,7 @@
       <description>This dialog is presented when you attempt to move out of a modified transaction. The changed data must be either saved or discarded.</description>
     </key>
   </schema>
-  
+
   <schema id="org.gnucash.warnings.temporary" path="/org/gnucash/warnings/temporary/">
     <key name="checkprinting-multi-acct" type="i">
       <default>0</default>
