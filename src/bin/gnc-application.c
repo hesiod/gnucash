@@ -308,10 +308,28 @@ get_file_strsplit (const gchar *partial)
     gchar *text, **lines;
 
     text = get_file(partial);
-    if (!text)
-        return NULL;
+    g_return_val_if_fail(text, NULL);
 
-    lines = g_strsplit_set(text, "\r\n", -1);
+    lines = g_strsplit(text, " ", 0);
+    g_free(text);
+    g_return_val_if_fail(lines, NULL);
+    {
+        const gsize num_elems = g_strv_length (lines);
+        guint i;
+        for (i = 0; i < num_elems; ++i) {
+            gchar *word = lines[i];
+            if (!word || word[0] == '\0' || strlen(word) > 1)
+                continue;
+            if (word[0] == '&') {
+                g_free(word);
+                word = g_strdup("&amp;");
+            }
+        };
+    }
+    text = g_strjoinv(" ", lines);
+    g_strfreev(lines);
+    g_return_val_if_fail(text, NULL);
+    lines = g_strsplit_set(text, "\r\n", 0);
     g_free(text);
     return lines;
 }
