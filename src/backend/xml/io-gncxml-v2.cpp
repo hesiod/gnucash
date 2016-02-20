@@ -471,6 +471,7 @@ gnc_counter_sixtp_parser_create(void)
 static void
 debug_print_counter_data(load_counter *data)
 {
+    g_return_if_fail(data);
     DEBUG("Transactions: Total: %d, Loaded: %d",
           data->transactions_total, data->transactions_loaded);
     DEBUG("Accounts: Total: %d, Loaded: %d",
@@ -491,7 +492,7 @@ file_rw_feedback (sixtp_gdv2 *gd, const char *type)
     load_counter *counter;
     int loaded, total, percentage;
 
-    g_assert(gd != NULL);
+    g_return_if_fail(gd);
     if (!gd->gui_display_fn)
         return;
 
@@ -1573,6 +1574,7 @@ try_gz_open (const char *filename, const char *perms, gboolean use_gzip,
 #endif
         if (!thread)
         {
+            g_return_val_if_fail(error, NULL);
             g_warning("Could not create thread for (de)compression: %s",
                       error->message);
             g_error_free(error);
