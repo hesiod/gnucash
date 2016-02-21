@@ -1001,46 +1001,40 @@ gnc_plugin_page_report_destroy(GncPluginPageReportPrivate * priv)
 static GActionEntry report_actions[] =
 {
     {
-        "FilePrintAction", gnc_plugin_page_report_print_cb
+        "file.print", gnc_plugin_page_report_print_cb
     },
     {
-        "FilePrintPDFAction", gnc_plugin_page_report_exportpdf_cb
+        "file.export.pdf", gnc_plugin_page_report_exportpdf_cb
     },
     {
-        "EditCutAction"
+        "edit.copy", gnc_plugin_page_report_copy_cb
     },
     {
-        "EditCopyAction", gnc_plugin_page_report_copy_cb
+        "view.refresh", gnc_plugin_page_report_reload_cb
     },
     {
-        "EditPasteAction"
+        "report.save", gnc_plugin_page_report_save_cb
     },
     {
-        "ViewRefreshAction", gnc_plugin_page_report_reload_cb
+        "report.save-as", gnc_plugin_page_report_save_as_cb
     },
     {
-        "ReportSaveAction", gnc_plugin_page_report_save_cb
+        "file.export.report", gnc_plugin_page_report_export_cb
     },
     {
-        "ReportSaveAsAction", gnc_plugin_page_report_save_as_cb
+        "edit.report-options", gnc_plugin_page_report_options_cb
     },
     {
-        "ReportExportAction", gnc_plugin_page_report_export_cb
+        "report.back", gnc_plugin_page_report_back_cb
     },
     {
-        "ReportOptionsAction", gnc_plugin_page_report_options_cb
+        "report.forward", gnc_plugin_page_report_forw_cb
     },
     {
-        "ReportBackAction", gnc_plugin_page_report_back_cb
+        "report.reload", gnc_plugin_page_report_reload_cb
     },
     {
-        "ReportForwAction", gnc_plugin_page_report_forw_cb
-    },
-    {
-        "ReportReloadAction", gnc_plugin_page_report_reload_cb
-    },
-    {
-        "ReportStopAction", gnc_plugin_page_report_stop_cb
+        "report.stop", gnc_plugin_page_report_stop_cb
     },
 };
 static guint num_report_actions = G_N_ELEMENTS( report_actions );
@@ -1048,15 +1042,10 @@ static guint num_report_actions = G_N_ELEMENTS( report_actions );
 /** Short labels for use on the toolbar buttons. */
 static action_toolbar_labels toolbar_labels[] =
 {
-    { "FilePrintAction", 	    N_("Print") },
-    { "ReportExportAction",   N_("Export") },
-    { "ReportOptionsAction",  N_("Options") },
+    { "file.print", 	    N_("Print") },
+    { "file.export.report",   N_("Export") },
+    { "edit.report-options",  N_("Options") },
     { NULL, NULL },
-};
-
-static const gchar *initially_insensitive_actions[] =
-{
-    NULL
 };
 
 static void
@@ -1128,9 +1117,6 @@ gnc_plugin_page_report_constr_init(GncPluginPageReport *plugin_page, gint report
                                     report_actions,
                                     num_report_actions,
                                     plugin_page);
-    gnc_plugin_update_actions(action_map,
-                              initially_insensitive_actions,
-                              "enabled", FALSE);
     // FIXME Migrate this
     // gnc_plugin_init_short_names (G_ACTION_GROUP(action_group), toolbar_labels);
 }

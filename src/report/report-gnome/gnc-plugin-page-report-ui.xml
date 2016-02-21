@@ -1,50 +1,46 @@
-<ui>
-  <menubar>
-    <menu name="File" action="FileAction">
-      <placeholder name="FilePrintPlaceholder">
-        <menuitem name="FileExportPDF" action="FilePrintPDFAction"/>
-      </placeholder>
-      <menu name="FileExport" action="FileExportAction">
-        <placeholder name="FileExportPlaceholder">
-          <menuitem name="FileReportExport" action="ReportExportAction" />
-        </placeholder>
-      </menu>
-    </menu>
+<interface>
+  <menu id="menubar">
+    <section id="menubar-main-section">
+      <submenu id="menubar-file">
+        <section id="menubar-file-print-section">
+          <submenu id="menubar-file-export">
+            <section id="menubar-file-export-section">
+              <item>
+                <attribute name="label" translatable="yes">Export PDF</attribute>
+                <attribute name="action">win.file.export.pdf</attribute>
+              </item>
+              <item>
+                <attribute name="label" translatable="yes">Export Report</attribute>
+                <attribute name="action">win.file.export.report</attribute>
+              </item>
+            </section>
+          </submenu>
+        </section>
+      </submenu>
+      <submenu id="menubar-edit">
+        <section id="menubar-edit-style-sheets-section">
+          <item>
+            <attribute name="label" translatable="yes">Report Options</attribute>
+            <attribute name="action">win.edit.report-options</attribute>
+          </item>
+        </section>
+      </submenu>
+      <submenu id="menubar-reports">
+        <section id="menubar-reports-standard-reports-section"></section>
+        <section id="menubar-reports-saved-reports-section"></section>
+        <section id="menubar-reports-account-reports-section"></section>
+        <section id="menubar-reports-other-reports-section">
+          <item>
+            <attribute name="label" translatable="yes">Save Report</attribute>
+            <attribute name="action">win.report.save</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Save Report As</attribute>
+            <attribute name="action">win.report.save-as</attribute>
+          </item>
+        </section>
+      </submenu>
+    </section>
+  </menu>
+</interface>
 
-    <menu name="Edit" action="EditAction">
-      <placeholder name="EditStyleSheetsPlaceholder">
-        <menuitem name="EditReportOptions" action="ReportOptionsAction" />
-      </placeholder>
-    </menu>
-
-    <menu name="Reports" action="ReportsAction">
-      <placeholder name="SavedReportConfigs">
-        <menuitem name="ReportSaveConfig" action="ReportSaveAction" />
-        <menuitem name="ReportSaveConfigAs" action="ReportSaveAsAction" />
-      </placeholder>
-    </menu>
-  </menubar>
-
-  <popup name="MainPopup" action="FakeToplevel">
-    <placeholder name="PopupPlaceholder1">
-      <menuitem name="PopupOptions" action="ReportOptionsAction"/>
-    </placeholder>
-  </popup>
-
-  <toolbar name="DefaultToolbar">
-    <placeholder name="DefaultToolbarPlaceholder">
-      <separator name="ReportToolbarSep0" />
-      <toolitem name="ReportToolbarBack" action="ReportBackAction" />
-      <toolitem name="ReportToolbarForw" action="ReportForwAction" />
-      <toolitem name="ReportToolbarReload" action="ReportReloadAction" />
-      <toolitem name="ReportToolbarStop" action="ReportStopAction" />
-      <separator name="ReportToolbarSep1" />
-      <toolitem name="ReportToolbarSave" action="ReportSaveAction" />
-      <toolitem name="ReportToolbarSaveAs" action="ReportSaveAsAction" />
-      <toolitem name="ReportToolbarExport" action="ReportExportAction" />
-      <toolitem name="ReportToolbarOptions" action="ReportOptionsAction" />
-      <toolitem name="ReportToolbarPrint" action="FilePrintAction" />
-      <toolitem name="ReportToolbarExportPDF" action="FilePrintPDFAction"/>
-    </placeholder>
-  </toolbar>
-</ui>
