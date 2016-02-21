@@ -43,7 +43,7 @@
 #include <regex.h>
 #include <libguile.h>
 
-#include <webkit/webkit.h>
+#include <webkit2/webkit2.h>
 
 #include "Account.h"
 #include "gnc-gui-query.h"
@@ -86,11 +86,10 @@ static char error_404_body[] = N_("The specified URL could not be loaded.");
 
 #define BASE_URI_NAME "base-uri"
 
-static WebKitNavigationResponse webkit_navigation_requested_cb(
-    WebKitWebView* web_view,
-    WebKitWebFrame* frame,
-    WebKitNetworkRequest* request,
-    gpointer user_data );
+static gboolean
+webkit_decide_policy_cb (WebKitWebView            *web_view,
+                         WebKitPolicyDecision     *decision,
+                         WebKitPolicyDecisionType  type);
 static void webkit_on_url_cb( WebKitWebView* web_view, gchar* title, gchar* url,
                               gpointer data );
 static gchar* handle_embedded_object( GncHtmlWebkit* self, gchar* html_str );
@@ -122,7 +121,7 @@ gnc_html_webkit_init( GncHtmlWebkit* self )
     GncHtmlWebkitPrivate* priv;
     GncHtmlWebkitPrivate* new_priv;
 
-    WebKitWebSettings* webkit_settings = NULL;
+    WebKitSettings* webkit_settings = NULL;
     const char* default_font_family = NULL;
 
     new_priv = g_realloc( GNC_HTML(self)->priv, sizeof(GncHtmlWebkitPrivate) );
@@ -158,8 +157,8 @@ gnc_html_webkit_init( GncHtmlWebkit* self )
     g_object_ref_sink( priv->base.container );
 
     /* signals */
-    g_signal_connect( priv->web_view, "navigation-requested",
-                      G_CALLBACK(webkit_navigation_requested_cb),
+    g_signal_connect( priv->web_view, "decide-policy-cb",
+                      G_CALLBACK(webkit_decide_policy_cb),
                       self);
 
     g_signal_connect( priv->web_view, "hovering-over-link",
@@ -484,7 +483,7 @@ load_to_stream( GncHtmlWebkit* self, URLType type,
                 fdata = fdata ? fdata :
                         g_strdup_printf( error_404_format,
                                          _(error_404_title), _(error_404_body) );
-                webkit_web_view_load_html_string( priv->web_view, fdata, BASE_URI_NAME );
+                webkit_web_view_load_html( priv->web_view, fdata, BASE_URI_NAME );
             }
 
             g_free( fdata );
@@ -541,7 +540,7 @@ load_to_stream( GncHtmlWebkit* self, URLType type,
                    label ? label : "(null)" );
             fdata = g_strdup_printf( error_404_format,
                                      _(error_404_title), _(error_404_body) );
-            webkit_web_view_load_html_string( priv->web_view, fdata, BASE_URI_NAME );
+            webkit_web_view_load_html ( priv->web_view, fdata, BASE_URI_NAME );
             g_free( fdata );
         }
 
@@ -576,8 +575,9 @@ gnc_html_link_clicked_cb( GtkHTML* html, const gchar* url, gpointer data )
  * loaded within the loading of a page (embedded image).
  ********************************************************************/
 
+#if 0
 static WebKitNavigationResponse
-webkit_navigation_requested_cb( WebKitWebView* web_view, WebKitWebFrame* frame,
+webkit_navigation_requested_cb( WebKitWebView* web_view, WebKitFrame* frame,
                                 WebKitNetworkRequest* request,
                                 gpointer data )
 {
@@ -607,6 +607,26 @@ webkit_navigation_requested_cb( WebKitWebView* web_view, WebKitWebFrame* frame,
 
     LEAVE("");
     return WEBKIT_NAVIGATION_RESPONSE_IGNORE;
+}
+#endif
+
+static gboolean
+webkit_decide_policy_cb (WebKitWebView *web_view,
+                  WebKitPolicyDecision *decision,
+                  WebKitPolicyDecisionType type)
+{
+    WebKitNavigationPolicyDecision *navigation_decision = WEBKIT_NAVIGATION_POLICY_DECISION (decision);
+    switch (type) {
+    case WEBKIT_POLICY_DECISION_TYPE_NEW_WINDOW_ACTION:
+        webkit_policy_decision_ignore (decision);
+        break;
+    case WEBKIT_POLICY_DECISION_TYPE_RESPONSE:
+    case WEBKIT_POLICY_DECISION_TYPE_NAVIGATION_ACTION:
+    default:
+        webkit_policy_decision_use (decision);
+        break;
+    }
+    return TRUE;
 }
 
 #if 0
@@ -1029,10 +1049,14 @@ impl_webkit_copy_to_clipboard( GncHtml* self )
     g_return_if_fail( GNC_IS_HTML_WEBKIT(self) );
 
     priv = GNC_HTML_WEBKIT_GET_PRIVATE(self);
+    webkit_web_view_execute_editing_command(priv->web_view,
+                                            WEBKIT_EDITING_COMMAND_COPY);
+#if 0
     if ( webkit_web_view_can_copy_clipboard( priv->web_view ) )
     {
         webkit_web_view_copy_clipboard( priv->web_view );
     }
+#endif
 }
 
 /**************************************************************
@@ -1094,20 +1118,22 @@ impl_webkit_export_to_file( GncHtml* self, const char *filepath )
 static void
 impl_webkit_print( GncHtml* self, const gchar* jobname, gboolean export_pdf )
 {
+    GncHtmlWebkitPrivate* priv;
+    priv = GNC_HTML_WEBKIT_GET_PRIVATE(self);
+    g_signal_emit_by_name(priv->web_view, "print");
+#if 0
 #if !HAVE(WEBKIT_WEB_FRAME_PRINT_FULL)
-    extern void webkit_web_frame_print( WebKitWebFrame * frame );
+    extern void webkit_web_frame_print( WebKitFrame * frame );
 #endif
 
     gchar *export_filename = NULL;
-    GncHtmlWebkitPrivate* priv;
-    WebKitWebFrame* frame;
+    WebKitFrame* frame;
 #if HAVE(WEBKIT_WEB_FRAME_PRINT_FULL)
     GtkPrintOperation* op = gtk_print_operation_new();
     GError* error = NULL;
     GtkPrintSettings *print_settings;
 #endif
 
-    priv = GNC_HTML_WEBKIT_GET_PRIVATE(self);
     frame = webkit_web_view_get_main_frame( priv->web_view );
 
 #if HAVE(WEBKIT_WEB_FRAME_PRINT_FULL)
@@ -1288,6 +1314,7 @@ impl_webkit_print( GncHtml* self, const gchar* jobname, gboolean export_pdf )
 
 #else
     webkit_web_frame_print( frame );
+#endif
 #endif
 }
 
