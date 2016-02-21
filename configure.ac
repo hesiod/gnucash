@@ -392,7 +392,7 @@ dnl Note that We use gnu99 or gnu11 because strdup is a gnu extension in gcc.
 CFLAGS="${CFLAGS} -Werror"
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([
 #include <gio/gio.h>
-])], [ac_cv_cstd=gnu99], [ac_cv_cstd=gnu11])
+])], [ac_cv_cstd=gnu11], [ac_cv_cstd=gnu99])
 CFLAGS="$GNC_OLDCFLAGS"
 LDFLAGS="$GNC_OLDLDFLAGS"
 dnl First remove any existing -std= setting from CFLAGS then add the one we want.
