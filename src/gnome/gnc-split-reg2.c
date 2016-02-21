@@ -513,6 +513,7 @@ gsr2_redraw_all_cb (GncTreeViewSplitReg *view, gpointer user_data)
     leader = gnc_ledger_display2_leader( gsr->ledger );
 
     commodity = xaccAccountGetCommodity( leader );
+	amount = xaccAccountGetBalance( leader );
 
     /* no EURO converson, if account is already EURO or no EURO currency */
     if (commodity != NULL)
